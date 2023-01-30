@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<DebugType>embedded</DebugType>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AssemblyName>InertialOuija</AssemblyName>
+		<AssemblyVersion>0.1</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemDefinitionGroup>
+		<Reference>
+			<Private>False</Private>
+			<SpecificVersion>False</SpecificVersion>
+		</Reference>
+	</ItemDefinitionGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Assembly-CSharp" Aliases="GameScripts" />
+		<Reference Include="Assembly-CSharp-firstpass" />
+		<Reference Include="UnityEngine" />
+		<Reference Include="UnityEngine.CoreModule" />
+		<Reference Include="UnityEngine.CrashReportingModule" />
+		<Reference Include="UnityEngine.InputLegacyModule" />
+		<Reference Include="UnityEngine.IMGUIModule" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ContentWithTargetPath Include="Doorstop/doorstop_config.ini" TargetPath="doorstop_config.ini" CopyToOutputDirectory="Always" />
+		<ContentWithTargetPath Include="Doorstop/version.dll" TargetPath="version.dll" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="patch.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<Target Name="AddToClean" BeforeTargets="BeforeBuild">
+		<ItemGroup>
+			<FileWrites Include="$(OutputPath)/InertialOuija/$(TargetFileName)" />
+			<FileWrites Include="$(OutputPath)/InertialOuija/0Harmony.dll" />
+			<FileWrites Include="$(OutputPath)/InertialOuija/patch.json" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="OrganizeOutput" AfterTargets="AfterBuild">
+		<ItemGroup>
+			<KeepInMainDir Include="$(OutputPath)/doorstop_config.ini" />
+			<KeepInMainDir Include="$(OutputPath)/version.dll" />
+		</ItemGroup>
+		<ItemGroup>
+			<MoveToSubDir Include="$(OutputPath)/*" Exclude="@(KeepInMainDir)" />
+		</ItemGroup>
+		<Move SourceFiles="@(MoveToSubDir)" DestinationFolder="$(OutputPath)/InertialOuija" />
+	</Target>
+
+</Project>
