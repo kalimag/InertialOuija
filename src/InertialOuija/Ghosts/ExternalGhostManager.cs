@@ -137,6 +137,7 @@ internal class ExternalGhostManager
 	{
 		(string directory, string fileName) = GetSavePath(ghost.Info);
 		using var stream = FileUtility.CreateUniqueFile(directory, fileName, GhostsExtension);
+		Log.Debug($"Save \"{stream.Name}\"");
 		ghost.Save(stream);
 
 		var path = Path.GetFullPath(stream.Name);
@@ -197,7 +198,7 @@ internal class ExternalGhostManager
 	{
 		var directory = Path.Combine(
 			GhostsPath,
-			FileUtility.Sanitize(info.Track.GetName(info.Direction)),
+			FileUtility.Sanitize(info.Track.GetName(info.Direction, true)),
 			FileUtility.Sanitize(info.Car.GetName())
 		);
 

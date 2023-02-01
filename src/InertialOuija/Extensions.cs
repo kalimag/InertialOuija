@@ -1,5 +1,7 @@
 ﻿extern alias GameScripts;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using GameScripts.Assets.Source.CloudStorage;
@@ -28,7 +30,13 @@ namespace InertialOuija
 		public static string GetInvariantString(this LocalisedString value)
 			=> value?.GetLocalisedString(Language.English) ?? "";
 
-		public static string GetName(this Track track, TrackDirection direction = TrackDirection.Forward)
+
+		private readonly static Dictionary<Track, int> TrackOrder =
+			((Track[])Enum.GetValues(typeof(Track)))
+			.OrderBy(track => track.ToString())
+			.Select((track, pos) => (track, pos))
+			.ToDictionary(pair => pair.track, pair => pair.pos);
+		public static string GetName(this Track track, TrackDirection direction = TrackDirection.Forward, bool prefixOrder = false)
 		{
 			string name = null;
 			try
@@ -39,7 +47,12 @@ namespace InertialOuija
 			{
 				// CorePlugin not initialized
 			}
-			return name ?? $"{track} {direction}";
+			name ??= $"{track} {direction}";
+
+			if (prefixOrder && TrackOrder.TryGetValue(track, out var order))
+				name = $"{order:00} {name}";
+
+			return name;
 		}
 
 		public static string GetName(this Car car)
