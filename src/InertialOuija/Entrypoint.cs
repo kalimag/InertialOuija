@@ -1,6 +1,7 @@
 ﻿extern alias GameScripts;
 
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using HarmonyLib;
 using InertialOuija;
@@ -26,9 +27,10 @@ internal class Entrypoint
 #else
 		var build = "Release";
 #endif
+		var modVersion = typeof(Entrypoint).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 		var gameVersion = $"{Application.version} {Application.buildGUID}";
 
-		Log.Info($"Mod version {typeof(Entrypoint).Assembly.GetName().Version.ToString(2)} {build}");
+		Log.Info($"Mod version {modVersion} {build}");
 		Log.Info($"Game version {gameVersion}");
 
 		var patchConfig = PatchConfig.Load();

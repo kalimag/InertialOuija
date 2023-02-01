@@ -6,7 +6,7 @@
 		<DebugType>embedded</DebugType>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>InertialOuija</AssemblyName>
-		<AssemblyVersion>0.1</AssemblyVersion>
+		<Version>0.2</Version>
 	</PropertyGroup>
 
 	<ItemDefinitionGroup>
@@ -59,6 +59,12 @@
 			<MoveToSubDir Include="$(OutputPath)/*" Exclude="@(KeepInMainDir)" />
 		</ItemGroup>
 		<Move SourceFiles="@(MoveToSubDir)" DestinationFolder="$(OutputPath)/InertialOuija" />
+	</Target>
+
+	<Target Name="GetGitCommit" BeforeTargets="InitializeSourceControlInformation">
+		<Exec Command="git describe --always --dirty" ConsoleToMSBuild="True" IgnoreExitCode="False">
+			<Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput" />
+		</Exec>
 	</Target>
 
 </Project>
