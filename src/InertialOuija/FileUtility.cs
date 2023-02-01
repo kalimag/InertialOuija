@@ -8,7 +8,7 @@ namespace InertialOuija;
 
 internal static class FileUtility
 {
-	public static string ModDirectory { get; } = Path.GetDirectoryName(Path.GetFileName(typeof(Entrypoint).Assembly.Location));
+	public static string ModDirectory { get; } = Path.GetDirectoryName(Path.GetFullPath(typeof(Entrypoint).Assembly.Location));
 
 	public static FileStream CreateUniqueFile(string directory, string fileName, string extension, bool overwriteFirst = false, uint maxTries = 100)
 	{
