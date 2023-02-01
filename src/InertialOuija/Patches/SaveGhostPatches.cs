@@ -17,15 +17,17 @@ namespace InertialOuija.Patches;
 internal class SaveGhostPatches
 {
 
-	[HarmonyPostfix, HarmonyPatch(typeof(PlayerGhostDatabase), nameof(PlayerGhostDatabase.AddGhostRecording))]
+	[HarmonyPrefix, HarmonyPatch(typeof(PlayerGhostDatabase), nameof(PlayerGhostDatabase.AddGhostRecording))]
 	static void PlayerGhostDatabase_AddGhostRecording(GhostKey ghostKey, GhostLap lap, Dictionary<GhostKey, GhostRecord> ____fastestLaps)
 	{
 		try
 		{
 			bool isValid = lap.Sectors != null && lap.Sectors.Any() && lap.LapTime >= 10f && lap.Sectors[0].HasNodes(5);
-			bool isFastest = !____fastestLaps.TryGetValue(ghostKey, out var fastestLap) || lap.LapTime <= fastestLap.Time;
+			bool isFastest = ____fastestLaps?.TryGetValue(ghostKey, out var fastestLap) != true || lap.LapTime <= fastestLap.Time;
 			if (isValid)
 				ExternalGhostManager.AddPlayerGhost(ghostKey, lap, isFastest);
+			else
+				Log.Info($"AddGhostRecording called for invalid ghost ({ghostKey}, AnySectors={lap.Sectors?.Any()}, LapTime{lap.LapTime}, Sector0Nodes={lap.Sectors?.FirstOrDefault()?.MainZone?.Count})");
 		}
 		catch (Exception ex)
 		{
