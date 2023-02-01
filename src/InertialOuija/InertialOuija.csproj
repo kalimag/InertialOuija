@@ -31,7 +31,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ContentWithTargetPath Include="Doorstop/doorstop_config.ini" TargetPath="doorstop_config.ini" CopyToOutputDirectory="Always" />
+		<ContentWithTargetPath Include="Doorstop/doorstop_config.ini" TargetPath="doorstop_config.ini" CopyToOutputDirectory="Always" Condition="'$(Configuration)'!='Debug'" />
+		<ContentWithTargetPath Include="Doorstop/doorstop_config.debug.ini" TargetPath="doorstop_config.ini" CopyToOutputDirectory="Always" Condition="'$(Configuration)'=='Debug'" />
 		<ContentWithTargetPath Include="Doorstop/version.dll" TargetPath="version.dll" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
