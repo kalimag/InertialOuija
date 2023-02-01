@@ -76,6 +76,10 @@ internal class Entrypoint
 		{
 			ApplyPatches<SerializationWhitelistPatches>();
 		}
+		if (patchConfig.DownloadDlcGhosts)
+		{
+			ApplyPatches<DownloadDlcGhostPatches>();
+		}
 
 #if DEBUG
 		LoggingPatches.Apply(harmony);

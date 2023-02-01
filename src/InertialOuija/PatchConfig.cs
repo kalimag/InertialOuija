@@ -16,6 +16,7 @@ internal class PatchConfig
 	[Include] public bool SerializationWhitelist { get; set; } = true;
 	[Include] public bool SaveGhosts { get; set; } = true;
 	[Include] public bool GhostPlayback { get; set; } = true;
+	[Include] public bool DownloadDlcGhosts { get; set; } = true;
 
 
 

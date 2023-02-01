@@ -1,5 +1,6 @@
 ﻿{
   "SaveGhosts": true,
   "GhostPlayback": true,
-  "PointToPointGhostStart": true
+  "PointToPointGhostStart": true,
+  "DownloadDlcGhosts": true
 }
