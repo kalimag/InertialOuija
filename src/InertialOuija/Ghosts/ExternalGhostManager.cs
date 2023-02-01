@@ -30,7 +30,7 @@ internal class ExternalGhostManager
 
 	public static void AddPlayerGhost(GhostKey ghostKey, GhostLap lap, bool isFastest)
 	{
-		Log.Debug($"{nameof(AddPlayerGhost)}({ghostKey}, {lap.GetType().Name} {lap.GetTotalTime()}, isFastest={isFastest})", nameof(ExternalGhostManager));
+		Log.Info($"{nameof(AddPlayerGhost)}({ghostKey}, {lap.GetTotalTime()}, isFastest={isFastest})", nameof(ExternalGhostManager));
 
 		var info = new ExternalGhostInfo
 		{
@@ -57,7 +57,7 @@ internal class ExternalGhostManager
 
 	public static void AddLeaderboardGhost(GhostDownloadRequest request, CompressionFriendlyGhostRecording packedGhost)
 	{
-		Log.Debug($"AddLeaderboardGhost(B{request.BoardId} {request.UserDetails.Username}, {packedGhost.FriendlyString()}", nameof(ExternalGhostManager));
+		Log.Info($"AddLeaderboardGhost(B{request.BoardId} {request.UserDetails.Username}, {packedGhost.FriendlyString()}", nameof(ExternalGhostManager));
 
 		var leaderboard = GameScripts.LeaderboardIdMapping.GetLeaderboardDetails(request.BoardId);
 
@@ -121,7 +121,7 @@ internal class ExternalGhostManager
 
 			if (UniqueGhosts.TryGetValue(info, out var existingGhostFile))
 			{
-				Log.Info($"Ghost {info} already exported at \"{existingGhostFile.Path}\"");
+				Log.Debug($"Ghost {info} already exported at \"{existingGhostFile.Path}\"");
 				continue;
 			}
 
@@ -137,7 +137,7 @@ internal class ExternalGhostManager
 	{
 		(string directory, string fileName) = GetSavePath(ghost.Info);
 		using var stream = FileUtility.CreateUniqueFile(directory, fileName, GhostsExtension);
-		Log.Debug($"Save \"{stream.Name}\"");
+		Log.Info($"Save ghost \"{stream.Name}\"");
 		ghost.Save(stream);
 
 		var path = Path.GetFullPath(stream.Name);
