@@ -8,7 +8,7 @@ internal partial class Styles
 
 	public static void Initialize()
 	{
-		float scale = Screen.dpi * 2 / BaseDPI;
+		float scale = Screen.dpi / BaseDPI;
 		GUIUtility.ScaleAroundPivot(new(scale, scale), Vector2.zero);
 	}
 
