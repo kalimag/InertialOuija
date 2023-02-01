@@ -59,27 +59,12 @@ internal class Entrypoint
 
 		var sw = System.Diagnostics.Stopwatch.StartNew();
 
-		if (patchConfig.SaveGhosts)
-		{
-			ApplyPatches<SaveGhostPatches>();
-			ApplyPatches<SaveDownloadedGhostPatches>();
-		}
-		if (patchConfig.GhostPlayback)
-		{
-			ApplyPatches<GhostPlaybackPatches>();
-		}
-		if (patchConfig.PointToPointGhostStart)
-		{
-			ApplyPatches<PointToPointGhostStartPatches>();
-		}
-		if (patchConfig.SerializationWhitelist)
-		{
-			ApplyPatches<SerializationWhitelistPatches>();
-		}
-		if (patchConfig.DownloadDlcGhosts)
-		{
-			ApplyPatches<DownloadDlcGhostPatches>();
-		}
+		harmony.Apply<SaveGhostPatches>(patchConfig.SaveGhosts);
+		harmony.Apply<SaveDownloadedGhostPatches>(patchConfig.SaveGhosts);
+		harmony.Apply<GhostPlaybackPatches>(patchConfig.GhostPlayback);
+		harmony.Apply<PointToPointGhostStartPatches>(patchConfig.PointToPointGhostStart);
+		harmony.Apply<SerializationWhitelistPatches>(patchConfig.SerializationWhitelist);
+		harmony.Apply<DownloadDlcGhostPatches>(patchConfig.DownloadDlcGhosts);
 
 #if DEBUG
 		LoggingPatches.Apply(harmony);
@@ -87,7 +72,5 @@ internal class Entrypoint
 
 		sw.Stop();
 		Log.Info($"Patching took {sw.Elapsed}");
-
-		void ApplyPatches<T>() => harmony.CreateClassProcessor(typeof(T)).Patch();
 	}
 }

@@ -9,8 +9,8 @@ internal partial class LoggingPatches
 	[Conditional("DEBUG")]
 	public static void Apply(Harmony harmony)
 	{
-		harmony.CreateClassProcessor(typeof(LoggingPatches)).Patch();
+		harmony.Apply<LoggingPatches>();
 		foreach (var nestedType in typeof(LoggingPatches).GetNestedTypes())
-			harmony.CreateClassProcessor(nestedType).Patch();
+			harmony.Apply(nestedType);
 	}
 }
