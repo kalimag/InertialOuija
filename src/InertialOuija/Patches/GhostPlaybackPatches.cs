@@ -24,7 +24,7 @@ internal class GhostPlaybackPatches
 			var eventDetails = CorePlugin.GameModeManager.CurrentEventDetails ?? ___DefaultEvent;
 			Log.Debug($"TimeAttack.InitialiseGameMode: UseLeaderboardGhost={eventDetails.UseLeaderboardGhost} GhostMode={CorePlugin.GameModeManager.GhostMode} " +
 				$"AiOpponent={___AiOpponent} StoryMission={eventDetails.StoryMission}", nameof(GhostPlaybackPatches));
-			if (/*eventDetails.UseLeaderboardGhost && CorePlugin.GameModeManager.GhostMode != 0 &&*/ ___AiOpponent != null)
+			if (eventDetails.UseLeaderboardGhost && CorePlugin.GameModeManager.GhostMode != 0 && ___AiOpponent != null)
 			{
 				GhostController.SpawnExternalGhosts(___AiOpponent);
 			}
