@@ -86,10 +86,10 @@ namespace InertialOuija
 			task.ContinueWith(static (task, caller) =>
 			{
 				if (task.IsFaulted)
-					Log.Error($"Task in {caller} failed", task.Exception);
+					Log.Error($"Task in {caller} failed", task.Exception.InnerExceptions.Count == 1 ? task.Exception.InnerException : task.Exception);
 				else if (task.IsCanceled)
 					Log.Debug($"Task in {caller} was canceled");
-			}, caller);
+			}, caller, TaskContinuationOptions.NotOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
 			return task;
 		}
 
