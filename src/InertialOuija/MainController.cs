@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
 using InertialOuija.Ghosts;
+using InertialOuija.UI;
 using UnityEngine;
 
 namespace InertialOuija;
@@ -22,6 +23,7 @@ internal static class MainController
 		_rootObject = new GameObject("InertialOuija") { hideFlags = HideFlags.HideAndDontSave };
 
 		AddGlobalComponent<HotkeyComponent>();
+		AddGlobalComponent<VersionLabelComponent>();
 
 		Task.Run(() => ExternalGhostManager.RefreshDatabase()).LogFailure();
 	}

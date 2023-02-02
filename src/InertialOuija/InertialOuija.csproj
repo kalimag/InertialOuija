@@ -32,6 +32,7 @@
 		<Reference Include="UnityEngine.CrashReportingModule" />
 		<Reference Include="UnityEngine.InputLegacyModule" />
 		<Reference Include="UnityEngine.IMGUIModule" />
+		<Reference Include="UnityEngine.TextRenderingModule" />
 	</ItemGroup>
 
 	<ItemGroup>
