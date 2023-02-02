@@ -138,7 +138,25 @@ internal class ExternalGhostManager
 		(string directory, string fileName) = GetSavePath(ghost.Info);
 		using var stream = FileUtility.CreateUniqueFile(directory, fileName, GhostsExtension);
 		Log.Info($"Save ghost \"{stream.Name}\"");
-		ghost.Save(stream);
+
+		try
+		{
+			ghost.Save(stream);
+		}
+		catch (Exception)
+		{
+			try
+			{
+				stream.Close();
+				if (File.Exists(stream.Name))
+					File.Move(stream.Name, stream.Name + ".error");
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Couldn't rename errored ghost", ex);
+			}
+			throw;
+		}
 
 		var path = Path.GetFullPath(stream.Name);
 		var ghostFile = new ExternalGhostFile(path, ghost.Info);
@@ -176,7 +194,7 @@ internal class ExternalGhostManager
 
 				var path = Path.GetFullPath(file);
 				var ghostFile = new ExternalGhostFile(path, info);
-				
+
 				GhostFiles[path] = new ExternalGhostFile(path, info);
 				if (!UniqueGhosts.TryAdd(info, ghostFile) && UniqueGhosts.TryGetValue(info, out var existingGhost))
 					Log.Debug($"Duplicate ghosts: \"{path}\" and \"{existingGhost.Path}\"");
