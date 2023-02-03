@@ -225,7 +225,7 @@ internal class ExternalGhostManager
 		var additional = new List<string>(0);
 		if (!string.IsNullOrEmpty(info.EventType))
 			additional.Add(info.EventType);
-		if (info.Date != null)
+		if (info.Date != null && info.Source == GhostSource.Player)
 			additional.Add(info.Date.Value.ToLocalTime().ToString("yyyy-MM-dd HH-mm"));
 		if (info.Source == GhostSource.Leaderboard)
 			additional.Add("Leaderboard");
