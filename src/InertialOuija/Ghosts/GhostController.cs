@@ -27,6 +27,7 @@ internal static class GhostController
 		var ghostFiles = ExternalGhostManager
 			.GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection, car)
 			.OrderBy(ghost => ghost.Info.Time)
+			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard)
 			.Take(Config.Ghosts.Count);
 
 		foreach (var ghostFile in ghostFiles)
