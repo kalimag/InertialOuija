@@ -14,11 +14,6 @@ if ($gameproc)
     Start-Sleep -Seconds 1
 }
 
-#echo "build=$build"
-#echo "game_dir=$game_dir"
-
 Copy-Item -Path "$build\*" -Destination "$game_dir" -Recurse -Force
 
-Start-Process "$game_dir\InertialDrift.exe" -WorkingDirectory "$game_dir"
-
-#Start-Sleep -Seconds 10
+Start-Process steam://launch/1184480/
