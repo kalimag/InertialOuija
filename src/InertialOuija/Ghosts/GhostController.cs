@@ -8,31 +8,26 @@ using GameScripts.Assets.Source.GhostCars.GhostPlayback;
 using GameScripts.Assets.Source.Tools;
 using InertialOuija.Patches;
 using UnityEngine;
+using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.Ghosts;
 
 internal static class GhostController
 {
 
-	public static bool UseVanillaGhosts { get; set; } = true;
-	public static bool UseExternalGhosts { get; set; }
-	public static bool SameCarOnly { get; set; } = true;
-	public static int GhostCount { get; set; } = 1;
-
-
 	public static async void SpawnExternalGhosts(GhostPlayer ghostPlayer)
 	{
 		Log.Debug(nameof(SpawnExternalGhosts), nameof(GhostController));
 
-		if (!UseExternalGhosts || GhostCount < 1)
+		if (Config.Ghosts.Mode == ExternalGhostMode.None || Config.Ghosts.Count < 1)
 			return;
 
-		Car? car = SameCarOnly ? CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car : null;
+		Car? car = Config.Ghosts.SameCar ? CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car : null;
 
 		var ghostFiles = ExternalGhostManager
 			.GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection, car)
 			.OrderBy(ghost => ghost.Info.Time)
-			.Take(GhostCount);
+			.Take(Config.Ghosts.Count);
 
 		foreach (var ghostFile in ghostFiles)
 		{

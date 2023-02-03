@@ -10,6 +10,7 @@ using GameScripts.Assets.Source.GhostCars.GhostPlayback;
 using GameScripts.Assets.Source.Tools;
 using HarmonyLib;
 using InertialOuija.Ghosts;
+using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.Patches;
 
@@ -53,15 +54,15 @@ internal class GhostPlaybackPatches
 	[HarmonyPrefix, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.CloudGhost))]
 	static bool SpawnHelpers_CloudGhost()
 	{
-		Log.Debug(nameof(SpawnHelpers_CloudGhost), nameof(GhostPlaybackPatches));
-		return GhostController.UseVanillaGhosts;
+		Log.Debug($"Prevent ghost spawn: {Config.Ghosts.Mode != ExternalGhostMode.None}");
+		return Config.Ghosts.Mode == ExternalGhostMode.None;
 	}
 
 	[HarmonyPrefix, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.PlayerGhost))]
 	static bool SpawnHelpers_PlayerGhost()
 	{
-		Log.Debug(nameof(SpawnHelpers_PlayerGhost), nameof(GhostPlaybackPatches));
-		return GhostController.UseVanillaGhosts;
+		Log.Debug($"Prevent ghost spawn: {Config.Ghosts.Mode != ExternalGhostMode.None}");
+		return Config.Ghosts.Mode == ExternalGhostMode.None;
 	}
 
 	[HarmonyReversePatch, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.CloudGhost))]

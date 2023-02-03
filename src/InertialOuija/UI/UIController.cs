@@ -8,8 +8,11 @@ internal static class UIController
 
 
 
-	private static GhostConfigWindow _ghostConfigWindow;
-	public static void ToggleGhostConfigWindow() => Toggle(ref _ghostConfigWindow);
+	private static GhostSelectionWindow _ghostSelectionWindow;
+	public static void ToggleGhostSelectionWindow() => Toggle(ref _ghostSelectionWindow);
+
+	private static GhostOptionsWindow _ghostOptionsWindow;
+	public static void ToggleGhostOptionsWindow() => Toggle(ref _ghostOptionsWindow);
 
 
 

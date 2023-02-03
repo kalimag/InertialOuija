@@ -17,7 +17,7 @@ internal class HotkeyComponent : MonoBehaviour
 		//bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
 		if (Input.GetKeyDown(KeyCode.F2))
-			UIController.ToggleGhostConfigWindow();
+			UIController.ToggleGhostSelectionWindow();
 
 #if DEBUG
 		if (Input.GetKeyDown(KeyCode.F7))
