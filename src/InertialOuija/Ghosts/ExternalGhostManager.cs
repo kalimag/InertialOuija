@@ -13,6 +13,7 @@ using GameScripts.Assets.Source.Gameplay.GameModes;
 using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
 using GameScripts.Assets.Source.Tools;
+using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.Ghosts;
 
@@ -220,7 +221,7 @@ internal class ExternalGhostManager
 	{
 		var directory = Path.Combine(
 			GhostsPath,
-			FileUtility.Sanitize(info.Track.GetName(info.Direction, true)),
+			FileUtility.Sanitize(info.Track.GetName(info.Direction, Config.Ghosts.TrackOrderPrefix)),
 			FileUtility.Sanitize(info.Car.GetName())
 		);
 
