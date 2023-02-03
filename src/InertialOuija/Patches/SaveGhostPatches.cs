@@ -34,6 +34,13 @@ internal class SaveGhostPatches
 			Log.Error("Failed to save player ghost", ex);
 		}
 	}
+
+	[HarmonyFinalizer, HarmonyPatch(typeof(PlayerGhostDatabase), nameof(PlayerGhostDatabase.AddGhostRecording))]
+	static void PlayerGhostDatabase_AddGhostRecordingFinalizer(GhostKey ghostKey, Exception __exception)
+	{
+		if (__exception != null)
+			Log.Error($"Error while saving player ghost {ghostKey}", __exception);
+	}
 }
 
 [HarmonyPatch]
