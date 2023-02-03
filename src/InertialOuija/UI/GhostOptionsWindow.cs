@@ -39,6 +39,13 @@ namespace InertialOuija.UI
 
 			GUILayout.Space(10);
 
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Ghosts:");
+			GUILayout.Label(ExternalGhostManager.Count.ToString());
+			GUILayout.EndHorizontal();
+
+			GUILayout.Space(10);
+
 			if (GUILayout.Button("Close"))
 				Close();
 

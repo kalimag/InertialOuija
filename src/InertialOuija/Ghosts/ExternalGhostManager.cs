@@ -28,6 +28,10 @@ internal class ExternalGhostManager
 
 
 
+	public static int Count => UniqueGhosts.Count;
+
+
+
 	public static void AddPlayerGhost(GhostKey ghostKey, GhostLap lap, bool isFastest)
 	{
 		Log.Info($"{nameof(AddPlayerGhost)}({ghostKey}, {lap.GetTotalTime()}, isFastest={isFastest})", nameof(ExternalGhostManager));
