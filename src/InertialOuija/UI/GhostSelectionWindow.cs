@@ -57,6 +57,9 @@ namespace InertialOuija.UI
 
 			Config.Ghosts.SameCar = GUILayout.Toggle(Config.Ghosts.SameCar, "Same car only");
 
+			GUI.enabled &= !Config.Ghosts.SameCar;
+			Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
+
 			GUI.enabled = true;
 
 			GUILayout.Space(10);

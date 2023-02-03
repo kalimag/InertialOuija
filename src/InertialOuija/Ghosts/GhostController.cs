@@ -25,8 +25,20 @@ internal static class GhostController
 		Car? car = Config.Ghosts.SameCar ? CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car : null;
 
 		var ghostFiles = ExternalGhostManager
-			.GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection, car)
-			.OrderBy(ghost => ghost.Info.Time)
+			.GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection, car);
+
+		if (Config.Ghosts.UniqueCars && !Config.Ghosts.SameCar)
+		{
+			ghostFiles = ghostFiles
+				.GroupBy(ghost => ghost.Info.Car)
+				.Select(group => group
+					.OrderBy(ghost => ghost.Info.Time)
+					.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard)
+					.First()
+				);
+		}
+
+		ghostFiles = ghostFiles.OrderBy(ghost => ghost.Info.Time)
 			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard)
 			.Take(Config.Ghosts.Count);
 
