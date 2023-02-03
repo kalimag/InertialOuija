@@ -19,8 +19,6 @@ namespace InertialOuija.Ghosts;
 
 internal class ExternalGhostManager
 {
-	//private static readonly string GhostsPath = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(typeof(ExternalGhostManager).Assembly.Location)), "Ghosts");
-	private static readonly string GhostsPath = Path.Combine(Path.GetDirectoryName(UnityEngine.Application.dataPath), "Ghosts");
 	private static readonly string GhostsExtension = ".ghost";
 	private static readonly string GhostTimeFormat = @"mm\.ss\.fff";
 
@@ -30,6 +28,17 @@ internal class ExternalGhostManager
 
 
 	public static int Count => UniqueGhosts.Count;
+
+	public static string GhostsPath
+	{
+		get
+		{
+			if (!string.IsNullOrWhiteSpace(Config.Ghosts.Directory))
+				return Config.Ghosts.Directory;
+			else
+				return Path.Combine(Path.GetDirectoryName(UnityEngine.Application.dataPath), "Ghosts");
+		}
+	}
 
 
 

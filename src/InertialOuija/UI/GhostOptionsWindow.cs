@@ -1,5 +1,7 @@
 ﻿extern alias GameScripts;
 using System;
+using System.Diagnostics;
+using System.IO;
 using InertialOuija.Ghosts;
 using UnityEngine;
 using static InertialOuija.Configuration.ModConfig;
@@ -56,7 +58,10 @@ namespace InertialOuija.UI
 
 		private void OpenGhostFolder()
 		{
-			throw new NotImplementedException();
+			if (!Directory.Exists(ExternalGhostManager.GhostsPath))
+				Directory.CreateDirectory(ExternalGhostManager.GhostsPath);
+
+			Process.Start(ExternalGhostManager.GhostsPath);
 		}
 	}
 }
