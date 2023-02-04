@@ -230,7 +230,7 @@ internal class ExternalGhostManager
 	{
 		var directory = Path.Combine(
 			GhostsPath,
-			FileUtility.Sanitize(info.Track.GetName(info.Direction, Config.Ghosts.TrackOrderPrefix)),
+			FileUtility.Sanitize(info.Track.GetName(info.Direction, true)),
 			FileUtility.Sanitize(info.Car.GetName())
 		);
 

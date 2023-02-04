@@ -28,10 +28,6 @@ namespace InertialOuija.UI
 		{
 			GUILayout.BeginVertical();
 
-			Config.Ghosts.TrackOrderPrefix = GUILayout.Toggle(Config.Ghosts.TrackOrderPrefix, "Number before track names");
-
-			GUILayout.Space(10);
-
 			if (GUILayout.Button("Export Ghost Database"))
 				ExternalGhostManager.ExportPlayerDatabase();
 
