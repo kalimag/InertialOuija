@@ -6,11 +6,24 @@ internal partial class Styles
 {
 	private const float BaseDPI = 96f;
 
-	public static void Initialize()
+	public static void Scale(float x, float y)
 	{
 		float scale = Screen.dpi / BaseDPI;
-		GUIUtility.ScaleAroundPivot(new(scale, scale), Vector2.zero);
+		GUI.matrix = Matrix4x4.identity;
+		GUIUtility.ScaleAroundPivot(new Vector2(scale, scale), new Vector2(x, y));
 	}
+
+	public static void Scale()
+		=> Scale(0f, 0f);
+
+	public static void ScaleRelative(float x, float y)
+		=> Scale(Screen.width * x, Screen.height * y);
+
+	public static void NoScaling()
+	{
+		GUI.matrix = Matrix4x4.identity;
+	}
+
 
 	public static readonly GUILayoutOption ExpandHeight = GUILayout.ExpandHeight(true);
 	public static readonly GUILayoutOption ExpandWidth = GUILayout.ExpandWidth(true);

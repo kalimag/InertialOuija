@@ -58,7 +58,7 @@ internal abstract class Window : MonoBehaviour
 
 	protected void OnGUI()
 	{
-		Styles.Initialize();
+		Styles.Scale();
 
 		if (WindowPosition == Rect.zero)
 			WindowPosition = InitialPosition;

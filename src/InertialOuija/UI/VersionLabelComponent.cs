@@ -29,6 +29,8 @@ internal class VersionLabelComponent : MonoBehaviour
 		if (!MenuNavigator.ActiveMenu || MenuNavigator.ActiveMenu.name != "MainMenuCanvas")
 			return;
 
+		Styles.ScaleRelative(0f, 1f);
+
 		GUI.Label(Screen.safeArea, _label, Styles.Version.LabelStyle);
 	}
 }
