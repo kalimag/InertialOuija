@@ -2,5 +2,6 @@
   "SaveGhosts": true,
   "GhostPlayback": true,
   "PointToPointGhostStart": true,
-  "DownloadDlcGhosts": true
+  "DownloadDlcGhosts": true,
+  "UnsavedGhostWarning": true
 }
