@@ -81,6 +81,17 @@ namespace InertialOuija
 			};
 		}
 
+		public static T GetOrAddComponent<T>(this GameObject obj) where T : Component
+		{
+			var component = obj.GetComponent<T>();
+			if (!component)
+				component = obj.AddComponent<T>();
+			return component;
+		}
+
+		public static T GetOrAddComponent<T>(this Component component) where T : Component
+			=> component.gameObject.GetOrAddComponent<T>();
+
 		public static T LogFailure<T>(this T task, [CallerMemberName] string caller = null) where T : Task
 		{
 			task.ContinueWith(static (task, caller) =>
