@@ -1,6 +1,8 @@
 ﻿extern alias GameScripts;
 
 using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.GameData;
 using GameScripts.Assets.Source.Gameplay;
@@ -68,6 +70,33 @@ internal class GhostPlaybackPatches
 	[HarmonyReversePatch, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.CloudGhost))]
 	public static CarProperties SpawnGhost(GhostPlayer basePrefab, CarSetupDetails carDetails, IGhostRecording ghostRecording, int carId)
 	{
+		throw new NotImplementedException();
+	}
+
+	[HarmonyReversePatch, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.CloudGhost))]
+	public static CarProperties SpawnCar(GhostPlayer basePrefab, CarSetupDetails carDetails, IGhostRecording ghostRecording, int carId)
+	{
+		// Patched version of SpawnHelpers.CloudGhost that uses the regular car visual
+		IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+		{
+			var ghostCarField = typeof(CarVisualProperties).GetField(nameof(CarVisualProperties.GhostCar));
+
+			foreach (var instruction in instructions)
+			{
+				if (instruction.LoadsField(ghostCarField))
+				{
+					// don't load ghost prefab so it falls back to regular visual
+					yield return new(OpCodes.Pop);
+					yield return new(OpCodes.Ldnull);
+				}
+				else
+				{
+					yield return instruction;
+				}
+			}
+		}
+
+		_ = Transpiler(null);
 		throw new NotImplementedException();
 	}
 }

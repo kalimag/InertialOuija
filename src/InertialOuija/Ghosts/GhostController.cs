@@ -1,6 +1,7 @@
 ﻿extern alias GameScripts;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.Enums;
@@ -15,7 +16,7 @@ namespace InertialOuija.Ghosts;
 internal static class GhostController
 {
 
-	public static async void SpawnExternalGhosts(GhostPlayer ghostPlayer)
+	public static void SpawnExternalGhosts(GhostPlayer ghostPlayer)
 	{
 		Log.Debug(nameof(SpawnExternalGhosts), nameof(GhostController));
 
@@ -42,6 +43,13 @@ internal static class GhostController
 			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard)
 			.Take(Config.Ghosts.Count);
 
+		SpawnGhosts(ghostFiles, ghostPlayer);
+	}
+
+	private static async void SpawnGhosts(IEnumerable<ExternalGhostFile> ghostFiles, GhostPlayer ghostPlayer)
+	{
+		var nextPalettes = new Dictionary<Car, int>();
+
 		foreach (var ghostFile in ghostFiles)
 		{
 			try
@@ -49,10 +57,25 @@ internal static class GhostController
 				Log.Debug($"Load \"{ghostFile.Path}\"");
 				var ghost = await ghostFile.LoadAsync();
 				var carDetails = CorePlugin.CarDatabase.GetCarDetails(ghost.Info.Car);
-				CarProperties carProperties = GhostPlaybackPatches.SpawnGhost(ghostPlayer, carDetails, ghost.Recording, 2);
 
-				if (ghost.Recording.IsEventStartLap())
-					Log.Info($"IsEventStartLap={ghost.Recording.IsEventStartLap()} Source={ghost.Info.Source} EventType={ghost.Info.EventType} GameMode={ghost.Info.GameMode}");
+				CarProperties carProperties;				
+				if (Config.Ghosts.GhostVisual)
+				{
+					carProperties = GhostPlaybackPatches.SpawnGhost(ghostPlayer, carDetails, ghost.Recording, 2);
+				}
+				else
+				{
+					carProperties = GhostPlaybackPatches.SpawnCar(ghostPlayer, carDetails, ghost.Recording, 2);
+					if (nextPalettes.TryGetValue(carProperties.CarVisualProperties.Car, out int nextPalette))
+					{
+						carProperties.CarVisualProperties.MaterialManager.ApplyPalette(nextPalette);
+						nextPalettes[carProperties.CarVisualProperties.Car] = nextPalette + 1;
+					}
+					else
+					{
+						nextPalettes[carProperties.CarVisualProperties.Car] = 1;
+					}
+				}
 
 				float eventStartTime = CorePlugin.EventManager.EventStartTime;
 				if (eventStartTime >= 0f)
@@ -67,4 +90,5 @@ internal static class GhostController
 			}
 		}
 	}
+
 }

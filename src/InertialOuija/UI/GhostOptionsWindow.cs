@@ -28,6 +28,10 @@ namespace InertialOuija.UI
 		{
 			GUILayout.BeginVertical();
 
+			Config.Ghosts.GhostVisual = GUILayout.Toggle(Config.Ghosts.GhostVisual, "Use ghost visual");
+
+			GUILayout.Space(10);
+
 			if (GUILayout.Button("Export Ghost Database"))
 				ExternalGhostManager.ExportPlayerDatabase();
 
