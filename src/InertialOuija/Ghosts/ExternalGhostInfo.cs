@@ -60,7 +60,6 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 			Car == other.Car &&
 			TimeInSeconds == other.TimeInSeconds &&
 			RecordingId == other.RecordingId &&
-			SteamUserId == other.SteamUserId &&
 			SteamFileId == other.SteamFileId &&
 			LeaderboardId == other.LeaderboardId;
 	}
@@ -75,7 +74,6 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 		hashCode = hashCode * -1521134295 + Car.GetHashCode();
 		hashCode = hashCode * -1521134295 + TimeInSeconds.GetHashCode();
 		hashCode = hashCode * -1521134295 + RecordingId.GetHashCode();
-		hashCode = hashCode * -1521134295 + SteamUserId.GetHashCode();
 		hashCode = hashCode * -1521134295 + SteamFileId.GetHashCode();
 		hashCode = hashCode * -1521134295 + LeaderboardId.GetHashCode();
 		return hashCode;

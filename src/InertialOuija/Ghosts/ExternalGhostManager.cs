@@ -59,6 +59,7 @@ internal class ExternalGhostManager
 			StoryMode = CorePlugin.GameModeManager.CurrentEventDetails?.StoryMission == true,
 			RecordingId = lap.RecordingId,
 			Username = CorePlugin.PlatformManager.PrimaryUserName(),
+			SteamUserId = GameScripts.SteamManager.Initialized ? Steamworks.SteamUser.GetSteamID().m_SteamID : null,
 			Date = DateTimeOffset.UtcNow,
 		};
 
@@ -119,6 +120,8 @@ internal class ExternalGhostManager
 			return;
 		}
 
+		ulong? steamId = GameScripts.SteamManager.Initialized ? Steamworks.SteamUser.GetSteamID().m_SteamID : null;
+
 		foreach (var savedGhost in savedGhosts)
 		{
 			var info = new ExternalGhostInfo
@@ -130,6 +133,7 @@ internal class ExternalGhostManager
 				Source = GhostSource.PlayerDatabaseExport,
 				RecordingId = savedGhost.Recording.RecordingId,
 				Username = CorePlugin.PlatformManager.PrimaryUserName(),
+				SteamUserId = steamId,
 				Date = DateTimeOffset.UtcNow
 			};
 

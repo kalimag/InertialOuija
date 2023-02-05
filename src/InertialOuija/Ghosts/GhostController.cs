@@ -41,6 +41,7 @@ internal static class GhostController
 
 		ghostFiles = ghostFiles.OrderBy(ghost => ghost.Info.Time)
 			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard)
+			.Distinct(RelaxedGhostComparer.Instance)
 			.Take(Config.Ghosts.Count);
 
 		SpawnGhosts(ghostFiles, ghostPlayer);
