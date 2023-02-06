@@ -23,10 +23,22 @@ internal static class GhostController
 		if (Config.Ghosts.Mode == ExternalGhostMode.None || Config.Ghosts.Count < 1)
 			return;
 
-		Car? car = Config.Ghosts.SameCar ? CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car : null;
+		var ghostFiles = GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
+			CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
 
-		var ghostFiles = ExternalGhostManager
-			.GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection, car);
+		SpawnGhosts(ghostFiles, ghostPlayer);
+	}
+
+	private static IEnumerable<ExternalGhostFile> GetGhosts(Track track, TrackDirection direction, Car car)
+	{
+		var ghostFiles = ExternalGhostManager.GetGhosts(track, direction, Config.Ghosts.SameCar ? car : null);
+
+		if (Config.Ghosts.MyGhosts && GameScripts.SteamManager.Initialized)
+		{
+			string name = CorePlugin.PlatformManager.PrimaryUserName();
+			ulong id = Steamworks.SteamUser.GetSteamID().m_SteamID;
+			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Username == name || ghost.Info.SteamUserId == id);
+		}
 
 		if (Config.Ghosts.UniqueCars && !Config.Ghosts.SameCar)
 		{
@@ -44,7 +56,7 @@ internal static class GhostController
 			.Distinct(RelaxedGhostComparer.Instance)
 			.Take(Config.Ghosts.Count);
 
-		SpawnGhosts(ghostFiles, ghostPlayer);
+		return ghostFiles;
 	}
 
 	private static async void SpawnGhosts(IEnumerable<ExternalGhostFile> ghostFiles, GhostPlayer ghostPlayer)

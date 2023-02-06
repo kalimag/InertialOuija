@@ -55,6 +55,8 @@ namespace InertialOuija.UI
 			GUILayout.EndHorizontal();
 			Config.Ghosts.Count = Mathf.RoundToInt(GUILayout.HorizontalSlider(Config.Ghosts.Count, 1, Config.Ghosts.MaxCount));
 
+			Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
+
 			Config.Ghosts.SameCar = GUILayout.Toggle(Config.Ghosts.SameCar, "Same car only");
 
 			GUI.enabled &= !Config.Ghosts.SameCar;
