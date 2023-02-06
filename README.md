@@ -1,8 +1,8 @@
 # InertialOuija
 
-An unofficial mod for the game [InertialDrift] (Steam/Windows version only) to improve and expand ghost playback.
+An unofficial mod for the game [Inertial Drift] (Steam/Windows version only) to improve and expand ghost playback.
 
-[InertialDrift]: https://store.steampowered.com/app/1184480/Inertial_Drift/
+[Inertial Drift]: https://store.steampowered.com/app/1184480/Inertial_Drift/
 
 ## Features
 
