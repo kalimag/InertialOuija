@@ -38,7 +38,7 @@ namespace InertialOuija.UI
 				ExternalGhostManager.ExportPlayerDatabase();
 
 			if (GUILayout.Button("Refresh External Ghosts"))
-				ExternalGhostManager.ExportPlayerDatabase();
+				ExternalGhostManager.RefreshDatabase();
 
 			if (GUILayout.Button("Open Ghost Folder"))
 				OpenGhostFolder();
