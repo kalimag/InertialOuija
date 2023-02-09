@@ -30,6 +30,8 @@ namespace InertialOuija.UI
 
 			Config.Ghosts.GhostVisual = GUILayout.Toggle(Config.Ghosts.GhostVisual, "Use ghost visual");
 
+			Config.Ghosts.DisableHeadlights = GUILayout.Toggle(Config.Ghosts.DisableHeadlights, "Disable headlight effect");
+
 			GUILayout.Space(10);
 
 			if (GUILayout.Button("Export Ghost Database"))

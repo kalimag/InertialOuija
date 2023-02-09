@@ -96,12 +96,27 @@ internal static class GhostController
 					Log.Info($"eventStartTime is {eventStartTime} ({Time.time - eventStartTime})");
 					carProperties.GetComponent<GhostPlayer>().SetPlaybackTime(Time.time - eventStartTime);
 				}
+
+				if (Config.Ghosts.DisableHeadlights)
+					DisableHeadlights(carProperties);
 			}
 			catch (Exception ex)
 			{
 				Log.Error($"Could not load ghost from \"{ghostFile.Path}\"", ex);
 			}
 		}
+	}
+
+	private static void DisableHeadlights(CarProperties carProperties)
+	{
+		// Headlights are animator controlled and updated every frame from the ghost node
+		// Disabling the Light component is the path of least resistance
+		var frontLight = carProperties.CarVisualProperties.gameObject.transform.Find("Car/FrontLight");
+		Light light;
+		if (frontLight && (light = frontLight.GetComponent<Light>()))
+			light.enabled = false;
+		else
+			Log.Warning($"Did not find FrontLight for {carProperties.CarVisualProperties.Car}");
 	}
 
 }

@@ -14,4 +14,5 @@ internal class GhostConfig
 	[Include] public bool UniqueCars { get; set; } = false;
 	[Include] public bool MyGhosts { get; set; } = false;
 	[Include] public bool GhostVisual { get; set; } = true;
+	[Include] public bool DisableHeadlights { get; set; } = false;
 }
