@@ -27,59 +27,7 @@ namespace InertialOuija
 			=> obj == null ? "<null>" : $"{{{obj.name} #{obj.GetInstanceID()}}}";
 
 
-		public static string GetInvariantString(this LocalisedString value)
-			=> value?.GetLocalisedString(Language.English) ?? "";
 
-
-		private readonly static Dictionary<Track, int> TrackOrder =
-			((Track[])Enum.GetValues(typeof(Track)))
-			.OrderBy(track => track.ToString())
-			.Select((track, pos) => (track, pos))
-			.ToDictionary(pair => pair.track, pair => pair.pos);
-		public static string GetName(this Track track, TrackDirection direction = TrackDirection.Forward, bool prefixOrder = false)
-		{
-			string name = null;
-			try
-			{
-				name = CorePlugin.TrackDatabase.GetTrackName(track, direction)?.GetInvariantString();
-			}
-			catch (NullReferenceException)
-			{
-				// CorePlugin not initialized
-			}
-			name ??= $"{track} {direction}";
-
-			if (prefixOrder && TrackOrder.TryGetValue(track, out var order))
-				name = $"{order:00} {name}";
-
-			return name;
-		}
-
-		public static string GetName(this Car car)
-		{
-			string name = null;
-			try
-			{
-				name = CorePlugin.CarDatabase.GetCarDetails(car)?.DisplayedName.GetInvariantString();
-			}
-			catch (NullReferenceException)
-			{
-				// CorePlugin not initialized
-			}
-			return name ?? car.ToString();
-		}
-		
-		public static GhostLeaderboardType ToEnum(this GameScripts.LeaderboardType leaderboardType)
-		{
-			return leaderboardType switch
-			{
-				null => GhostLeaderboardType.None,
-				{ Timed: true} => GhostLeaderboardType.Timed,
-				{ Distance: true } => GhostLeaderboardType.Distance,
-				{ Style: true } => GhostLeaderboardType.Style,
-				_ => GhostLeaderboardType.Other,
-			};
-		}
 
 		public static T GetOrAddComponent<T>(this GameObject obj) where T : Component
 		{
