@@ -94,11 +94,6 @@ namespace InertialOuija.UI
 			GUILayout.EndVertical();
 		}
 
-		private void OpenGhostFolder()
-		{
-			throw new NotImplementedException();
-		}
-
 		void IReceiveMessages<GameModeSetupCompleteMessage>.HandleMessage(GameModeSetupCompleteMessage message)
 		{
 			Close();
