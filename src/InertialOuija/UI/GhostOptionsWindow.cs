@@ -11,7 +11,7 @@ namespace InertialOuija.UI
 	internal class GhostOptionsWindow : Window
 	{
 		protected override string Title => "Ghost Options";
-		protected override Rect InitialPosition => new(350, 100, 200, 50);
+		protected override Rect InitialPosition => new(510, 100, 200, 50);
 		protected override Rect WindowPosition { get => _windowPosition; set => _windowPosition = value; }
 
 		private static Rect _windowPosition;

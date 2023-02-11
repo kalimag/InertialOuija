@@ -31,7 +31,7 @@ internal static class GhostController
 
 	private static IEnumerable<ExternalGhostFile> GetGhosts(Track track, TrackDirection direction, Car car)
 	{
-		var ghostFiles = ExternalGhostManager.GetGhosts(track, direction, Config.Ghosts.SameCar ? car : null);
+		var ghostFiles = ExternalGhostManager.GetGhosts(track, direction);
 
 		if (Config.Ghosts.MyGhosts && GameScripts.SteamManager.Initialized)
 		{
@@ -40,7 +40,17 @@ internal static class GhostController
 			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Username == name || ghost.Info.SteamUserId == id);
 		}
 
-		if (Config.Ghosts.UniqueCars && !Config.Ghosts.SameCar)
+		if (Config.Ghosts.CarFilter == CarFilter.SameCar)
+		{
+			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Car == car);
+		}
+		else if (Config.Ghosts.CarFilter == CarFilter.SameClass)
+		{
+			var perfClass = car.GetClass();
+			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Car.GetClass() == perfClass);
+		}
+
+		if (Config.Ghosts.UniqueCars && Config.Ghosts.CarFilter != CarFilter.SameCar)
 		{
 			ghostFiles = ghostFiles
 				.GroupBy(ghost => ghost.Info.Car)

@@ -12,7 +12,7 @@ namespace InertialOuija.UI
 	internal class GhostSelectionWindow : Window, IReceiveMessages<GameModeSetupCompleteMessage>
 	{
 		protected override string Title => "Ghosts";
-		protected override Rect InitialPosition => new(100, 100, 200, 50);
+		protected override Rect InitialPosition => new(100, 100, 400, 50);
 		protected override Rect WindowPosition { get => _windowPosition; set => _windowPosition = value; }
 
 		private static Rect _windowPosition;
@@ -22,6 +22,13 @@ namespace InertialOuija.UI
 		{
 			"None",
 			"Fastest"
+		};
+		
+		private static readonly string[] CarFilterLabels =
+		{
+			"Same Car",
+			"Same Class",
+			"Any"
 		};
 
 
@@ -47,20 +54,26 @@ namespace InertialOuija.UI
 			Config.Ghosts.Mode = (ExternalGhostMode)GUILayout.Toolbar((int)Config.Ghosts.Mode, ModeLabels);
 			GUILayout.EndHorizontal();
 
+
 			GUI.enabled = Config.Ghosts.Mode != ExternalGhostMode.None;
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Ghost count:", Styles.Width100);
 			GUILayout.Label(Config.Ghosts.Count.ToString());
-			GUILayout.EndHorizontal();
 			Config.Ghosts.Count = Mathf.RoundToInt(GUILayout.HorizontalSlider(Config.Ghosts.Count, 1, Config.Ghosts.MaxCount));
+			GUILayout.EndHorizontal();
 
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Car:", Styles.Width100);
+			Config.Ghosts.CarFilter = (CarFilter)GUILayout.Toolbar((int)Config.Ghosts.CarFilter, CarFilterLabels);
+			GUILayout.EndHorizontal();
+
+			GUI.enabled &= Config.Ghosts.CarFilter != CarFilter.SameCar;
+			Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
+			
+			GUI.enabled = Config.Ghosts.Mode != ExternalGhostMode.None;
 			Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
 
-			Config.Ghosts.SameCar = GUILayout.Toggle(Config.Ghosts.SameCar, "Same car only");
-
-			GUI.enabled &= !Config.Ghosts.SameCar;
-			Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
 
 			GUI.enabled = true;
 
