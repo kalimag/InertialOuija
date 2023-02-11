@@ -50,20 +50,13 @@ internal static class GhostController
 			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Car.GetClass() == perfClass);
 		}
 
-		if (Config.Ghosts.UniqueCars && Config.Ghosts.CarFilter != CarFilter.SameCar)
-		{
-			ghostFiles = ghostFiles
-				.GroupBy(ghost => ghost.Info.Car)
-				.Select(group => group
-					.OrderBy(ghost => ghost.Info.Time)
-					.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard)
-					.First()
-				);
-		}
-
 		ghostFiles = ghostFiles.OrderBy(ghost => ghost.Info.Time)
-			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard)
-			.Distinct(RelaxedGhostComparer.Instance)
+			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard);
+
+		if (Config.Ghosts.UniqueCars && Config.Ghosts.CarFilter != CarFilter.SameCar)
+			ghostFiles = ghostFiles.Distinct(GhostCarComparer.Instance);
+
+		ghostFiles = ghostFiles.Distinct(RelaxedGhostComparer.Instance)
 			.Take(Config.Ghosts.Count);
 
 		return ghostFiles;
