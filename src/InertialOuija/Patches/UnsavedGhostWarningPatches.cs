@@ -43,10 +43,17 @@ namespace InertialOuija.Patches
 
 		[HarmonyPostfix, HarmonyPatch(typeof(GhostRecorder), "SaveLap")]
 		static void GhostRecorder_SaveLap(GhostRecorder __instance)
+			=> DisableWarning(__instance);
+
+		[HarmonyPostfix, HarmonyPatch(typeof(GhostRecorder), nameof(GhostRecorder.HandleMessage), typeof(RestartEventMessage))]
+		static void GhostRecorder_RestartEventMessage(GhostRecorder __instance)
+			=> DisableWarning(__instance);
+
+		private static void DisableWarning(GhostRecorder instance)
 		{
 			try
 			{
-				var warningComponent = __instance.GetComponent<UnsavedGhostWarning>();
+				var warningComponent = instance.GetComponent<UnsavedGhostWarning>();
 				if (warningComponent && warningComponent.enabled)
 				{
 					Debug.Log($"Disabling unsaved ghost warning");
