@@ -4,6 +4,7 @@ using System.Diagnostics.Tracing;
 using GameScripts.Assets.Source.Messaging;
 using GameScripts.Assets.Source.Messaging.Messages;
 using InertialOuija.Ghosts;
+using InertialOuija.Utilities;
 using UnityEngine;
 using static InertialOuija.Configuration.ModConfig;
 
@@ -11,6 +12,9 @@ namespace InertialOuija.UI
 {
 	internal class GhostSelectionWindow : Window, IReceiveMessages<GameModeSetupCompleteMessage>
 	{
+		private readonly StringCache<int> _countString = new();
+
+
 		protected override string Title => "Ghosts";
 		protected override Rect InitialPosition => new(100, 100, 400, 50);
 		protected override Rect WindowPosition { get => _windowPosition; set => _windowPosition = value; }
@@ -59,7 +63,7 @@ namespace InertialOuija.UI
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Ghost count:", Styles.Width100);
-			GUILayout.Label(Config.Ghosts.Count.ToString());
+			GUILayout.Label(_countString.GetString(Config.Ghosts.Count));
 			Config.Ghosts.Count = Mathf.RoundToInt(GUILayout.HorizontalSlider(Config.Ghosts.Count, 1, Config.Ghosts.MaxCount));
 			GUILayout.EndHorizontal();
 

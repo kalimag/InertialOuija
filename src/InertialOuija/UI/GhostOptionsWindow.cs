@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using InertialOuija.Ghosts;
+using InertialOuija.Utilities;
 using UnityEngine;
 using static InertialOuija.Configuration.ModConfig;
 
@@ -10,12 +11,14 @@ namespace InertialOuija.UI
 {
 	internal class GhostOptionsWindow : Window
 	{
+		private readonly StringCache<int> _countString = new();
+
+
 		protected override string Title => "Ghost Options";
 		protected override Rect InitialPosition => new(510, 100, 200, 50);
 		protected override Rect WindowPosition { get => _windowPosition; set => _windowPosition = value; }
 
 		private static Rect _windowPosition;
-
 
 
 		protected override void OnDestroy()
@@ -47,7 +50,7 @@ namespace InertialOuija.UI
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Ghosts:");
-			GUILayout.Label(ExternalGhostManager.Count.ToString());
+			GUILayout.Label(_countString.GetString(ExternalGhostManager.Count));
 			GUILayout.EndHorizontal();
 
 			GUILayout.Space(10);
