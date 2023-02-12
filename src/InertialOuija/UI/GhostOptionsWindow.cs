@@ -31,26 +31,28 @@ namespace InertialOuija.UI
 		{
 			GUILayout.BeginVertical();
 
-			Config.Ghosts.GhostVisual = GUILayout.Toggle(Config.Ghosts.GhostVisual, "Use ghost visual");
+			Config.Ghosts.GhostVisual = !GUILayout.Toggle(!Config.Ghosts.GhostVisual, "Show as regular cars");
 
 			Config.Ghosts.DisableHeadlights = GUILayout.Toggle(Config.Ghosts.DisableHeadlights, "Disable headlight effect");
 
 			GUILayout.Space(10);
 
-			if (GUILayout.Button("Export Ghost Database"))
-				ExternalGhostManager.ExportPlayerDatabase();
-
-			if (GUILayout.Button("Refresh External Ghosts"))
-				ExternalGhostManager.RefreshDatabase();
-
 			if (GUILayout.Button("Open Ghost Folder"))
 				OpenGhostFolder();
+
+			if (GUILayout.Button(TempContent("Refresh External Ghosts","Use if you added or removed files while the game is running")))
+				ExternalGhostManager.RefreshDatabase();
+
+			GUILayout.Space(10);
+
+			if (GUILayout.Button(TempContent("Export Old Ghosts", "This only needs to be done once")))
+				ExternalGhostManager.ExportPlayerDatabase();
 
 			GUILayout.Space(10);
 
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Ghosts:");
-			GUILayout.Label(_countString.GetString(ExternalGhostManager.Count));
+			GUILayout.Label("Ghosts:", Styles.NoWrapLabel, Styles.DontExpandWidth);
+			GUILayout.Label(_countString.GetString(ExternalGhostManager.Count), Styles.NoWrapLabel, Styles.DontExpandWidth);
 			GUILayout.EndHorizontal();
 
 			GUILayout.Space(10);

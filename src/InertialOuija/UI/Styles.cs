@@ -25,13 +25,15 @@ internal partial class Styles
 	}
 
 
-	public static readonly GUILayoutOption ExpandHeight = GUILayout.ExpandHeight(true);
-	public static readonly GUILayoutOption ExpandWidth = GUILayout.ExpandWidth(true);
+	public static readonly GUILayoutOption[] ExpandHeight = new[] { GUILayout.ExpandHeight(true) };
+	public static readonly GUILayoutOption[] ExpandWidth = new[] { GUILayout.ExpandWidth(true) };
 	public static readonly GUILayoutOption[] ExpandBoth = new[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true) };
 
-	public static readonly GUILayoutOption DontExpandHeight = GUILayout.ExpandHeight(false);
-	public static readonly GUILayoutOption DontExpandWidth = GUILayout.ExpandWidth(false);
+	public static readonly GUILayoutOption[] DontExpandHeight = new[] { GUILayout.ExpandHeight(false) };
+	public static readonly GUILayoutOption[] DontExpandWidth = new[] { GUILayout.ExpandWidth(false) };
 	public static readonly GUILayoutOption[] DontExpandBoth = new[] { GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false) };
 
-	public static readonly GUILayoutOption Width100 = GUILayout.Width(100);
+	public static readonly GUILayoutOption[] Width100 = new[] { GUILayout.Width(100) };
+
+	public static readonly GUIStyle NoWrapLabel = new(GUI.skin.label) { wordWrap = false };
 }

@@ -1,6 +1,4 @@
 ﻿extern alias GameScripts;
-using System;
-using System.Diagnostics.Tracing;
 using GameScripts.Assets.Source.Messaging;
 using GameScripts.Assets.Source.Messaging.Messages;
 using InertialOuija.Ghosts;
@@ -27,7 +25,7 @@ namespace InertialOuija.UI
 			"None",
 			"Fastest"
 		};
-		
+
 		private static readonly string[] CarFilterLabels =
 		{
 			"Same Car",
@@ -63,8 +61,9 @@ namespace InertialOuija.UI
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Ghost count:", Styles.Width100);
-			GUILayout.Label(_countString.GetString(Config.Ghosts.Count));
-			Config.Ghosts.Count = Mathf.RoundToInt(GUILayout.HorizontalSlider(Config.Ghosts.Count, 1, Config.Ghosts.MaxCount));
+			GUILayout.Label(_countString.GetString(Config.Ghosts.Count), Styles.GhostSelection.GhostCountLabelStyle, Styles.GhostSelection.GhostCountLabelLayout);
+			Config.Ghosts.Count = Mathf.RoundToInt(GUILayout.HorizontalSlider(Config.Ghosts.Count, 1, Config.Ghosts.MaxCount,
+				Styles.GhostSelection.GhostCountSlider, GUI.skin.horizontalSliderThumb));
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
@@ -74,7 +73,7 @@ namespace InertialOuija.UI
 
 			GUI.enabled &= Config.Ghosts.CarFilter != CarFilter.SameCar;
 			Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
-			
+
 			GUI.enabled = Config.Ghosts.Mode != ExternalGhostMode.None;
 			Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
 
@@ -83,6 +82,7 @@ namespace InertialOuija.UI
 
 			GUILayout.Space(10);
 
+			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Options"))
 				UIController.ToggleGhostOptionsWindow();
 
@@ -90,6 +90,8 @@ namespace InertialOuija.UI
 
 			if (GUILayout.Button("Close"))
 				Close();
+			GUILayout.EndHorizontal();
+
 
 			GUILayout.EndVertical();
 		}
@@ -97,6 +99,23 @@ namespace InertialOuija.UI
 		void IReceiveMessages<GameModeSetupCompleteMessage>.HandleMessage(GameModeSetupCompleteMessage message)
 		{
 			Close();
+		}
+	}
+
+	partial class Styles
+	{
+		public static class GhostSelection
+		{
+			public static GUILayoutOption[] GhostCountLabelLayout = new[] { GUILayout.Width(30) };
+			public static readonly GUIStyle GhostCountLabelStyle = new(GUI.skin.label)
+			{
+				alignment = TextAnchor.MiddleCenter,
+				wordWrap = false,
+			};
+			public static readonly GUIStyle GhostCountSlider = new(GUI.skin.horizontalSlider)
+			{
+				margin = new(0, 0, 10, 0) 
+			};
 		}
 	}
 }
