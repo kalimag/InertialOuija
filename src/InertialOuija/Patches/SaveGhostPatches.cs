@@ -52,13 +52,10 @@ internal class SaveDownloadedGhostPatches
 	// - the CompressionFriendlyGhostRecording because the unpacked ghost is missing the lap time
 	// This is the only place to get all three in a single method
 
-	static MethodBase TargetMethod()
-	{
-		var iteratorAttr = typeof(CloudManager)
-			.GetMethod(nameof(CloudManager.GhostDownloadSequence))
-			.GetCustomAttribute<IteratorStateMachineAttribute>();
-		return iteratorAttr.StateMachineType.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-	}
+	static MethodBase TargetMethod() =>
+		typeof(CloudManager)
+		.GetMethod(nameof(CloudManager.GhostDownloadSequence))
+		.GetIteratorImplementation();
 
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> CloudManager_GhostDownloadSequence(IEnumerable<CodeInstruction> instructions, ILGenerator il, MethodBase method)

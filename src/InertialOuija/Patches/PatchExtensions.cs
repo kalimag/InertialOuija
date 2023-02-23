@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 
 namespace InertialOuija.Patches;
@@ -28,4 +30,16 @@ internal static class PatchExtensions
 
 	public static void Apply<T>(this Harmony harmony, bool condition = true)
 		=> harmony.Apply(typeof(T), condition);
+
+	public static MethodInfo GetIteratorImplementation(this MethodInfo method)
+	{
+		if (method == null)
+			throw new ArgumentNullException(nameof(method));
+
+		var iteratorAttr = method.GetCustomAttribute<IteratorStateMachineAttribute>();
+		if (iteratorAttr == null)
+			throw new InvalidOperationException($"{method} is not a yield iterator method.");
+
+		return iteratorAttr.StateMachineType.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+	}
 }

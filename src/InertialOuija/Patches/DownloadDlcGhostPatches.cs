@@ -17,13 +17,10 @@ internal class DownloadDlcGhostPatches
 	// However, this id isn't actually used by SteamCloudStorage.DownloadGhostPack,
 	// so we can NOP it to fix downloads. Upload already works fine.
 
-	static MethodBase TargetMethod()
-	{
-		var iteratorAttr = typeof(CloudManager)
-			.GetMethod(nameof(CloudManager.GhostDownloadSequence))
-			.GetCustomAttribute<IteratorStateMachineAttribute>();
-		return iteratorAttr.StateMachineType.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-	}
+	static MethodBase TargetMethod() =>
+		typeof(CloudManager)
+		.GetMethod(nameof(CloudManager.GhostDownloadSequence))
+		.GetIteratorImplementation();
 
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> CloudManager_GhostDownloadSequence(IEnumerable<CodeInstruction> instructions)

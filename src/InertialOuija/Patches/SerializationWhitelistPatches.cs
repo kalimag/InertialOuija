@@ -16,14 +16,10 @@ namespace InertialOuija.Patches;
 [HarmonyPatch]
 internal class SerializationWhitelistPatches
 {
-	static MethodBase TargetMethod()
-	{
-		var iteratorAttr = typeof(SteamCloudStorage)
-			.GetMethod(nameof(SteamCloudStorage.DownloadGhostPack))
-			.GetCustomAttribute<IteratorStateMachineAttribute>();
-
-		return iteratorAttr.StateMachineType.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-	}
+	static MethodBase TargetMethod() => 
+		typeof(SteamCloudStorage)
+		.GetMethod(nameof(SteamCloudStorage.DownloadGhostPack))
+		.GetIteratorImplementation();
 
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SteamCloudStorage_DownloadGhostPack(IEnumerable<CodeInstruction> instructions)
