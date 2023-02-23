@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading;
 using GameScripts.Assets.Source.GhostCars;
 using GameScripts.Assets.Source.SaveData;
+using InertialOuija.Utilities;
 
 namespace InertialOuija.Ghosts;
 
 public class ExternalGhost
 {
 	private const uint FileSignature = 0x01_474449;
-	private static readonly ThreadLocal<BinaryFormatter> Serializer = new(CreateSerializer);
 
 
 
@@ -42,10 +42,9 @@ public class ExternalGhost
 		}
 
 		using var compressedStream = new GZipStream(stream, CompressionMode.Compress, true);
-		{
-			Serializer.Value.Serialize(compressedStream, Info);
-			Serializer.Value.Serialize(compressedStream, Recording);
-		}
+		using var serializer = ObjectPool.UnitySerializers.Lease();
+		serializer.Value.Serialize(compressedStream, Info);
+		serializer.Value.Serialize(compressedStream, Recording);
 	}
 
 	private static (ExternalGhostInfo info, IGhostRecording recording) LoadInternal(Stream stream, bool infoOnly = false)
@@ -61,9 +60,10 @@ public class ExternalGhost
 		IGhostRecording recording = null;
 		using (var decompressedStream = new GZipStream(stream, CompressionMode.Decompress))
 		{
-			info = (ExternalGhostInfo)Serializer.Value.Deserialize(decompressedStream);
+			using var serializer = ObjectPool.WhitelistedSerializers.Lease();
+			info = (ExternalGhostInfo)serializer.Value.Deserialize(decompressedStream);
 			if (!infoOnly)
-				recording = (IGhostRecording)Serializer.Value.Deserialize(decompressedStream);
+				recording = (IGhostRecording)serializer.Value.Deserialize(decompressedStream);
 		}
 
 		return (info, recording);
@@ -91,14 +91,5 @@ public class ExternalGhost
 	{
 		using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 		return LoadInfo(stream);
-	}
-
-
-	private static BinaryFormatter CreateSerializer()
-	{
-		var serializer = new BinaryFormatter();
-		serializer.Binder = new GhostSerializationBinder();
-		SaveHelpers.AddUnitySerialisationSurrogates(serializer);
-		return serializer;
 	}
 }

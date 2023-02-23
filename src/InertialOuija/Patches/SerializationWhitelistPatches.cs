@@ -10,6 +10,7 @@ using GameScripts.Assets.Source.CloudStorage;
 using GameScripts.Assets.Source.SaveData;
 using HarmonyLib;
 using InertialOuija.Ghosts;
+using InertialOuija.Utilities;
 
 namespace InertialOuija.Patches;
 
@@ -40,14 +41,11 @@ internal class SerializationWhitelistPatches
 	{
 		Log.Debug(nameof(DeserializeWhitelisted), nameof(SerializationWhitelistPatches));
 
-		var serializer = new BinaryFormatter();
-		serializer.Binder = new GhostSerializationBinder();
-		SaveHelpers.AddUnitySerialisationSurrogates(serializer);
-
 		using var mem = new MemoryStream(buffer);
+		using var serializer = ObjectPool.WhitelistedSerializers.Lease();
 		try
 		{
-			return serializer.Deserialize(mem);
+			return serializer.Value.Deserialize(mem);
 		}
 		catch (Exception ex)
 		{

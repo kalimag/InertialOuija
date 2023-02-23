@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GameScripts.Assets.Source.SaveData;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using InertialOuija.Ghosts;
 
 namespace InertialOuija.Utilities;
 
@@ -14,6 +15,14 @@ internal static class ObjectPool
 	public static ObjectPool<BinaryFormatter> UnitySerializers { get; } = new(() =>
 	{
 		var serializer = new BinaryFormatter();
+		SaveHelpers.AddUnitySerialisationSurrogates(serializer);
+		return serializer;
+	});
+
+	public static ObjectPool<BinaryFormatter> WhitelistedSerializers { get; } = new(() =>
+	{
+		var serializer = new BinaryFormatter();
+		serializer.Binder = new GhostSerializationBinder();
 		SaveHelpers.AddUnitySerialisationSurrogates(serializer);
 		return serializer;
 	});
