@@ -7,7 +7,9 @@ using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.Localisation;
 using GameScripts.Assets.Source.Tools;
+using GameScripts.Assets.Source.UI.Menus;
 using InertialOuija.Ghosts;
+using UnityEngine;
 
 namespace InertialOuija;
 
@@ -80,4 +82,21 @@ internal static class GameExtensions
 
 	public static PerformanceClassification GetClass(this Car car)
 		=> CarDetails.Value[car].PerfClass;
+
+	public static void IntegrateInLayout(this RectTransform item, int offset = 0)
+	{
+		var layout = item.GetComponentInParent<SimpleVerticalLayout>();
+		if (!layout)
+			return;
+
+		int index = layout.Children.Length;
+
+		Array.Resize(ref layout.Children, layout.Children.Length + 1);
+		if (layout.LayoutInfo.Length < layout.Children.Length)
+			Array.Resize(ref layout.LayoutInfo, layout.Children.Length);
+
+		layout.Children[index] = item;
+		layout.LayoutInfo[index] ??= new();
+		layout.LayoutInfo[index].Offset = offset;
+	}
 }

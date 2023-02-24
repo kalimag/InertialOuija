@@ -3,5 +3,6 @@
   "GhostPlayback": true,
   "PointToPointGhostStart": true,
   "DownloadDlcGhosts": true,
-  "UnsavedGhostWarning": true
+  "UnsavedGhostWarning": true,
+  "PrecisionModeTimer": true
 }

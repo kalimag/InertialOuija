@@ -18,6 +18,7 @@ internal class PatchConfig
 	[Include] public bool GhostPlayback { get; set; } = true;
 	[Include] public bool DownloadDlcGhosts { get; set; } = true;
 	[Include] public bool UnsavedGhostWarning { get; set; } = true;
+	[Include] public bool PrecisionModeTimer { get; set; } = true;
 
 
 

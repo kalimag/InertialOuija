@@ -66,6 +66,7 @@ internal class Entrypoint
 		harmony.Apply<SerializationWhitelistPatches>(patchConfig.SerializationWhitelist);
 		harmony.Apply<DownloadDlcGhostPatches>(patchConfig.DownloadDlcGhosts);
 		harmony.Apply<UnsavedGhostWarningPatches>(patchConfig.UnsavedGhostWarning);
+		harmony.Apply<PrecisionModeTimerPatches>(patchConfig.PrecisionModeTimer);
 
 #if DEBUG
 		LoggingPatches.Apply(harmony);
