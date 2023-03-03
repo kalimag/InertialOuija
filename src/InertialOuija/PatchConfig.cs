@@ -19,6 +19,7 @@ internal class PatchConfig
 	[Include] public bool DownloadDlcGhosts { get; set; } = true;
 	[Include] public bool UnsavedGhostWarning { get; set; } = true;
 	[Include] public bool PrecisionModeTimer { get; set; } = true;
+	[Include] public bool AllowKeyboardReverseBinding { get; set; } = true;
 
 
 

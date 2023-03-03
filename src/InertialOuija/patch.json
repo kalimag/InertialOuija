@@ -4,5 +4,6 @@
   "PointToPointGhostStart": true,
   "DownloadDlcGhosts": true,
   "UnsavedGhostWarning": true,
-  "PrecisionModeTimer": true
+  "PrecisionModeTimer": true,
+  "AllowKeyboardReverseBinding": true
 }
