@@ -83,20 +83,26 @@ internal static class GameExtensions
 	public static PerformanceClassification GetClass(this Car car)
 		=> CarDetails.Value[car].PerfClass;
 
-	public static void IntegrateInLayout(this RectTransform item, int offset = 0)
+	public static void IntegrateInLayout(this RectTransform item, int? index = null, int offset = 0)
 	{
 		var layout = item.GetComponentInParent<SimpleVerticalLayout>();
 		if (!layout)
 			return;
 
-		int index = layout.Children.Length;
+		int insertIndex = index ?? layout.Children.Length;
 
 		Array.Resize(ref layout.Children, layout.Children.Length + 1);
 		if (layout.LayoutInfo.Length < layout.Children.Length)
 			Array.Resize(ref layout.LayoutInfo, layout.Children.Length);
 
-		layout.Children[index] = item;
-		layout.LayoutInfo[index] ??= new();
-		layout.LayoutInfo[index].Offset = offset;
+		if (index.HasValue)
+		{
+			Array.Copy(layout.Children, insertIndex, layout.Children, insertIndex + 1, layout.Children.Length - insertIndex - 1);
+			Array.Copy(layout.LayoutInfo, insertIndex, layout.LayoutInfo, insertIndex + 1, layout.LayoutInfo.Length - insertIndex - 1);
+		}
+
+		layout.Children[insertIndex] = item;
+		layout.LayoutInfo[insertIndex] ??= new();
+		layout.LayoutInfo[insertIndex].Offset = offset;
 	}
 }

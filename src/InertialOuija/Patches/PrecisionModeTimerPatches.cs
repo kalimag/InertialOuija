@@ -74,7 +74,7 @@ internal class PrecisionModeTimerPatches
 
 				var totalTimeHud = UnityEngine.Object.Instantiate(totalTimeHudPrefab, topRightHudRoot);
 				totalTimeHud.GetComponentInChildren<DisplayTotalTime>().LapTimer = hud.Timer;
-				totalTimeHud.GetComponent<RectTransform>().IntegrateInLayout(15);
+				totalTimeHud.GetComponent<RectTransform>().IntegrateInLayout(offset: 15);
 			}
 			catch (Exception ex)
 			{
