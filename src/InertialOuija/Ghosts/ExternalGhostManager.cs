@@ -230,6 +230,26 @@ internal class ExternalGhostManager
 		return UniqueGhosts.Values.Where(ghost => ghost.Info.Track == track && ghost.Info.Direction == direction && (car == null || ghost.Info.Car == car));
 	}
 
+	public static ExternalGhostInfo GetPersonalBestTime(Track track, TrackDirection direction, Car? car = null)
+	{
+		if (!GameScripts.SteamManager.Initialized)
+			return null;
+
+		string name = CorePlugin.PlatformManager.PrimaryUserName();
+		ulong id = Steamworks.SteamUser.GetSteamID().m_SteamID;
+
+		var ghosts = UniqueGhosts.Values
+			.Where(ghost => (ghost.Info.SteamUserId == id || ghost.Info.Username == name) &&
+			ghost.Info.Track == track && ghost.Info.Direction == direction && (car == null || ghost.Info.Car == car));
+
+		ExternalGhostInfo best = null;
+		foreach (var ghost in ghosts)
+			if (best == null || ghost.Info.Time < best.Time)
+				best = ghost.Info;
+
+		return best;
+	}
+
 	private static (string Directory, string FileName) GetSavePath(ExternalGhostInfo info)
 	{
 		var directory = Path.Combine(
