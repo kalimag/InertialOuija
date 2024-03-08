@@ -7,6 +7,7 @@ using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.GhostCars.GhostPlayback;
 using GameScripts.Assets.Source.Tools;
+using InertialOuija.Components;
 using InertialOuija.Patches;
 using UnityEngine;
 using static InertialOuija.Configuration.ModConfig;
@@ -66,6 +67,8 @@ internal static class GhostController
 	{
 		var nextPalettes = new Dictionary<Car, int>();
 
+		ExternalGhostInfo fastestGhost = null;
+
 		foreach (var ghostFile in ghostFiles)
 		{
 			try
@@ -74,7 +77,9 @@ internal static class GhostController
 				var ghost = await ghostFile.LoadAsync();
 				var carDetails = CorePlugin.CarDatabase.GetCarDetails(ghost.Info.Car);
 
-				CarProperties carProperties;				
+				fastestGhost ??= ghost.Info;
+
+				CarProperties carProperties;
 				if (Config.Ghosts.GhostVisual)
 				{
 					carProperties = GhostPlaybackPatches.SpawnGhost(ghostPlayer, carDetails, ghost.Recording, 2);
@@ -106,6 +111,20 @@ internal static class GhostController
 			catch (Exception ex)
 			{
 				Log.Error($"Could not load ghost from \"{ghostFile.Path}\"", ex);
+			}
+		}
+
+		if (Config.UI.ShowGhostTime && RivalTimeHud.FastestGhostHud)
+		{
+			Log.Debug("FastestGhostHud found");
+			if (fastestGhost is not null)
+			{
+				RivalTimeHud.FastestGhostHud.SetText("ghost", fastestGhost.Username, fastestGhost.Time);
+				RivalTimeHud.FastestGhostHud.SetActive(true);
+			}
+			else
+			{
+				RivalTimeHud.FastestGhostHud.SetActive(false);
 			}
 		}
 	}

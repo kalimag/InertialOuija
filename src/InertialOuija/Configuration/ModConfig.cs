@@ -15,7 +15,8 @@ internal class ModConfig
 
 
 
-    [Include] public GhostConfig Ghosts { get; private set; } = new GhostConfig();
+    [Include] public GhostConfig Ghosts { get; private set; } = new();
+    [Include] public UIConfig UI { get; private set; } = new();
 
 
 

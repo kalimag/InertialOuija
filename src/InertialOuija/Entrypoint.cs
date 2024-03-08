@@ -68,6 +68,7 @@ internal class Entrypoint
 		harmony.Apply<UnsavedGhostWarningPatches>(patchConfig.UnsavedGhostWarning);
 		harmony.Apply<PrecisionModeTimerPatches>(patchConfig.PrecisionModeTimer);
 		harmony.Apply<AllowKeyboardReverseBindingPatches>(patchConfig.AllowKeyboardReverseBinding);
+		harmony.Apply<TimeAttackHudPatches>(patchConfig.TimeAttackHud);
 
 #if DEBUG
 		LoggingPatches.Apply(harmony);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using GameScripts.Assets.Source.UI;
+using InertialOuija.Components;
 using UnityEngine;
 
 namespace InertialOuija;
@@ -17,4 +18,12 @@ internal class GameAssets
 		LazyThreadSafetyMode.PublicationOnly);
 
 	public static HudPrefabInfo GetHudPrefabInfo(string name) => HudPrefabInfos.Value[name];
+
+	public static RivalTimeHud CreateRivalTimeHud(Transform parent, int? layoutIndex)
+	{
+		var prefab = GetHudPrefabInfo("TimeAttackHud").RivalRoot.gameObject;
+		var instance = UnityEngine.Object.Instantiate(prefab, parent);
+		instance.GetComponent<RectTransform>().IntegrateInLayout(layoutIndex);
+		return instance.AddComponent<RivalTimeHud>();
+	}
 }

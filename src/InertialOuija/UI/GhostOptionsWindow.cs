@@ -37,6 +37,12 @@ namespace InertialOuija.UI
 
 			GUILayout.Space(10);
 
+			Config.UI.ShowGhostTime = GUILayout.Toggle(Config.UI.ShowGhostTime, "Show ghost time in hud");
+			Config.UI.ShowPersonalBestTime = GUILayout.Toggle(Config.UI.ShowPersonalBestTime, TempContent("Show personal best in hud", "Based on saved ghosts"));
+			Config.UI.HideAchievedTargetTimes = GUILayout.Toggle(Config.UI.HideAchievedTargetTimes, "Hide medals time in hud");
+
+			GUILayout.Space(10);
+
 			if (GUILayout.Button("Open Ghost Folder"))
 				OpenGhostFolder();
 
