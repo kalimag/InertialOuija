@@ -2,6 +2,7 @@
 
 using System;
 using GameScripts.Assets.Source.Enums;
+using GameScripts.Assets.Source.Gameplay.GameModes;
 using UnityEngine;
 
 namespace InertialOuija.Ghosts;
@@ -40,6 +41,15 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 
 
 	public TimeSpan Time => TimeSpan.FromSeconds(TimeInSeconds);
+
+	public GhostType? Type => GameMode switch
+	{
+		nameof(TimeAttack) or nameof(RaceMode) or nameof(FreeDriveMode) or nameof(GhostBattleMode) or nameof(DuelMode) => GhostType.Timed,
+		nameof(EnduranceMode) => GhostType.Distance,
+		nameof(StyleMode) => GhostType.Style,
+		nameof(PrecisionStyleMode) => GhostType.Precision,
+		_ => null,
+	};
 
 
 	internal ExternalGhostInfo(int externalGhostVersion)
