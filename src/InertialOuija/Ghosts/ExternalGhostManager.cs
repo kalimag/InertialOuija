@@ -255,6 +255,7 @@ internal class ExternalGhostManager
 	{
 		var directory = Path.Combine(
 			GhostsPath,
+			info.Type is not null and not GhostType.Timed ? info.Type.ToString() : "",
 			FileUtility.Sanitize(info.Track.GetName(info.Direction, true)),
 			FileUtility.Sanitize(info.Car.GetName())
 		);
