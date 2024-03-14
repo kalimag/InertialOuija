@@ -33,6 +33,7 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 	/// <remarks>Only set for uploaded ghosts</remarks>
 	public GhostLeaderboardType LeaderboardType;
 	public bool StoryMode;
+	public int? PlayerIndex;
 
 	public DateTimeOffset? Date;
 

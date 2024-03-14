@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.CloudStorage;
+using GameScripts.Assets.Source.Gameplay;
+using GameScripts.Assets.Source.GhostCars;
 using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
+using GameScripts.Assets.Source.Tools;
 using HarmonyLib;
 using InertialOuija.Ghosts;
 
@@ -17,17 +20,16 @@ namespace InertialOuija.Patches;
 internal class SaveGhostPatches
 {
 
-	[HarmonyPrefix, HarmonyPatch(typeof(PlayerGhostDatabase), nameof(PlayerGhostDatabase.AddGhostRecording))]
-	static void PlayerGhostDatabase_AddGhostRecording(GhostKey ghostKey, GhostLap lap, Dictionary<GhostKey, GhostRecord> ____fastestLaps)
+	[HarmonyPostfix, HarmonyPatch(typeof(GhostRecorder), "SaveLap")]
+	static void GhostRecorder_SaveLap(GhostLap lap, CarProperties ___CarProperties)
 	{
 		try
 		{
 			bool isValid = lap.Sectors != null && lap.Sectors.Any() && lap.LapTime >= 10f && lap.Sectors[0].HasNodes(5);
-			bool isFastest = ____fastestLaps?.TryGetValue(ghostKey, out var fastestLap) != true || lap.LapTime <= fastestLap.Time;
 			if (isValid)
-				ExternalGhostManager.AddPlayerGhost(ghostKey, lap, isFastest);
+				ExternalGhostManager.AddPlayerGhost(TrackInfo.CurrentTrack(), CorePlugin.GameModeManager.TrackDirection, ___CarProperties.CarVisualProperties.Car, lap, ___CarProperties.CarVisualProperties.CarId);
 			else
-				Log.Info($"AddGhostRecording called for invalid ghost ({ghostKey}, AnySectors={lap.Sectors?.Any()}, LapTime{lap.LapTime}, Sector0Nodes={lap.Sectors?.FirstOrDefault()?.MainZone?.Count})");
+				Log.Info($"Tried to save invalid ghost (AnySectors={lap.Sectors?.Any()}, LapTime{lap.LapTime}, Sector0Nodes={lap.Sectors?.FirstOrDefault()?.MainZone?.Count})");
 		}
 		catch (Exception ex)
 		{

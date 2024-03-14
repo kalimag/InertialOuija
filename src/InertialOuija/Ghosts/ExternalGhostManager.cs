@@ -42,15 +42,15 @@ internal class ExternalGhostManager
 
 
 
-	public static void AddPlayerGhost(GhostKey ghostKey, GhostLap lap, bool isFastest)
+	public static void AddPlayerGhost(Track track, TrackDirection direction, Car car, GhostLap lap, int? playerIndex)
 	{
-		Log.Info($"{nameof(AddPlayerGhost)}({ghostKey}, {lap.GetTotalTime()}, isFastest={isFastest})", nameof(ExternalGhostManager));
+		Log.Info($"{nameof(AddPlayerGhost)}({track}, {direction}, {car}, {lap.GetTotalTime()})", nameof(ExternalGhostManager));
 
 		var info = new ExternalGhostInfo
 		{
-			Track = ghostKey.Track,
-			Direction = ghostKey.Direction,
-			Car = ghostKey.Car,
+			Track = track,
+			Direction = direction,
+			Car = car,
 			TimeInSeconds = lap.GetTotalTime(),
 			Source = GhostSource.Player,
 			EventType = CorePlugin.GameModeManager.CurrentEventDetails?.EventTitle.GetInvariantString(),
@@ -60,6 +60,7 @@ internal class ExternalGhostManager
 			RecordingId = lap.RecordingId,
 			Username = CorePlugin.PlatformManager.PrimaryUserName(),
 			SteamUserId = GameScripts.SteamManager.Initialized ? Steamworks.SteamUser.GetSteamID().m_SteamID : null,
+			PlayerIndex = CorePlugin.GameModeManager.ActivePlayers > 1 || playerIndex > 0 ? playerIndex : null,
 			Date = DateTimeOffset.UtcNow,
 		};
 
@@ -259,6 +260,9 @@ internal class ExternalGhostManager
 		);
 
 		var fileName = $"{info.Time.ToString(GhostTimeFormat, CultureInfo.InvariantCulture)} {FileUtility.Sanitize(info.Username)}";
+
+		if (info.PlayerIndex != null && info.GameMode != nameof(OnlineRaceMode))
+			fileName += $" [{info.PlayerIndex + 1}]";
 
 		var additional = new List<string>(0);
 		if (!string.IsNullOrEmpty(info.EventType))
