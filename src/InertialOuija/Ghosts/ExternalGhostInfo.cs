@@ -20,6 +20,9 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 	public Car Car;
 
 	public float TimeInSeconds;
+	//public float? Distance;
+	public float? StyleScore;
+	public int? PrecisionScore;
 
 	public GhostSource Source;
 	public string EventType;

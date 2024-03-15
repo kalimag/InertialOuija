@@ -6,13 +6,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.CloudStorage;
-using GameScripts.Assets.Source.Gameplay;
 using GameScripts.Assets.Source.GhostCars;
 using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
-using GameScripts.Assets.Source.Tools;
+using GameScripts.Assets.Source.UI;
 using HarmonyLib;
+using InertialOuija.Components;
 using InertialOuija.Ghosts;
+using UnityEngine;
 
 namespace InertialOuija.Patches;
 
@@ -27,13 +28,30 @@ internal class SaveGhostPatches
 		{
 			bool isValid = lap.Sectors != null && lap.Sectors.Any() && lap.LapTime >= 10f && lap.Sectors[0].HasNodes(5);
 			if (isValid)
-				ExternalGhostManager.AddPlayerGhost(TrackInfo.CurrentTrack(), CorePlugin.GameModeManager.TrackDirection, ___CarProperties.CarVisualProperties.Car, lap, ___CarProperties.CarVisualProperties.CarId);
+				ExternalGhostManager.AddPlayerGhost(lap, ___CarProperties);
 			else
 				Log.Info($"Tried to save invalid ghost (AnySectors={lap.Sectors?.Any()}, LapTime{lap.LapTime}, Sector0Nodes={lap.Sectors?.FirstOrDefault()?.MainZone?.Count})");
 		}
 		catch (Exception ex)
 		{
 			Log.Error("Failed to save player ghost", ex);
+		}
+	}
+
+	[HarmonyPostfix, HarmonyPatch(typeof(HudPrefabInfo), nameof(HudPrefabInfo.SetTargetRacer))]
+	static void HudPrefabInfo_SetTargetRacer(HudPrefabInfo __instance, GameObject racer)
+	{
+		try
+		{
+			if (__instance.StyleCounter)
+			{
+				var styleCounterRef = racer.AddComponent<StyleCounterRef>();
+				styleCounterRef.StyleCounter = __instance.StyleCounter;
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.Error(ex);
 		}
 	}
 

@@ -7,12 +7,17 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.CloudStorage;
 using GameScripts.Assets.Source.Enums;
+using GameScripts.Assets.Source.Gameplay;
 using GameScripts.Assets.Source.Gameplay.GameModes;
+using GameScripts.Assets.Source.Gameplay.Scoring;
+using GameScripts.Assets.Source.Gameplay.Timing;
 using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
 using GameScripts.Assets.Source.Tools;
+using InertialOuija.Components;
 using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.Ghosts;
@@ -42,16 +47,19 @@ internal class ExternalGhostManager
 
 
 
-	public static void AddPlayerGhost(Track track, TrackDirection direction, Car car, GhostLap lap, int? playerIndex)
+	public static void AddPlayerGhost(GhostLap lap, CarProperties carProperties)
 	{
-		Log.Info($"{nameof(AddPlayerGhost)}({track}, {direction}, {car}, {lap.GetTotalTime()})", nameof(ExternalGhostManager));
+		Log.Info($"{nameof(AddPlayerGhost)}()", nameof(ExternalGhostManager));
 
 		var info = new ExternalGhostInfo
 		{
-			Track = track,
-			Direction = direction,
-			Car = car,
+			Track = TrackInfo.CurrentTrack(),
+			Direction = CorePlugin.GameModeManager.TrackDirection,
+			Car = carProperties.CarVisualProperties.Car,
 			TimeInSeconds = lap.GetTotalTime(),
+			//Distance = carProperties.GetComponentInChildren<DistanceTracker>()?.DistanceTravelled,
+			StyleScore = carProperties.GetComponentInChildren<DriftScoreTracker>()?.TotalScore,
+			PrecisionScore = carProperties.GetComponent<StyleCounterRef>()?.StyleCounter.Points,
 			Source = GhostSource.Player,
 			EventType = CorePlugin.GameModeManager.CurrentEventDetails?.EventTitle.GetInvariantString(),
 			GameMode = CorePlugin.GameModeManager.GameModePrefab?.GetComponent<IGameMode>()?.GetType().Name,
@@ -60,7 +68,7 @@ internal class ExternalGhostManager
 			RecordingId = lap.RecordingId,
 			Username = CorePlugin.PlatformManager.PrimaryUserName(),
 			SteamUserId = GameScripts.SteamManager.Initialized ? Steamworks.SteamUser.GetSteamID().m_SteamID : null,
-			PlayerIndex = CorePlugin.GameModeManager.ActivePlayers > 1 || playerIndex > 0 ? playerIndex : null,
+			PlayerIndex = CorePlugin.GameModeManager.ActivePlayers > 1 || carProperties.CarVisualProperties.CarId > 0 ? carProperties.CarVisualProperties.CarId : null,
 			Date = DateTimeOffset.UtcNow,
 		};
 
@@ -255,12 +263,19 @@ internal class ExternalGhostManager
 	{
 		var directory = Path.Combine(
 			GhostsPath,
-			info.Type is not null and not GhostType.Timed ? info.Type.ToString() : "",
+			info.Type is GhostType.Precision or GhostType.Style ? info.Type.ToString() : "",
 			FileUtility.Sanitize(info.Track.GetName(info.Direction, true)),
 			FileUtility.Sanitize(info.Car.GetName())
 		);
 
-		var fileName = $"{info.Time.ToString(GhostTimeFormat, CultureInfo.InvariantCulture)} {FileUtility.Sanitize(info.Username)}";
+		string fileName = "";
+
+		if (info.GameMode == nameof(StyleMode) && info.StyleScore != null)
+			fileName = $"{(int)info.StyleScore} ";
+		else if (info.GameMode == nameof(PrecisionStyleMode) && info.PrecisionScore != null)
+			fileName = $"{info.PrecisionScore} ";
+
+		fileName += $"{info.Time.ToString(GhostTimeFormat, CultureInfo.InvariantCulture)} {FileUtility.Sanitize(info.Username)}";
 
 		if (info.PlayerIndex != null && info.GameMode != nameof(OnlineRaceMode))
 			fileName += $" [{info.PlayerIndex + 1}]";
