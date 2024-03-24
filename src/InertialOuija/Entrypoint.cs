@@ -69,6 +69,7 @@ internal class Entrypoint
 		harmony.Apply<PrecisionModeTimerPatches>(patchConfig.PrecisionModeTimer);
 		harmony.Apply<AllowKeyboardReverseBindingPatches>(patchConfig.AllowKeyboardReverseBinding);
 		harmony.Apply<TimeAttackHudPatches>(patchConfig.TimeAttackHud);
+		harmony.Apply<EnableReplayPatches>(patchConfig.EnableReplay);
 
 #if DEBUG
 		LoggingPatches.Apply(harmony);

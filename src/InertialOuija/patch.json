@@ -6,5 +6,6 @@
   "UnsavedGhostWarning": true,
   "PrecisionModeTimer": true,
   "TimeAttackHud": true,
-  "AllowKeyboardReverseBinding": true
+  "AllowKeyboardReverseBinding": true,
+  "EnableReplay": true
 }
