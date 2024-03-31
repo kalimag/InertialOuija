@@ -7,5 +7,6 @@
   "PrecisionModeTimer": true,
   "TimeAttackHud": true,
   "AllowKeyboardReverseBinding": true,
+  "DisableReplayRecording": true,
   "EnableReplay": false
 }
