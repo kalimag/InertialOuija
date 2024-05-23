@@ -56,7 +56,7 @@ internal static class GameExtensions
 	}
 
 
-	private static Lazy<Dictionary<Car, (string Name, PerformanceClassification PerfClass)>> CarDetails = new(() => {
+	private static readonly Lazy<Dictionary<Car, (string Name, PerformanceClassification PerfClass)>> CarDetails = new(() => {
 		return ((Car[])Enum.GetValues(typeof(Car)))
 			.Select(CorePlugin.CarDatabase.GetCarDetails)
 			.Where(details => details != null)
