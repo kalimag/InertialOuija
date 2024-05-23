@@ -56,15 +56,15 @@ internal class GhostPlaybackPatches
 	[HarmonyPrefix, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.CloudGhost))]
 	static bool SpawnHelpers_CloudGhost()
 	{
-		Log.Debug($"Prevent ghost spawn: {Config.Ghosts.Mode != ExternalGhostMode.None}");
-		return Config.Ghosts.Mode == ExternalGhostMode.None;
+		Log.Debug($"Prevent ghost spawn: {Config.Ghosts.Mode != ExternalGhostMode.Default}");
+		return Config.Ghosts.Mode == ExternalGhostMode.Default;
 	}
 
 	[HarmonyPrefix, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.PlayerGhost))]
 	static bool SpawnHelpers_PlayerGhost()
 	{
-		Log.Debug($"Prevent ghost spawn: {Config.Ghosts.Mode != ExternalGhostMode.None}");
-		return Config.Ghosts.Mode == ExternalGhostMode.None;
+		Log.Debug($"Prevent ghost spawn: {Config.Ghosts.Mode != ExternalGhostMode.Default}");
+		return Config.Ghosts.Mode == ExternalGhostMode.Default;
 	}
 
 	[HarmonyReversePatch, HarmonyPatch(typeof(SpawnHelpers), nameof(SpawnHelpers.CloudGhost))]

@@ -2,6 +2,7 @@
 
 internal enum ExternalGhostMode
 {
+	Default,
+	Best,
 	None,
-	Fastest
 }

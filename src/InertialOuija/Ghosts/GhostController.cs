@@ -21,7 +21,7 @@ internal static class GhostController
 	{
 		Log.Debug(nameof(SpawnExternalGhosts), nameof(GhostController));
 
-		if (Config.Ghosts.Mode == ExternalGhostMode.None || Config.Ghosts.Count < 1)
+		if (Config.Ghosts.Mode is ExternalGhostMode.Default or ExternalGhostMode.None || Config.Ghosts.Count < 1)
 			return;
 
 		var ghostFiles = GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,

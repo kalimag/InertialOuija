@@ -20,10 +20,11 @@ namespace InertialOuija.UI
 		private static Rect _windowPosition;
 
 
-		private static readonly string[] ModeLabels =
+		private static readonly GUIContent[] ModeLabels =
 		{
-			"None",
-			"Fastest"
+			new("Default", "Unmodded behavior"),
+			new("Best"),
+			new("None"),
 		};
 
 		private static readonly string[] CarFilterLabels =
@@ -52,12 +53,12 @@ namespace InertialOuija.UI
 			GUILayout.BeginVertical();
 
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("External Ghosts:", Styles.Width100);
+			GUILayout.Label("Ghosts:", Styles.Width100);
 			Config.Ghosts.Mode = (ExternalGhostMode)GUILayout.Toolbar((int)Config.Ghosts.Mode, ModeLabels);
 			GUILayout.EndHorizontal();
 
 
-			GUI.enabled = Config.Ghosts.Mode != ExternalGhostMode.None;
+			GUI.enabled = Config.Ghosts.Mode is not ExternalGhostMode.Default and not ExternalGhostMode.None;
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Ghost count:", Styles.Width100);
@@ -74,7 +75,7 @@ namespace InertialOuija.UI
 			GUI.enabled &= Config.Ghosts.CarFilter != CarFilter.SameCar;
 			Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
 
-			GUI.enabled = Config.Ghosts.Mode != ExternalGhostMode.None;
+			GUI.enabled = Config.Ghosts.Mode is not ExternalGhostMode.Default and not ExternalGhostMode.None;
 			Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
 
 
