@@ -4,5 +4,6 @@ internal enum ExternalGhostMode
 {
 	Default,
 	Best,
+	NextBest,
 	None,
 }

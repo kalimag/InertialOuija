@@ -54,11 +54,20 @@ internal static class GhostController
 		ghostFiles = ghostFiles.OrderBy(ghost => ghost.Info.Time)
 			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard);
 
-		if (Config.Ghosts.UniqueCars && Config.Ghosts.CarFilter != CarFilter.SameCar)
+		if (Config.Ghosts.UniqueCars && Config.Ghosts.CarFilter != CarFilter.SameCar && Config.Ghosts.Mode != ExternalGhostMode.NextBest)
 			ghostFiles = ghostFiles.Distinct(GhostCarComparer.Instance);
 
-		ghostFiles = ghostFiles.Distinct(RelaxedGhostComparer.Instance)
-			.Take(Config.Ghosts.Count);
+		ghostFiles = ghostFiles.Distinct(RelaxedGhostComparer.Instance);
+
+		if (Config.Ghosts.Mode == ExternalGhostMode.NextBest && ExternalGhostManager.GetPersonalBestTime(track, direction, car) is ExternalGhostInfo pb)
+		{
+			var ghostList = ghostFiles.ToList();
+			int equalTimeIndex = ghostList.FindIndex(ghost => ghost.Info.Time >= pb.Time);
+			int nBestIndex = Math.Max(equalTimeIndex - Config.Ghosts.Count, 0);
+			ghostFiles = ghostList.Skip(nBestIndex);
+		}
+
+		ghostFiles = ghostFiles.Take(Config.Ghosts.Count);
 
 		return ghostFiles;
 	}

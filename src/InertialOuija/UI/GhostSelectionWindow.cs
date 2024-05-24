@@ -24,6 +24,7 @@ namespace InertialOuija.UI
 		{
 			new("Default", "Unmodded behavior"),
 			new("Best"),
+			new("Rival", "Closest ghosts to personal best"),
 			new("None"),
 		};
 
@@ -72,10 +73,10 @@ namespace InertialOuija.UI
 			Config.Ghosts.CarFilter = (CarFilter)GUILayout.Toolbar((int)Config.Ghosts.CarFilter, CarFilterLabels);
 			GUILayout.EndHorizontal();
 
-			GUI.enabled &= Config.Ghosts.CarFilter != CarFilter.SameCar;
+			GUI.enabled &= Config.Ghosts.CarFilter != CarFilter.SameCar && Config.Ghosts.Mode != ExternalGhostMode.NextBest;
 			Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
 
-			GUI.enabled = Config.Ghosts.Mode is not ExternalGhostMode.Default and not ExternalGhostMode.None;
+			GUI.enabled = Config.Ghosts.Mode is not ExternalGhostMode.Default and not ExternalGhostMode.None and not ExternalGhostMode.NextBest;
 			Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
 
 
