@@ -16,12 +16,23 @@ internal class Entrypoint
 	public static void Start()
 	{
 		SceneManager.sceneLoaded += OnSceneLoaded;
+
+		static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			SceneManager.sceneLoaded -= OnSceneLoaded;
+			try
+			{
+				Initialize();
+			}
+			catch (System.Exception ex)
+			{
+				Log.Error("InertialOuija initialization failed.", ex);
+			}
+		}
 	}
 
-	private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	private static void Initialize()
 	{
-		SceneManager.sceneLoaded -= OnSceneLoaded;
-
 #if DEBUG
 		var build = "Debug";
 #else
