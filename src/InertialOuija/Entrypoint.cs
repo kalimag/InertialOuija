@@ -61,7 +61,7 @@ internal class Entrypoint
 
 		MainController.Initialize();
 
-		new Thread(() => ApplyPatches(patchConfig)) { IsBackground = true }.Start();
+		new Thread(() => ApplyPatches(patchConfig)) { IsBackground = true, Name = "Patch Thread" }.Start();
 	}
 
 	private static void ApplyPatches(PatchConfig patchConfig)
