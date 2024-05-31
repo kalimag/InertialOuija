@@ -28,6 +28,7 @@
 		<Reference Include="Assembly-CSharp" Aliases="GameScripts" />
 		<Reference Include="Assembly-CSharp-firstpass" />
 		<Reference Include="UnityEngine" />
+		<Reference Include="UnityEngine.AnimationModule" />
 		<Reference Include="UnityEngine.CoreModule" />
 		<Reference Include="UnityEngine.CrashReportingModule" />
 		<Reference Include="UnityEngine.InputLegacyModule" />
