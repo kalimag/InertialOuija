@@ -80,9 +80,13 @@
 	</Target>
 
 	<Target Name="GetGitCommit" BeforeTargets="InitializeSourceControlInformation">
-		<Exec Command="git describe --always --dirty" ConsoleToMSBuild="True" IgnoreExitCode="False">
+		<Exec Command="git describe --always --dirty" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">
 			<Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput" />
+			<Output PropertyName="GitExitCode" TaskParameter="ExitCode" />
 		</Exec>
+		<PropertyGroup Condition="$(GitExitCode)!=0">
+			<SourceRevisionId>unknown</SourceRevisionId>
+		</PropertyGroup>
 	</Target>
 
 </Project>
