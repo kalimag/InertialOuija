@@ -5,11 +5,16 @@ using GameScripts.Assets.Source.GhostCars;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
 using GameScripts.Assets.Source.GhostCars.GhostPlayback;
 using GameScripts.Assets.Source.Messaging.Messages;
-using GameScripts.Assets.Source.Tools;
 using HarmonyLib;
 
 namespace InertialOuija.Patches;
 
+/// <remarks>
+/// The <see cref="IGhostRecording.IsEventStartLap"/> (<see cref="GhostSector.EventStartSector"/>) flag is lost during leaderboard compression.
+/// This results in ghost playback starting when the player crosses the starting line, even though a ghost recording may contain the acceleration from
+/// standstill, leading to a permanent delay in playback, obvious in point-to-point races.
+/// This technically affects circuit race ghosts without rolling starts as well, but their status is ambiguous and those ghosts are not competitive anyway.
+/// </remarks>
 [HarmonyPatch]
 internal class PointToPointGhostStartPatches
 {
@@ -19,8 +24,6 @@ internal class PointToPointGhostStartPatches
 	{
 		try
 		{
-			Log.Debug($"IsEventStartLap={____recording?.IsEventStartLap()} ShouldRollingStart={CorePlugin.GameModeManager.ShouldRollingStart()} Circuit={TrackInfo.CurrentTrackInfo().IsCircuit}");
-
 			if (StartFixNeeded(____recording))
 			{
 				Log.Debug($"Forcing ghost playback");
