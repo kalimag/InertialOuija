@@ -228,7 +228,7 @@ internal class ExternalGhostManager
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Failed to load ghost info from \"{file}\"", ex);
+				Log.Error($"Failed to load ghost info from \"{file}\"", ex, true);
 			}
 		}
 		Log.Info($"Found {GhostFiles.Count} valid ghost files ({files.Length} {GhostsExtension} files)");

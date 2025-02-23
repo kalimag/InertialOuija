@@ -56,7 +56,7 @@ internal abstract class Window : MonoBehaviour
 	protected virtual void OnDestroy()
 	{ }
 
-	protected void OnGUI()
+	protected virtual void OnGUI()
 	{
 		Styles.Scale();
 

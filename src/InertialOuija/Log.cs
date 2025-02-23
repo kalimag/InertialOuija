@@ -18,21 +18,27 @@ internal static class Log
 	public static void Warning(string message)
 	{
 		UnityEngine.Debug.LogWarning($"[InertialOuija] {message}");
+		UI.ErrorWindow.ShowError(message, "Warning");
 	}
 
 	public static void Warning(string message, string source)
 	{
 		UnityEngine.Debug.LogWarning($"[InertialOuija {source}] {message}");
+		UI.ErrorWindow.ShowError($"{source}: {message}", "Warning");
 	}
 
-	public static void Error(string message, Exception ex)
+	public static void Error(string message, Exception ex, bool hidden = false)
 	{
 		UnityEngine.Debug.LogError($"[InertialOuija] {message}\n\n{ex}");
+		if (!hidden)
+			UI.ErrorWindow.ShowError($"{message}\n\n{ex}");
 	}
 
-	public static void Error(Exception ex)
+	public static void Error(Exception ex, bool hidden = false)
 	{
 		UnityEngine.Debug.LogError($"[InertialOuija] {ex}");
+		if (!hidden)
+			UI.ErrorWindow.ShowError(ex.ToString());
 	}
 
 	[Conditional("DEBUG")]
