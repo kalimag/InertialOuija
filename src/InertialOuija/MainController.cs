@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using InertialOuija.Ghosts;
 using InertialOuija.UI;
@@ -10,13 +12,15 @@ internal static class MainController
 {
 	private static GameObject _rootObject;
 	private static CoroutineComponent _coroutineComponent;
-
+	private static SynchronizationContext _synchronizationContext;
 
 
 	public static void Initialize()
 	{
 		if (_rootObject)
 			return;
+
+		_synchronizationContext = SynchronizationContext.Current;
 
 		Log.Debug("Initialize", nameof(MainController));
 
@@ -39,6 +43,32 @@ internal static class MainController
 		if (!_coroutineComponent)
 			_coroutineComponent = AddGlobalComponent<CoroutineComponent>();
 		return _coroutineComponent.StartCoroutine(routine);
+	}
+
+	public static bool TrySendMainThread(Action action)
+	{
+		if (_synchronizationContext != null)
+		{
+			_synchronizationContext.Send(static state => ((Action)state)(), action);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static bool TryPostMainThread(Action action)
+	{
+		if (_synchronizationContext != null)
+		{
+			_synchronizationContext.Post(static state => ((Action)state)(), action);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	private class CoroutineComponent : MonoBehaviour
