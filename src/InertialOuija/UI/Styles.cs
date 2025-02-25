@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.UI;
 
@@ -8,7 +9,7 @@ internal partial class Styles
 
 	public static void Scale(float x, float y)
 	{
-		float scale = Screen.dpi / BaseDPI;
+		float scale = Screen.dpi / BaseDPI * Config.UI.ModScale;
 		GUI.matrix = Matrix4x4.identity;
 		GUIUtility.ScaleAroundPivot(new Vector2(scale, scale), new Vector2(x, y));
 	}
