@@ -13,6 +13,8 @@ internal class VersionLabelComponent : MonoBehaviour
 
 	void Awake()
 	{
+		useGUILayout = false;
+
 		var version = typeof(Entrypoint).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 		_label = $"InertialOuija {version}";
 
