@@ -24,12 +24,27 @@ internal static class MainController
 
 		Log.Debug("Initialize", nameof(MainController));
 
-		_rootObject = new GameObject("InertialOuija") { hideFlags = HideFlags.HideAndDontSave };
+		_rootObject = CreatePersistentObject("InertialOuija");
 
 		AddGlobalComponent<HotkeyComponent>();
 		AddGlobalComponent<VersionLabelComponent>();
 
 		Task.Run(() => ExternalGhostManager.RefreshDatabase()).LogFailure();
+	}
+
+	public static GameObject CreatePersistentObject(string name)
+	{
+		var obj = new GameObject(name) { hideFlags = HideFlags.HideAndDontSave };
+		if (_rootObject)
+			obj.transform.SetParent(_rootObject.transform);
+		return obj;
+	}
+
+	public static T CreatePersistentObject<T>(string name)
+		where T : Component
+	{
+		var obj = CreatePersistentObject(name);
+		return obj.AddComponent<T>();
 	}
 
 	public static T AddGlobalComponent<T>() where T : Component
