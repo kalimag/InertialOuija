@@ -29,7 +29,7 @@ internal static class MainController
 		AddGlobalComponent<HotkeyComponent>();
 		AddGlobalComponent<VersionLabelComponent>();
 
-		Task.Run(() => ExternalGhostManager.RefreshDatabase()).LogFailure();
+		ExternalGhostManager.RefreshDatabaseAsync().LogFailure();
 	}
 
 	public static GameObject CreatePersistentObject(string name)

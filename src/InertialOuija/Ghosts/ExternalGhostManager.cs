@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.CloudStorage;
@@ -13,11 +14,11 @@ using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.Gameplay;
 using GameScripts.Assets.Source.Gameplay.GameModes;
 using GameScripts.Assets.Source.Gameplay.Scoring;
-using GameScripts.Assets.Source.Gameplay.Timing;
 using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
 using GameScripts.Assets.Source.Tools;
 using InertialOuija.Components;
+using InertialOuija.UI;
 using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.Ghosts;
@@ -29,6 +30,8 @@ internal class ExternalGhostManager
 
 	private static readonly ConcurrentDictionary<string, ExternalGhostFile> GhostFiles = new(1, 0);
 	private static readonly ConcurrentDictionary<ExternalGhostInfo, ExternalGhostFile> UniqueGhosts = new(1, 0);
+
+	private static CancellationTokenSource _refreshCancellation;
 
 
 
@@ -114,7 +117,7 @@ internal class ExternalGhostManager
 
 	public static void ExportPlayerDatabase()
 	{
-		RefreshDatabase();
+		RefreshDatabaseInternal(CancellationToken.None);
 
 		Log.Info("Export player database...");
 
@@ -193,9 +196,31 @@ internal class ExternalGhostManager
 			Log.Debug($"Duplicate ghosts: \"{path}\"");
 	}
 
-	public static void RefreshDatabase()
+	public static async Task RefreshDatabaseAsync()
 	{
-		Log.Debug(nameof(RefreshDatabase), nameof(ExternalGhostManager));
+		_refreshCancellation?.Cancel();
+
+		var progress = MainController.CreatePersistentObject<RefreshProgressDisplay>("RefreshProgress");
+
+		var cancellation = _refreshCancellation = new CancellationTokenSource();
+		try
+		{
+			await Task.Run(() => RefreshDatabaseInternal(cancellation.Token, progress), _refreshCancellation.Token);
+			Interlocked.CompareExchange(ref _refreshCancellation, null, cancellation);
+		}
+		catch (OperationCanceledException)
+		{
+			Log.Info("Refresh canceled", nameof(ExternalGhostManager));
+		}
+		finally
+		{
+			UnityEngine.Object.Destroy(progress.gameObject);
+		}
+	}
+
+	private static void RefreshDatabaseInternal(CancellationToken cancellationToken = default, IProgress<float> progress = null)
+	{
+		Log.Debug(nameof(RefreshDatabaseInternal), nameof(ExternalGhostManager));
 
 		GhostFiles.Clear();
 		UniqueGhosts.Clear();
@@ -211,8 +236,10 @@ internal class ExternalGhostManager
 			return;
 		}
 
+		int count = 0;
 		foreach (var file in files)
 		{
+			cancellationToken.ThrowIfCancellationRequested();
 			ExternalGhostInfo info;
 			try
 			{
@@ -230,6 +257,7 @@ internal class ExternalGhostManager
 			{
 				Log.Error($"Failed to load ghost info from \"{file}\"", ex, true);
 			}
+			progress?.Report(++count / (float)files.Length);
 		}
 		Log.Info($"Found {GhostFiles.Count} valid ghost files ({files.Length} {GhostsExtension} files)");
 	}

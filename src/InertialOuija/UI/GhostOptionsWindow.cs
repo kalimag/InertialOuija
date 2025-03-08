@@ -47,7 +47,7 @@ namespace InertialOuija.UI
 				OpenGhostFolder();
 
 			if (GUILayout.Button(TempContent("Refresh External Ghosts","Use if you added or removed files while the game is running")))
-				ExternalGhostManager.RefreshDatabase();
+				ExternalGhostManager.RefreshDatabaseAsync().LogFailure();
 
 			GUILayout.Space(10);
 
