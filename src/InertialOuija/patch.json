@@ -6,6 +6,7 @@
   "UnsavedGhostWarning": true,
   "PrecisionModeTimer": true,
   "TimeAttackHud": true,
+  "ReplaceLeaderboardTitle": true,
   "AllowKeyboardReverseBinding": true,
   "FixSplitscreenCarSelection": true,
   "FixSplitscreenStyleCounter": true,
