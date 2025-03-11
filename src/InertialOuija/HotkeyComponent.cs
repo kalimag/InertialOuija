@@ -40,6 +40,7 @@ internal class HotkeyComponent : MonoBehaviour
 		_unityExplorerLoaded = true;
 		try
 		{
+			UIController.IncrementCursorUsers();
 			Assembly.Load("UnityExplorer.STANDALONE.Mono")
 				?.GetType("UnityExplorer.ExplorerStandalone")
 				?.GetMethod("CreateInstance", new Type[] { })
