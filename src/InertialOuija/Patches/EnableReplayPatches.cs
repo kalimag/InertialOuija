@@ -5,6 +5,7 @@ using System.Linq;
 using GameScripts.Assets.Source.CameraScripts;
 using GameScripts.Assets.Source.Gameplay;
 using GameScripts.Assets.Source.Gameplay.Timing;
+using GameScripts.Assets.Source.Messaging;
 using GameScripts.Assets.Source.Messaging.Messages;
 using GameScripts.Assets.Source.Tools;
 using HarmonyLib;
@@ -57,6 +58,37 @@ internal class EnableReplayPatches
 		catch (Exception ex)
 		{
 			Log.Error(ex);
+		}
+	}
+
+	[HarmonyPostfix, HarmonyPatch(typeof(ReplayCameraRig), nameof(ReplayCameraRig.SetActive))]
+	static void ReplayCameraRig_SetActive(ReplayCameraRig __instance, bool active)
+	{
+		try
+		{
+			// enable AudioListener on spectated car
+			var audio = __instance.transform.parent.Find("PlayerAudio");
+			if (audio)
+			{
+				if (!audio.GetComponent<RestoreAudio>())
+					audio.gameObject.AddComponent<RestoreAudio>().OriginalValue = audio.gameObject.activeSelf;
+				audio.gameObject.SetActive(active);
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.Error(ex);
+		}
+	}
+
+	private sealed class RestoreAudio : BaseComponent, IReceiveMessages<RestartEventMessage>
+	{
+		public bool OriginalValue { get; set; }
+
+		void IReceiveMessages<RestartEventMessage>.HandleMessage(RestartEventMessage message)
+		{
+			Log.Debug($"Restoring PlayerAudio to {OriginalValue}");
+			gameObject.SetActive(OriginalValue);
 		}
 	}
 }
