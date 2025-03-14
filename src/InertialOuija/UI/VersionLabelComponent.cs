@@ -18,6 +18,10 @@ internal class VersionLabelComponent : MonoBehaviour
 		var version = typeof(Entrypoint).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 		_label = $"InertialOuija {version}";
 
+		var build = typeof(Entrypoint).Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration;
+		if (build != "Release")
+			_label += $" {build}";
+
 		SceneManager.activeSceneChanged += OnAciveSceneChanged;
 	}
 

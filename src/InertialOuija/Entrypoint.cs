@@ -33,15 +33,11 @@ internal class Entrypoint
 
 	private static void Initialize()
 	{
-#if DEBUG
-		var build = "Debug";
-#else
-		var build = "Release";
-#endif
 		var modVersion = typeof(Entrypoint).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+		var modBuild = typeof(Entrypoint).Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration;
 		var gameVersion = $"{Application.version} {Application.buildGUID}";
 
-		Log.Info($"Mod version {modVersion} {build}");
+		Log.Info($"Mod version {modVersion} {modBuild}");
 		Log.Info($"Game version {gameVersion}");
 
 		var patchConfig = PatchConfig.Load();
