@@ -18,10 +18,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
-		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.15.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.15.0" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -46,18 +43,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="patch.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Include="..\..\README.md" Link="README.md">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Include="..\..\LICENSE.txt" Link="LICENSE.txt">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Include="..\..\THIRD-PARTY-LICENSES.txt" Link="THIRD-PARTY-LICENSES.txt">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
+		<None Update="patch.json" CopyToOutputDirectory="Always" />
+		<None Include="..\..\README.md" Link="README.md" CopyToOutputDirectory="Always" />
+		<None Include="..\..\LICENSE.txt" Link="LICENSE.txt" CopyToOutputDirectory="Always" />
+		<None Include="..\..\THIRD-PARTY-LICENSES.txt" Link="THIRD-PARTY-LICENSES.txt" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 	<Target Name="AddToClean" BeforeTargets="BeforeBuild">
@@ -80,7 +69,7 @@
 	</Target>
 
 	<Target Name="GetGitCommit" BeforeTargets="InitializeSourceControlInformation">
-		<Exec Command="git describe --always --dirty" EnvironmentVariables="GIT_ADVICE=0" ConsoleToMSBuild="True" ContinueOnError="True">
+		<Exec Command="git describe --always --dirty" EnvironmentVariables="GIT_ADVICE=0" ConsoleToMSBuild="True" ContinueOnError="True" StandardOutputImportance="Normal">
 			<Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput" />
 			<Output PropertyName="GitExitCode" TaskParameter="ExitCode" />
 		</Exec>
