@@ -49,14 +49,6 @@
 		<None Include="..\..\THIRD-PARTY-LICENSES.txt" Link="THIRD-PARTY-LICENSES.txt" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
-	<Target Name="AddToClean" BeforeTargets="BeforeBuild">
-		<ItemGroup>
-			<FileWrites Include="$(OutputPath)/InertialOuija/$(TargetFileName)" />
-			<FileWrites Include="$(OutputPath)/InertialOuija/0Harmony.dll" />
-			<FileWrites Include="$(OutputPath)/InertialOuija/patch.json" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="OrganizeOutput" AfterTargets="AfterBuild">
 		<ItemGroup>
 			<KeepInMainDir Include="$(OutputPath)/doorstop_config.ini" />
@@ -66,6 +58,10 @@
 			<MoveToSubDir Include="$(OutputPath)/*" Exclude="@(KeepInMainDir)" />
 		</ItemGroup>
 		<Move SourceFiles="@(MoveToSubDir)" DestinationFolder="$(OutputPath)/InertialOuija" />
+	</Target>
+
+	<Target Name="CleanMovedFiles" AfterTargets="AfterClean">
+		<RemoveDir Directories="$(OutputPath)/InertialOuija" />
 	</Target>
 
 	<Target Name="GetGitCommit" BeforeTargets="InitializeSourceControlInformation">
