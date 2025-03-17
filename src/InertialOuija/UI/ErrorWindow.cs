@@ -1,6 +1,9 @@
 ﻿extern alias GameScripts;
 
 using GameScripts.Assets.Source.Tools;
+using System;
+using System.Reflection;
+using System.Text;
 using UnityEngine;
 using static InertialOuija.Configuration.ModConfig;
 
@@ -39,7 +42,7 @@ internal sealed class ErrorWindow : Window
 		GUILayout.BeginHorizontal();
 
 		if (GUILayout.Button("Copy", Styles.Width100))
-			GUIUtility.systemCopyBuffer = _message;
+			CopyErrorMessage();
 
 		GUILayout.FlexibleSpace();
 
@@ -51,6 +54,22 @@ internal sealed class ErrorWindow : Window
 			Close();
 
 		GUILayout.EndHorizontal();
+	}
+
+	private void CopyErrorMessage()
+	{
+		var sb = new StringBuilder(_message);
+
+		sb.AppendLine();
+		sb.AppendLine();
+
+		var modVersion = typeof(Doorstop.Entrypoint).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+		var modBuild = typeof(Doorstop.Entrypoint).Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration;
+		sb.AppendLine($"Mod: {modVersion} {modBuild}");
+		sb.AppendLine($"Game: {Application.version} {Application.buildGUID}");
+		sb.AppendLine($"OS: {SystemInfo.operatingSystem} [{Environment.OSVersion}]");
+
+		GUIUtility.systemCopyBuffer = sb.ToString();
 	}
 
 
