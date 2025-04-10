@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using GameScripts.TinyJSON;
+using InertialOuija.Patches;
 
 namespace InertialOuija.Configuration;
 
@@ -11,7 +12,7 @@ internal class ModConfig
 
 
     private static ModConfig _config;
-    public static ModConfig Config => _config ??= Load();
+    public static ModConfig Config => _config ?? Load();
 
 
 
@@ -24,18 +25,21 @@ internal class ModConfig
     {
         var configPath = Path.Combine(FileUtility.ModDirectory, Filename);
 
-        ModConfig config;
         try
         {
             var json = File.ReadAllText(configPath);
-            JSON.MakeInto(JSON.Load(json), out config);
+            JSON.MakeInto(JSON.Load(json), out _config);
+            if (_config == null)
+                throw new InvalidDataException("Unknown JSON error");
         }
         catch (Exception ex)
         {
-            Log.Error("Failed to load patch configuration", ex);
-            config = new ModConfig();
+            _config = new ModConfig();
+            _config.Save();
+            if (ex is not FileNotFoundException)
+                Log.Error("Failed to load mod configuration", ex);
         }
-        return config;
+        return _config;
     }
 
     public void Save()

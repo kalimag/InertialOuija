@@ -38,6 +38,8 @@ internal class PatchConfig
 		{
 			var json = File.ReadAllText(configPath);
 			JSON.MakeInto(JSON.Load(json), out config);
+			if (config == null)
+				throw new InvalidDataException("Unknown JSON error");
 		}
 		catch (Exception ex)
 		{
