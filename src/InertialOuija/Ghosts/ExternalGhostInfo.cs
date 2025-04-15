@@ -44,7 +44,7 @@ public partial class ExternalGhostInfo : IEquatable<ExternalGhostInfo>, ISeriali
 	public string GameVersion { get; init; }
 	public string BuildGuid { get; init; }
 
-	public TimeSpan Time => TimeSpan.FromSeconds(TimeInSeconds);
+	public GhostTime Time => new(TimeInSeconds);
 
 	// Keep in sync with GameExtensions.GetGhostType
 	public GhostType? Type => GameMode switch

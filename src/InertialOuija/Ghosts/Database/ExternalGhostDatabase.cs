@@ -179,10 +179,10 @@ public partial class ExternalGhostDatabase : SQLiteDatabase
 		.Limit(1)
 		.ExecuteScalar<float?>();
 
-	public TimeSpan? GetPersonalBestTime(Track track, TrackDirection direction, Car? car) =>
+	public GhostTime? GetPersonalBestTime(Track track, TrackDirection direction, Car? car) =>
 		GetBestTimeInSeconds(new(GhostType.Timed, track, direction, car, User: GameData.SteamUser.Id)) switch
 		{
-			float time => TimeSpan.FromSeconds(time),
+			float time => new(time),
 			_ => null
 		};
 

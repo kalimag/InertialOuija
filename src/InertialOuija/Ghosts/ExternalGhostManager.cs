@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +23,6 @@ namespace InertialOuija.Ghosts;
 internal class ExternalGhostManager
 {
 	private static readonly string GhostsExtension = ".ghost";
-	private static readonly string GhostTimeFormat = @"mm\.ss\.fff";
 
 	public static ExternalGhostDatabase Ghosts { get; private set; }
 
@@ -359,7 +357,7 @@ internal class ExternalGhostManager
 		else if (info.GameMode == nameof(PrecisionStyleMode) && info.PrecisionScore != null)
 			fileName = $"{info.PrecisionScore} ";
 
-		fileName += $"{info.Time.ToString(GhostTimeFormat, CultureInfo.InvariantCulture)} {FileUtility.Sanitize(info.Username)}";
+		fileName += $"{info.Time.ToString(true, ".")} {FileUtility.Sanitize(info.Username)}";
 
 		if (info.PlayerIndex != null && info.GameMode != nameof(OnlineRaceMode))
 			fileName += $" [{info.PlayerIndex + 1}]";

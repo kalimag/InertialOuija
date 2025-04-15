@@ -1,4 +1,4 @@
-﻿using System;
+﻿using InertialOuija.Ghosts;
 using TMPro;
 using UnityEngine;
 
@@ -42,9 +42,9 @@ internal class RivalTimeHud : MonoBehaviour
         Value = value;
     }
 
-    public void SetText(string header, string name, TimeSpan value)
+    public void SetText(string header, string name, GhostTime value)
     {
-        var valueStr = $"<mspace=0.7em>{value.Minutes:00}:{value.Seconds:00}:{value.Milliseconds / 10:00}";
+        var valueStr = "<mspace=0.7em>" + value.ToString(false, ":");
         SetText(header, name, valueStr);
     }
 

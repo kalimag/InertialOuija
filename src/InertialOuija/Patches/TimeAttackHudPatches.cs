@@ -38,7 +38,7 @@ internal class TimeAttackHudPatches
 		AddPersonalBestTime(____hudInfos, personalBest);
 	}
 
-	private static void AddPersonalBestTime(Dictionary<GameObject, HudPrefabInfo> hudInfos, TimeSpan? personalBest)
+	private static void AddPersonalBestTime(Dictionary<GameObject, HudPrefabInfo> hudInfos, GhostTime? personalBest)
 	{
 		if (!Config.UI.ShowPersonalBestTime && !Config.UI.ShowGhostTime)
 			return;
@@ -64,7 +64,7 @@ internal class TimeAttackHudPatches
 		}
 	}
 
-	private static void UpdateHideTargetTimes(EventDetails eventDetails, Dictionary<GameObject, HudPrefabInfo> hudInfos, TimeSpan? personalBest)
+	private static void UpdateHideTargetTimes(EventDetails eventDetails, Dictionary<GameObject, HudPrefabInfo> hudInfos, GhostTime? personalBest)
 	{
 		try
 		{
@@ -75,10 +75,10 @@ internal class TimeAttackHudPatches
 			Log.Debug($"PB={personalBest} Gold={gold} Silver={silver} Bronze={bronze}");
 
 			_hideTargetTimes = Config.UI.HideAchievedTargetTimes &&
-				personalBest is TimeSpan pb &&
-				(gold == 0 || pb.TotalSeconds < gold) &&
-				(silver == 0 || pb.TotalSeconds < silver) &&
-				(bronze == 0 || pb.TotalSeconds < bronze);
+				personalBest is GhostTime pb &&
+				(gold == 0 || pb.TimeInSeconds < gold) &&
+				(silver == 0 || pb.TimeInSeconds < silver) &&
+				(bronze == 0 || pb.TimeInSeconds < bronze);
 
 			if (_hideTargetTimes)
 				hudInfos.Values.Single().ActiveTargetDisplays(false, false, false);
