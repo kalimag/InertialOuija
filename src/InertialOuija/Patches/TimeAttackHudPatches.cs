@@ -24,18 +24,25 @@ internal class TimeAttackHudPatches
 	[HarmonyPostfix, HarmonyPatch(typeof(TimeAttack), nameof(TimeAttack.InitialiseGameMode))]
 	static void TimeAttack_InitialiseGameMode(TrackInfo trackInfo, EventDetails ___DefaultEvent, Dictionary<GameObject, HudPrefabInfo> ____hudInfos)
 	{
-		EventDetails eventDetails = CorePlugin.GameModeManager.CurrentEventDetails ?? ___DefaultEvent;
-		if (CorePlugin.GameModeManager.ActivePlayers != 1 || !eventDetails.UseLeaderboardGhost)
+		try
 		{
-			_hideTargetTimes = false;
-			return;
+			EventDetails eventDetails = CorePlugin.GameModeManager.CurrentEventDetails ?? ___DefaultEvent;
+			if (CorePlugin.GameModeManager.ActivePlayers != 1 || !eventDetails.UseLeaderboardGhost)
+			{
+				_hideTargetTimes = false;
+				return;
+			}
+
+			var personalBest = ExternalGhostManager.Ghosts.GetPersonalBestTime(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
+				CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
+
+			UpdateHideTargetTimes(eventDetails, ____hudInfos, personalBest);
+			AddPersonalBestTime(____hudInfos, personalBest);
 		}
-
-		var personalBest = ExternalGhostManager.Ghosts.GetPersonalBestTime(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
-			CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
-
-		UpdateHideTargetTimes(eventDetails, ____hudInfos, personalBest);
-		AddPersonalBestTime(____hudInfos, personalBest);
+		catch (Exception ex)
+		{
+			Log.Error(ex);
+		}
 	}
 
 	private static void AddPersonalBestTime(Dictionary<GameObject, HudPrefabInfo> hudInfos, GhostTime? personalBest)
