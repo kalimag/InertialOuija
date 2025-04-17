@@ -1,0 +1,4 @@
+[submodule "submodules/sqlite-net"]
+	path = submodules/sqlite-net
+	url = https://github.com/kalimag/sqlite-net
+	branch = inertialouija
