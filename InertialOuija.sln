@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InertialOuija", "src\InertialOuija\InertialOuija.csproj", "{558CBA76-52BB-4E65-A371-448193CCCDF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InertialOuija.SourceGenerators", "src\InertialOuija.SourceGenerators\InertialOuija.SourceGenerators.csproj", "{F35A5B4D-1676-CB87-CA41-61A38EEA0227}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{558CBA76-52BB-4E65-A371-448193CCCDF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{558CBA76-52BB-4E65-A371-448193CCCDF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{558CBA76-52BB-4E65-A371-448193CCCDF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F35A5B4D-1676-CB87-CA41-61A38EEA0227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F35A5B4D-1676-CB87-CA41-61A38EEA0227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F35A5B4D-1676-CB87-CA41-61A38EEA0227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F35A5B4D-1676-CB87-CA41-61A38EEA0227}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

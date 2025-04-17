@@ -17,6 +17,10 @@
 	</ItemDefinitionGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\InertialOuija.SourceGenerators\InertialOuija.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.6" />
 		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.22.0" PrivateAssets="all" />
 	</ItemGroup>
