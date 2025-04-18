@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net472</TargetFramework>
 		<LangVersion>13.0</LangVersion>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<DebugType>embedded</DebugType>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>InertialOuija</AssemblyName>
@@ -17,6 +18,10 @@
 	</ItemDefinitionGroup>
 
 	<ItemGroup>
+	  <Compile Include="..\..\submodules\sqlite-net\src\SQLite.cs" Link="Ghosts\Database\SQL\SQLite.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\InertialOuija.SourceGenerators\InertialOuija.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
@@ -24,6 +29,9 @@
 		<PackageReference Include="Lib.Harmony" Version="2.3.6" />
 		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.22.0" PrivateAssets="all" />
 		<PackageReference Include="PolySharp" Version="1.15.0" />
+		<PackageReference Include="Riok.Mapperly" Version="4.2.1" ExcludeAssets="runtime" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.11" />
+		<PackageReference Include="SqlKata" Version="2.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -55,6 +63,7 @@
 	</ItemGroup>
 
 	<Target Name="OrganizeOutput" AfterTargets="AfterBuild">
+		<Move SourceFiles="$(OutputPath)e_sqlite3.dll" DestinationFiles="$(OutputPath)sqlite3.dll" />
 		<ItemGroup>
 			<KeepInMainDir Include="$(OutputPath)/doorstop_config.ini" />
 			<KeepInMainDir Include="$(OutputPath)/version.dll" />

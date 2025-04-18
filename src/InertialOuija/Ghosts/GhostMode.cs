@@ -1,6 +1,6 @@
 ﻿namespace InertialOuija.Ghosts;
 
-internal enum ExternalGhostMode
+public enum ExternalGhostMode
 {
 	Default,
 	Best,

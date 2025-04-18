@@ -1,15 +1,10 @@
 ﻿extern alias GameScripts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using GameScripts.Assets.Source.CloudStorage;
-using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.GameData;
-using GameScripts.Assets.Source.Localisation;
-using GameScripts.Assets.Source.Tools;
-using InertialOuija.Ghosts;
 using UnityEngine;
 
 namespace InertialOuija
@@ -28,6 +23,8 @@ namespace InertialOuija
 
 
 
+		public static bool IsFileSystemException(this Exception exception)
+			=> exception is (IOException and not EndOfStreamException) or UnauthorizedAccessException;
 
 		public static T GetOrAddComponent<T>(this GameObject obj) where T : Component
 		{

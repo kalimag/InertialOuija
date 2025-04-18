@@ -1,5 +1,4 @@
 ﻿extern alias GameScripts;
-using System;
 using System.Diagnostics;
 using System.IO;
 using InertialOuija.Ghosts;
@@ -46,8 +45,11 @@ namespace InertialOuija.UI
 			if (GUILayout.Button("Open Ghost Folder"))
 				OpenGhostFolder();
 
-			if (GUILayout.Button(TempContent("Refresh External Ghosts","Use if you added or removed files while the game is running")))
+			if (GUILayout.Button(TempContent("Refresh External Ghosts", "Use if you added or removed files while the game is running")))
 				ExternalGhostManager.RefreshDatabaseAsync().LogFailure();
+
+			if (GUILayout.Button(TempContent("Reset Ghost Cache", "This shouldn't be necessary unless something goes wrong")))
+				ExternalGhostManager.ResetCache().LogFailure();
 
 			GUILayout.Space(10);
 

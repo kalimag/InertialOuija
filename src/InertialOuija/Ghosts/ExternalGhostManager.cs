@@ -1,16 +1,13 @@
 ﻿extern alias GameScripts;
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.CloudStorage;
-using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.Gameplay;
 using GameScripts.Assets.Source.Gameplay.GameModes;
 using GameScripts.Assets.Source.Gameplay.Scoring;
@@ -18,6 +15,7 @@ using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
 using GameScripts.Assets.Source.Tools;
 using InertialOuija.Components;
+using InertialOuija.Ghosts.Database;
 using InertialOuija.UI;
 using static InertialOuija.Configuration.ModConfig;
 
@@ -28,27 +26,41 @@ internal class ExternalGhostManager
 	private static readonly string GhostsExtension = ".ghost";
 	private static readonly string GhostTimeFormat = @"mm\.ss\.fff";
 
-	private static readonly ConcurrentDictionary<string, ExternalGhostFile> GhostFiles = new(1, 0);
-	private static readonly ConcurrentDictionary<ExternalGhostInfo, ExternalGhostFile> UniqueGhosts = new(1, 0);
+	public static ExternalGhostDatabase Ghosts { get; private set; }
 
 	private static CancellationTokenSource _refreshCancellation;
 
 
 
-	public static int Count => UniqueGhosts.Count;
+	public static int Count => Ghosts.Count;
 
 	public static string GhostsPath
 	{
 		get
 		{
 			if (!string.IsNullOrWhiteSpace(Config.Ghosts.Directory))
-				return Config.Ghosts.Directory;
+				return Path.GetFullPath(Config.Ghosts.Directory);
 			else
 				return Path.Combine(Path.GetDirectoryName(UnityEngine.Application.dataPath), "Ghosts");
 		}
 	}
 
 
+
+	internal static void Initialize()
+	{
+		if (Ghosts != null)
+			return;
+		try
+		{
+			Ghosts = new ExternalGhostDatabase();
+			RefreshDatabaseAsync().LogFailure();
+		}
+		catch (Exception ex)
+		{
+			Log.Error(ex);
+		}
+	}
 
 	public static void AddPlayerGhost(GhostLap lap, CarProperties carProperties)
 	{
@@ -104,14 +116,14 @@ internal class ExternalGhostManager
 			Date = DateTimeOffset.UtcNow,
 		};
 
-		if (!UniqueGhosts.TryGetValue(info, out var existingGhost))
+		if (!Ghosts.Contains(info))
 		{
 			var ghost = new ExternalGhost(info, request.Data);
 			Task.Run(() => SaveGhost(ghost)).LogFailure();
 		}
 		else
 		{
-			Log.Debug($"Downloaded ghost already exists at \"{existingGhost.Path}\"");
+			Log.Debug($"Downloaded ghost already exists");
 		}
 	}
 
@@ -149,9 +161,9 @@ internal class ExternalGhostManager
 				Date = DateTimeOffset.UtcNow
 			};
 
-			if (UniqueGhosts.TryGetValue(info, out var existingGhostFile))
+			if (Ghosts.Contains(info))
 			{
-				Log.Debug($"Ghost {info} already exported at \"{existingGhostFile.Path}\"");
+				Log.Debug($"Ghost {info} already exported");
 				continue;
 			}
 
@@ -188,12 +200,14 @@ internal class ExternalGhostManager
 			throw;
 		}
 
-		var path = Path.GetFullPath(stream.Name);
-		var ghostFile = new ExternalGhostFile(path, ghost.Info);
+		if (Ghosts != null)
+		{
+			var ghostFile = ExternalGhostFile.FromInfo(new FileInfo(stream.Name), ghost.Info);
 
-		GhostFiles[path] = ghostFile;
-		if (!UniqueGhosts.TryAdd(ghost.Info, ghostFile))
-			Log.Debug($"Duplicate ghosts: \"{path}\"");
+			if (Ghosts.Contains(ghost.Info))
+				Log.Info($"Saved duplicate ghost: \"{ghostFile.Path}\"");
+			Ghosts.Write(() => Ghosts.Add(ghostFile));
+		}
 	}
 
 	public static async Task RefreshDatabaseAsync()
@@ -222,69 +236,111 @@ internal class ExternalGhostManager
 	{
 		Log.Debug(nameof(RefreshDatabaseInternal), nameof(ExternalGhostManager));
 
-		GhostFiles.Clear();
-		UniqueGhosts.Clear();
+		var unprocessedFiles = new HashSet<string>();
+		var missingFiles = new List<string>();
 
-		string[] files;
-		try
-		{
-			files = Directory.GetFiles(GhostsPath, "*" + GhostsExtension, SearchOption.AllDirectories);
-		}
-		catch (Exception ex)
-		{
-			Log.Error($"Failed to enumerate ghost directory", ex);
-			return;
-		}
+		int cacheItemCount = 0;
+		int processed = 0;
 
-		int count = 0;
-		foreach (var file in files)
+		// this should all happen as one transaction, to avoid a situation where a new ghost is added
+		// after the files have been enumerated but before the database is enumerated
+		Ghosts.Write(() =>
 		{
-			cancellationToken.ThrowIfCancellationRequested();
-			ExternalGhostInfo info;
 			try
 			{
-				info = ExternalGhost.LoadInfo(file);
-				//Log.Debug($"Ghost {info.Track} {info.Direction} {info.Car} {info.Time} {info.Username} {info.Source}");
-
-				var path = Path.GetFullPath(file);
-				var ghostFile = new ExternalGhostFile(path, info);
-
-				GhostFiles[path] = new ExternalGhostFile(path, info);
-				if (!UniqueGhosts.TryAdd(info, ghostFile) && UniqueGhosts.TryGetValue(info, out var existingGhost))
-					Log.Debug($"Duplicate ghosts: \"{path}\" and \"{existingGhost.Path}\"");
+				foreach (var file in Directory.GetFiles(GhostsPath, "*" + GhostsExtension, SearchOption.AllDirectories))
+					unprocessedFiles.Add(Path.GetFullPath(file));
+			}
+			catch (DirectoryNotFoundException)
+			{
+				Log.Info("Ghost directory doesn't exist");
 			}
 			catch (Exception ex)
 			{
+				Log.Error($"Failed to enumerate ghost directory", ex);
+				return;
+			}
+			Log.Info($"Found {unprocessedFiles.Count} {GhostsExtension} files");
+
+			cacheItemCount = Ghosts.GetCount(true); // for progress calculation
+
+			foreach (var cachedFile in Ghosts.EnumerateFiles())
+			{
+				cancellationToken.ThrowIfCancellationRequested();
+				if (unprocessedFiles.Remove(cachedFile.Path))
+				{
+					try
+					{
+						var fileInfo = new FileInfo(cachedFile.Path);
+						if (!fileInfo.Exists) // double check, FileInfo loads and caches all these properties at once
+							missingFiles.Add(cachedFile.Path);
+						else if (fileInfo.Length != cachedFile.Size || fileInfo.LastWriteTimeUtc != cachedFile.LastWrite)
+							unprocessedFiles.Add(cachedFile.Path);
+					}
+					catch (Exception ex)
+					{
+						Log.Error($"Unable to get file info for \"{cachedFile.Path}\"", ex);
+					}
+				}
+				else
+				{
+					missingFiles.Add(cachedFile.Path);
+				}
+				IncrementProgress();
+			}
+
+			Log.Info($"Removing {missingFiles.Count} missing files...");
+			foreach (var file in missingFiles)
+			{
+				Ghosts.Remove(file);
+				IncrementProgress();
+			}
+		});
+
+		Log.Info($"Loading {unprocessedFiles.Count} new/stale files...");
+		foreach (var file in unprocessedFiles)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			FileInfo fileInfo = null;
+			try
+			{
+				fileInfo = new FileInfo(file);
+				var info = ExternalGhost.LoadInfo(file);
+				Log.Debug($"New ghost: {info.Track} {info.Direction} {info.Car} {info.Time} {info.Username} {info.Source} (\"{file}\")");
+				Ghosts.Write(() => Ghosts.Add(ExternalGhostFile.FromInfo(fileInfo, info)));
+			}
+			catch (Exception ex)
+			{
+				if (fileInfo != null && !ex.IsFileSystemException()) // exception probably not related to the file contents and shouldn't be cached
+					Ghosts.Write(() => Ghosts.AddError(fileInfo));
 				Log.Error($"Failed to load ghost info from \"{file}\"", ex, true);
 			}
-			progress?.Report(++count / (float)files.Length);
+			IncrementProgress();
 		}
-		Log.Info($"Found {GhostFiles.Count} valid ghost files ({files.Length} {GhostsExtension} files)");
+
+		Log.Info($"Database now contains {Ghosts.Count} valid ghost files");
+
+		Log.Debug($"Checkpointing...");
+		Ghosts.PassiveCheckpoint();
+
+		progress?.Report(1);
+		Log.Debug("Done");
+
+		void IncrementProgress()
+		{
+			processed++;
+			if (processed % 10 == 0)
+			{
+				float percentage = (float)processed / (cacheItemCount + unprocessedFiles.Count + missingFiles.Count);
+				progress?.Report(float.IsNaN(percentage) ? 0 : percentage);
+			}
+		}
 	}
 
-	public static IEnumerable<ExternalGhostFile> GetGhosts(Track track, TrackDirection direction, Car? car = null)
+	public static async Task ResetCache()
 	{
-		return UniqueGhosts.Values.Where(ghost => ghost.Info.Track == track && ghost.Info.Direction == direction && (car == null || ghost.Info.Car == car));
-	}
-
-	public static ExternalGhostInfo GetPersonalBestTime(Track track, TrackDirection direction, Car? car = null)
-	{
-		if (!GameScripts.SteamManager.Initialized)
-			return null;
-
-		string name = CorePlugin.PlatformManager.PrimaryUserName();
-		ulong id = Steamworks.SteamUser.GetSteamID().m_SteamID;
-
-		var ghosts = UniqueGhosts.Values
-			.Where(ghost => (ghost.Info.SteamUserId == id || ghost.Info.Username == name) &&
-			ghost.Info.Track == track && ghost.Info.Direction == direction && (car == null || ghost.Info.Car == car));
-
-		ExternalGhostInfo best = null;
-		foreach (var ghost in ghosts)
-			if (best == null || ghost.Info.Time < best.Time)
-				best = ghost.Info;
-
-		return best;
+		await Ghosts.WriteAsync(Ghosts.Clear);
+		await RefreshDatabaseAsync();
 	}
 
 	private static (string Directory, string FileName) GetSavePath(ExternalGhostInfo info)

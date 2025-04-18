@@ -11,11 +11,11 @@ public class GhostCarComparer : IEqualityComparer<ExternalGhostInfo>, IEqualityC
 		=> ReferenceEquals(x, y) || x.Car == y.Car;
 
 	public bool Equals(ExternalGhostFile x, ExternalGhostFile y)
-		=> Equals(x?.Info, y?.Info);
+		=> Equals((ExternalGhostInfo)x, (ExternalGhostInfo)y);
 
 	public int GetHashCode(ExternalGhostInfo ghostInfo)
 		=> ghostInfo != null ? ghostInfo.Car.GetHashCode() : 0;
 
 	public int GetHashCode(ExternalGhostFile ghostFile)
-		=> GetHashCode(ghostFile?.Info);
+		=> GetHashCode((ExternalGhostInfo)ghostFile);
 }

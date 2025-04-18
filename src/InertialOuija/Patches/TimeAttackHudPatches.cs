@@ -31,14 +31,14 @@ internal class TimeAttackHudPatches
 			return;
 		}
 
-		var personalBest = ExternalGhostManager.GetPersonalBestTime(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
+		var personalBest = ExternalGhostManager.Ghosts.GetPersonalBestTime(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
 			CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
 
 		UpdateHideTargetTimes(eventDetails, ____hudInfos, personalBest);
 		AddPersonalBestTime(____hudInfos, personalBest);
 	}
 
-	private static void AddPersonalBestTime(Dictionary<GameObject, HudPrefabInfo> hudInfos, ExternalGhostInfo personalBest)
+	private static void AddPersonalBestTime(Dictionary<GameObject, HudPrefabInfo> hudInfos, TimeSpan? personalBest)
 	{
 		if (!Config.UI.ShowPersonalBestTime && !Config.UI.ShowGhostTime)
 			return;
@@ -51,7 +51,7 @@ internal class TimeAttackHudPatches
 			if (Config.UI.ShowPersonalBestTime && personalBest is not null)
 			{
 				var rivalTimeHud = GameAssets.CreateRivalTimeHud(topRightHudRoot, 1);
-				rivalTimeHud.SetText("personal best", personalBest.Username, personalBest.Time);
+				rivalTimeHud.SetText("personal best", GameData.SteamUser.Name, personalBest.Value);
 				rivalTimeHud.SetActive(true);
 			}
 
@@ -64,7 +64,7 @@ internal class TimeAttackHudPatches
 		}
 	}
 
-	private static void UpdateHideTargetTimes(EventDetails eventDetails, Dictionary<GameObject, HudPrefabInfo> hudInfos, ExternalGhostInfo personalBest)
+	private static void UpdateHideTargetTimes(EventDetails eventDetails, Dictionary<GameObject, HudPrefabInfo> hudInfos, TimeSpan? personalBest)
 	{
 		try
 		{
@@ -72,13 +72,13 @@ internal class TimeAttackHudPatches
 			float silver = eventDetails.SilverTargetSecondsValue;
 			float gold = eventDetails.GoldTargetSecondsValue;
 
-			Log.Debug($"PB={personalBest?.TimeInSeconds} Gold={gold} Silver={silver} Bronze={bronze}");
+			Log.Debug($"PB={personalBest} Gold={gold} Silver={silver} Bronze={bronze}");
 
 			_hideTargetTimes = Config.UI.HideAchievedTargetTimes &&
-				personalBest != null &&
-				(gold == 0 || personalBest.TimeInSeconds < gold) &&
-				(silver == 0 || personalBest.TimeInSeconds < silver) &&
-				(bronze == 0 || personalBest.TimeInSeconds < bronze);
+				personalBest is TimeSpan pb &&
+				(gold == 0 || pb.TotalSeconds < gold) &&
+				(silver == 0 || pb.TotalSeconds < silver) &&
+				(bronze == 0 || pb.TotalSeconds < bronze);
 
 			if (_hideTargetTimes)
 				hudInfos.Values.Single().ActiveTargetDisplays(false, false, false);

@@ -38,8 +38,8 @@ public class RelaxedGhostComparer : IEqualityComparer<ExternalGhostInfo>, IEqual
 		static bool EqualsAndNotNull<T>(T? x, T? y) where T : struct, IEquatable<T>
 			=> x != null && x.Equals(y);
 	}
-	public bool Equals(ExternalGhostFile x, ExternalGhostFile y)
-		=> Equals(x?.Info, y?.Info);
+
+	public bool Equals(ExternalGhostFile x, ExternalGhostFile y) => Equals((ExternalGhostInfo)x, (ExternalGhostInfo)y);
 
 	public int GetHashCode(ExternalGhostInfo ghost)
 	{
@@ -54,6 +54,5 @@ public class RelaxedGhostComparer : IEqualityComparer<ExternalGhostInfo>, IEqual
 		return hashCode;
 	}
 
-	public int GetHashCode(ExternalGhostFile ghostFile)
-		=> GetHashCode(ghostFile?.Info);
+	public int GetHashCode(ExternalGhostFile ghostFile) => GetHashCode((ExternalGhostInfo)ghostFile);
 }

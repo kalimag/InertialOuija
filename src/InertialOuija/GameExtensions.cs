@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.Enums;
+using GameScripts.Assets.Source.Gameplay.GameModes;
 using GameScripts.Assets.Source.Localisation;
 using GameScripts.Assets.Source.Tools;
 using GameScripts.Assets.Source.UI.Menus;
@@ -55,8 +56,19 @@ internal static class GameExtensions
 		};
 	}
 
+	// Keep in sync with ExternalGhostInfo.Type
+	public static GhostType? GetGhostType(this IGameMode mode) => mode switch
+	{
+		TimeAttack or RaceMode or FreeDriveMode or GhostBattleMode or DuelMode => GhostType.Timed,
+		EnduranceMode => GhostType.Distance,
+		StyleMode => GhostType.Style,
+		PrecisionStyleMode => GhostType.Precision,
+		_ => null,
+	};
 
-	private static readonly Lazy<Dictionary<Car, (string Name, PerformanceClassification PerfClass)>> CarDetails = new(() => {
+
+	private static readonly Lazy<Dictionary<Car, (string Name, PerformanceClassification PerfClass)>> CarDetails = new(() =>
+	{
 		return ((Car[])Enum.GetValues(typeof(Car)))
 			.Select(CorePlugin.CarDatabase.GetCarDetails)
 			.Where(details => details != null)
@@ -65,7 +77,7 @@ internal static class GameExtensions
 				details => (details.DisplayedName.GetInvariantString(), details.Class)
 			);
 	}, LazyThreadSafetyMode.PublicationOnly);
-	
+
 	public static string GetName(this Car car)
 	{
 		try
@@ -82,6 +94,9 @@ internal static class GameExtensions
 
 	public static PerformanceClassification GetClass(this Car car)
 		=> CarDetails.Value[car].PerfClass;
+
+	public static IEnumerable<Car> GetCars(this PerformanceClassification perfClass)
+		=> CarDetails.Value.Where(car => car.Value.PerfClass == perfClass).Select(car => car.Key);
 
 	public static void IntegrateInLayout(this RectTransform item, int? index = null, int offset = 0)
 	{

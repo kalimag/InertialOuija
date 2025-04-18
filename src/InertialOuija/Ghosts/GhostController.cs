@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.GhostCars.GhostPlayback;
@@ -24,52 +23,14 @@ internal static class GhostController
 		if (Config.Ghosts.Mode is ExternalGhostMode.Default or ExternalGhostMode.None || Config.Ghosts.Count < 1)
 			return;
 
-		var ghostFiles = GetGhosts(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
+		if (CorePlugin.EventManager.GameMode.GetGhostType() is not GhostType ghostType)
+			return;
+
+		var filter = GhostFilter.FromConfig(ghostType, CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
 			CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
+		var ghostFiles = ExternalGhostManager.Ghosts.FindGhosts(filter, Config.Ghosts.Mode, Config.Ghosts.Count);
 
 		SpawnGhosts(ghostFiles, ghostPlayer);
-	}
-
-	private static IEnumerable<ExternalGhostFile> GetGhosts(Track track, TrackDirection direction, Car car)
-	{
-		var ghostFiles = ExternalGhostManager.GetGhosts(track, direction);
-
-		if (Config.Ghosts.MyGhosts && GameScripts.SteamManager.Initialized)
-		{
-			string name = CorePlugin.PlatformManager.PrimaryUserName();
-			ulong id = Steamworks.SteamUser.GetSteamID().m_SteamID;
-			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Username == name || ghost.Info.SteamUserId == id);
-		}
-
-		if (Config.Ghosts.CarFilter == CarFilter.SameCar)
-		{
-			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Car == car);
-		}
-		else if (Config.Ghosts.CarFilter == CarFilter.SameClass)
-		{
-			var perfClass = car.GetClass();
-			ghostFiles = ghostFiles.Where(ghost => ghost.Info.Car.GetClass() == perfClass);
-		}
-
-		ghostFiles = ghostFiles.OrderBy(ghost => ghost.Info.Time)
-			.ThenByDescending(ghost => ghost.Info.Source != GhostSource.Leaderboard);
-
-		if (Config.Ghosts.UniqueCars && Config.Ghosts.CarFilter != CarFilter.SameCar && Config.Ghosts.Mode != ExternalGhostMode.NextBest)
-			ghostFiles = ghostFiles.Distinct(GhostCarComparer.Instance);
-
-		ghostFiles = ghostFiles.Distinct(RelaxedGhostComparer.Instance);
-
-		if (Config.Ghosts.Mode == ExternalGhostMode.NextBest && ExternalGhostManager.GetPersonalBestTime(track, direction, car) is ExternalGhostInfo pb)
-		{
-			var ghostList = ghostFiles.ToList();
-			int equalTimeIndex = ghostList.FindIndex(ghost => ghost.Info.Time >= pb.Time);
-			int nBestIndex = Math.Max(equalTimeIndex - Config.Ghosts.Count, 0);
-			ghostFiles = ghostList.Skip(nBestIndex);
-		}
-
-		ghostFiles = ghostFiles.Take(Config.Ghosts.Count);
-
-		return ghostFiles;
 	}
 
 	private static async void SpawnGhosts(IEnumerable<ExternalGhostFile> ghostFiles, GhostPlayer ghostPlayer)

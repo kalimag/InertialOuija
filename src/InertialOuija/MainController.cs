@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
-using System.Threading.Tasks;
 using InertialOuija.Ghosts;
 using InertialOuija.UI;
 using UnityEngine;
@@ -29,7 +28,7 @@ internal static class MainController
 		AddGlobalComponent<HotkeyComponent>();
 		AddGlobalComponent<VersionLabelComponent>();
 
-		ExternalGhostManager.RefreshDatabaseAsync().LogFailure();
+		ExternalGhostManager.Initialize();
 	}
 
 	public static GameObject CreatePersistentObject(string name)

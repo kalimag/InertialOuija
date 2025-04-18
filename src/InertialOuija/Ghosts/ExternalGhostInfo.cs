@@ -1,51 +1,52 @@
 ﻿extern alias GameScripts;
 
-using System;
 using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.Gameplay.GameModes;
+using SQLite;
+using System;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 namespace InertialOuija.Ghosts;
 
-[Serializable]
-public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
+[Serializable, SourceGenerators.ImplementISerializable]
+public partial class ExternalGhostInfo : IEquatable<ExternalGhostInfo>, ISerializable
 {
-	public static int CurrentVersion => 1;
+	[Indexed(Name = "IdxTrackCarTime", Order = 0)]
+	public required Track Track { get; init; }
+	[Indexed(Name = "IdxTrackCarTime", Order = 1)]
+	public required TrackDirection Direction { get; init; }
+	[Indexed(Name = "IdxTrackCarTime", Order = 2)]
+	public required Car Car { get; init; }
 
-	[NonSerialized]
-	public readonly int ExternalGhostVersion;
+	[Indexed(Name = "IdxTrackCarTime", Order = 3)]
+	public required float TimeInSeconds { get; init; }
+	//public float? Distance { get; }
+	public float? StyleScore { get; init; }
+	public int? PrecisionScore { get; init; }
 
-	public Track Track;
-	public TrackDirection Direction;
-	public Car Car;
-
-	public float TimeInSeconds;
-	//public float? Distance;
-	public float? StyleScore;
-	public int? PrecisionScore;
-
-	public GhostSource Source;
-	public string EventType;
-	public string GameMode;
-	public Guid? RecordingId;
-	public string Username;
-	public ulong? SteamUserId;
+	public required GhostSource Source { get; init; }
+	public string EventType { get; init; }
+	public string GameMode { get; init; }
+	public Guid? RecordingId { get; init; }
+	public required string Username { get; init; }
+	public required ulong? SteamUserId { get; init; }
 	/// <remarks>Only set for downloaded ghosts</remarks>
-	public int? LeaderboardId;
-	public ulong? SteamFileId;
+	public int? LeaderboardId { get; init; }
+	public ulong? SteamFileId { get; init; }
 	/// <remarks>Only set for uploaded ghosts</remarks>
-	public GhostLeaderboardType LeaderboardType;
-	public bool StoryMode;
-	public int? PlayerIndex;
+	public GhostLeaderboardType LeaderboardType { get; init; }
+	public bool StoryMode { get; init; }
+	public int? PlayerIndex { get; init; }
 
-	public DateTimeOffset? Date;
+	public required DateTimeOffset? Date { get; init; }
 
-	public string GameVersion;
-	public string BuildGuid;
-
+	public string GameVersion { get; init; }
+	public string BuildGuid { get; init; }
 
 	public TimeSpan Time => TimeSpan.FromSeconds(TimeInSeconds);
 
+	// Keep in sync with GameExtensions.GetGhostType
 	public GhostType? Type => GameMode switch
 	{
 		nameof(TimeAttack) or nameof(RaceMode) or nameof(FreeDriveMode) or nameof(GhostBattleMode) or nameof(DuelMode) => GhostType.Timed,
@@ -56,14 +57,11 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 	};
 
 
-	internal ExternalGhostInfo(int externalGhostVersion)
+	internal ExternalGhostInfo()
 	{
-		ExternalGhostVersion = externalGhostVersion;
 		GameVersion = Application.version;
 		BuildGuid = Application.buildGUID;
 	}
-	internal ExternalGhostInfo() : this(CurrentVersion)
-	{ }
 
 
 	public bool Equals(ExternalGhostInfo other)
