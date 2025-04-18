@@ -23,6 +23,7 @@
 	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.6" />
 		<PackageReference Include="Microsoft.Unity.Analyzers" Version="1.22.0" PrivateAssets="all" />
+		<PackageReference Include="PolySharp" Version="1.15.0" />
 	</ItemGroup>
 
 	<ItemGroup>
