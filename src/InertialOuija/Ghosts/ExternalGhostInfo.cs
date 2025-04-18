@@ -74,8 +74,7 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 			Car == other.Car &&
 			TimeInSeconds == other.TimeInSeconds &&
 			RecordingId == other.RecordingId &&
-			SteamFileId == other.SteamFileId &&
-			LeaderboardId == other.LeaderboardId;
+			SteamFileId == other.SteamFileId;
 	}
 
 	public override bool Equals(object obj) => Equals(obj as ExternalGhostInfo);
@@ -89,7 +88,6 @@ public class ExternalGhostInfo : IEquatable<ExternalGhostInfo>
 		hashCode = hashCode * -1521134295 + TimeInSeconds.GetHashCode();
 		hashCode = hashCode * -1521134295 + RecordingId.GetHashCode();
 		hashCode = hashCode * -1521134295 + SteamFileId.GetHashCode();
-		hashCode = hashCode * -1521134295 + LeaderboardId.GetHashCode();
 		return hashCode;
 	}
 }
