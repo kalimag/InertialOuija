@@ -6,7 +6,7 @@ namespace InertialOuija.Configuration;
 
 internal class GhostConfig
 {
-	public ExternalGhostMode Mode { get; set; } = ExternalGhostMode.Default;
+	[Include] public ExternalGhostMode Mode { get; set; } = ExternalGhostMode.Default;
 	[Include] public string Directory { get; set; } = "";
 	[Include] public int Count { get; set; } = 1;
 	[Include] public int MaxCount { get; set; } = 30;
