@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace InertialOuija.UI;
 
-internal class VersionLabelComponent : MonoBehaviour
+internal class VersionLabel : MonoBehaviour
 {
 	private string _label;
 

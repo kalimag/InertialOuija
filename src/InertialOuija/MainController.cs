@@ -26,7 +26,7 @@ internal static class MainController
 		_rootObject = CreatePersistentObject("InertialOuija");
 
 		AddGlobalComponent<HotkeyComponent>();
-		AddGlobalComponent<VersionLabelComponent>();
+		AddGlobalComponent<VersionLabel>();
 
 		ExternalGhostManager.Initialize();
 	}
