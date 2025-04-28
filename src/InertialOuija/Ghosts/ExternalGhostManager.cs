@@ -28,8 +28,6 @@ internal class ExternalGhostManager
 
 	private static CancellationTokenSource _refreshCancellation;
 
-
-
 	public static int Count => Ghosts.Count;
 
 	public static string GhostsPath
@@ -39,7 +37,7 @@ internal class ExternalGhostManager
 			if (!string.IsNullOrWhiteSpace(Config.Ghosts.Directory))
 				return Path.GetFullPath(Config.Ghosts.Directory);
 			else
-				return Path.Combine(Path.GetDirectoryName(UnityEngine.Application.dataPath), "Ghosts");
+				return Path.Combine(Path.GetDirectoryName(GameData.DataPath), "Ghosts");
 		}
 	}
 

@@ -5,7 +5,6 @@ using GameScripts.Assets.Source.Gameplay.GameModes;
 using SQLite;
 using System;
 using System.Runtime.Serialization;
-using UnityEngine;
 
 namespace InertialOuija.Ghosts;
 
@@ -59,8 +58,8 @@ public partial class ExternalGhostInfo : IEquatable<ExternalGhostInfo>, ISeriali
 
 	internal ExternalGhostInfo()
 	{
-		GameVersion = Application.version;
-		BuildGuid = Application.buildGUID;
+		GameVersion = GameData.Version;
+		BuildGuid = GameData.BuildGuid;
 	}
 
 

@@ -25,6 +25,8 @@ internal static class MainController
 
 		_rootObject = CreatePersistentObject("InertialOuija");
 
+		GameData.Initialize();
+
 		AddGlobalComponent<HotkeyComponent>();
 		AddGlobalComponent<VersionLabel>();
 

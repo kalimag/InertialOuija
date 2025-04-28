@@ -4,6 +4,7 @@ using GameScripts.Assets.Source.Tools;
 using HarmonyLib;
 using System;
 using System.Threading;
+using UnityEngine;
 
 namespace InertialOuija;
 
@@ -23,4 +24,19 @@ public static class GameData
 	public static (string Name, ulong Id) SteamUser => _steamUser.Value;
 	public static (string Name, ulong Id)? TryGetSteamUser() => GameScripts.SteamManager.Initialized ? SteamUser : null;
 
+
+	public static string DataPath { get; private set; }
+	public static string Version { get; private set; }
+	public static string BuildGuid { get; private set; }
+
+
+
+	internal static void Initialize()
+	{
+		if (SynchronizationContext.Current is null)
+			throw new InvalidOperationException("Must be initialized from main thread");
+		DataPath = Application.dataPath;
+		Version = Application.unityVersion;
+		BuildGuid = Application.buildGUID;
+	}
 }
