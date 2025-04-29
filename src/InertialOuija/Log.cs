@@ -1,6 +1,7 @@
 ﻿using System;
 using ConditionalAttribute = System.Diagnostics.ConditionalAttribute;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace InertialOuija;
 
@@ -46,4 +47,15 @@ internal static class Log
 	{
 		UnityEngine.Debug.Log($"[InertialOuija {source}] {message}");
 	}
+
+#if DEBUG
+	static Log()
+	{
+		Application.logMessageReceivedThreaded += (message, stackTrace, type) =>
+		{
+			if (type == LogType.Exception)
+				UI.ErrorWindow.ShowError($"{message}\n\n{stackTrace}");
+		};
+	}
+#endif
 }
