@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -12,7 +13,16 @@ internal static class PatchExtensions
 	{
 		if (condition)
 		{
-			var patchedMethods = harmony.CreateClassProcessor(patchClass).Patch();
+			List<MethodInfo> patchedMethods;
+			try
+			{
+				patchedMethods = harmony.CreateClassProcessor(patchClass).Patch();
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Failed to apply {patchClass.Name}", ex);
+				return;
+			}
 
 #if DEBUG
 			// Calling ToString() on one specific MethodInfo suddenly hard crashes Mono, even on older revisions?
