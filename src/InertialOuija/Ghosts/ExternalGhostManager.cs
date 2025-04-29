@@ -140,6 +140,9 @@ internal class ExternalGhostManager
 			return;
 		}
 
+		if (savedGhosts is null)
+			return;
+
 		ulong? steamId = GameScripts.SteamManager.Initialized ? Steamworks.SteamUser.GetSteamID().m_SteamID : null;
 
 		foreach (var savedGhost in savedGhosts)
