@@ -10,11 +10,11 @@ namespace InertialOuija.UI
 {
 	internal class GhostOptionsWindow : Window
 	{
-		private readonly StringCache<int> _countString = new();
+		private readonly StringCache<int> _countString = new("Ghosts: 0");
 
 
 		protected override string Title => "Ghost Options";
-		protected override Rect InitialPosition => new(510, 100, 200, 50);
+		protected override Rect InitialPosition => new(710, 100, 200, 50);
 		protected override Rect WindowPosition { get => _windowPosition; set => _windowPosition = value; }
 
 		private static Rect _windowPosition;
@@ -28,19 +28,17 @@ namespace InertialOuija.UI
 
 		protected override void DrawWindow()
 		{
-			GUILayout.BeginVertical();
-
 			Config.Ghosts.GhostVisual = !GUILayout.Toggle(!Config.Ghosts.GhostVisual, "Show as regular cars");
 
 			Config.Ghosts.DisableHeadlights = GUILayout.Toggle(Config.Ghosts.DisableHeadlights, "Disable headlight effect");
 
-			GUILayout.Space(10);
+			Styles.Space();
 
 			Config.UI.ShowGhostTime = GUILayout.Toggle(Config.UI.ShowGhostTime, "Show ghost time in hud");
 			Config.UI.ShowPersonalBestTime = GUILayout.Toggle(Config.UI.ShowPersonalBestTime, TempContent("Show personal best in hud", "Based on saved ghosts"));
 			Config.UI.HideAchievedTargetTimes = GUILayout.Toggle(Config.UI.HideAchievedTargetTimes, "Hide medals time in hud");
 
-			GUILayout.Space(10);
+			Styles.Space();
 
 			if (GUILayout.Button("Open Ghost Folder"))
 				OpenGhostFolder();
@@ -51,24 +49,19 @@ namespace InertialOuija.UI
 			if (GUILayout.Button(TempContent("Reset Ghost Cache", "This shouldn't be necessary unless something goes wrong")))
 				ExternalGhostManager.ResetCache().LogFailure();
 
-			GUILayout.Space(10);
+			Styles.Space();
 
 			if (GUILayout.Button(TempContent("Export Old Ghosts", "This only needs to be done once")))
 				ExternalGhostManager.ExportPlayerDatabase();
 
-			GUILayout.Space(10);
+			Styles.Space();
 
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Ghosts:", Styles.NoWrapLabel, Styles.DontExpandWidth);
-			GUILayout.Label(_countString.GetString(ExternalGhostManager.Count), Styles.NoWrapLabel, Styles.DontExpandWidth);
-			GUILayout.EndHorizontal();
+			GUILayout.Label(_countString.GetString(ExternalGhostManager.Count));
 
-			GUILayout.Space(10);
+			Styles.Space();
 
 			if (GUILayout.Button("Close"))
 				Close();
-
-			GUILayout.EndVertical();
 		}
 
 		private void OpenGhostFolder()

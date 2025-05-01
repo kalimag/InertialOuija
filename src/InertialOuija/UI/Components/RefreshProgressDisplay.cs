@@ -8,34 +8,29 @@ namespace InertialOuija.UI;
 
 internal sealed class RefreshProgressDisplay : MonoBehaviour, IProgress<float>
 {
-	private readonly StringCache<double> _text = new(static value => $"Loading ghosts: {value:0}%");
+	private static readonly Vector2 Size = new(270, 50);
+	private static readonly Vector2 Margin = new(10, 10);
+
+
+	private readonly StringCache<double> _text = new(static value => $"{value:0}%");
 
 	private volatile float _progress;
 
-	void Awake()
-	{
-		useGUILayout = false;
-	}
-
 	void OnGUI()
 	{
-		Styles.ScaleRelative(1f, 1f);
+		Styles.ApplySkin();
+		Styles.ScaleRelative(0.5f, 1f);
+
 		var text = _text.GetString(Mathf.Round(_progress * 100));
-		GUI.Label(new Rect(Screen.width - 200, Screen.height - 50, 190, 40), text, Styles.RefreshProgress.LabelStyle);
+
+		GUILayout.BeginArea(Styles.GetScreenRect(TextAnchor.LowerCenter, Size, Margin), Styles.RefreshProgress);
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Loading ghosts:", Styles.RefreshProgressLabel);
+		GUILayout.FlexibleSpace();
+		GUILayout.Label(text, Styles.RefreshProgressLabel);
+		GUILayout.EndHorizontal();
+		GUILayout.EndArea();
 	}
 
 	public void Report(float value) => _progress = value;
-}
-
-partial class Styles
-{
-	public static class RefreshProgress
-	{
-		public static readonly GUIStyle LabelStyle = new(GUI.skin.box)
-		{
-			fontSize = 15,
-			alignment = TextAnchor.MiddleCenter,
-			wordWrap = false,
-		};
-	}
 }

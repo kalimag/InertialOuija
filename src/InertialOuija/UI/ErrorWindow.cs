@@ -2,6 +2,8 @@
 
 using GameScripts.Assets.Source.Tools;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
@@ -19,7 +21,7 @@ internal sealed class ErrorWindow : Window
 	private Vector2 _scrollPosition;
 
 	protected override Rect WindowPosition { get; set; }
-	protected override Rect InitialPosition => new(100, 100, 500, 200);
+	protected override Rect InitialPosition => new(100, 100, 700, 300);
 	protected override string Title => _title;
 
 
@@ -35,22 +37,25 @@ internal sealed class ErrorWindow : Window
 
 	protected override void DrawWindow()
 	{
-		_scrollPosition = GUILayout.BeginScrollView(_scrollPosition, Styles.ExpandHeight);
-		GUILayout.Label(_message);
+		_scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
+		GUILayout.Label(_message, Styles.MultilineWrapLabel);
 		GUILayout.EndScrollView();
 
 		GUILayout.BeginHorizontal();
 
-		if (GUILayout.Button("Copy", Styles.Width100))
+		if (GUILayout.Button("Copy", Styles.FixedButton))
 			CopyErrorMessage();
+
+		if (GUILayout.Button("Open Log", Styles.FixedButton))
+			OpenLog();
 
 		GUILayout.FlexibleSpace();
 
 		_hideErrors = GUILayout.Toggle(_hideErrors, "Hide further errors");
 
-		GUILayout.Space(10);
+		GUILayout.FlexibleSpace();
 
-		if (GUILayout.Button("Close", Styles.Width100))
+		if (GUILayout.Button("Close", Styles.FixedButton))
 			Close();
 
 		GUILayout.EndHorizontal();
@@ -70,6 +75,12 @@ internal sealed class ErrorWindow : Window
 		sb.AppendLine($"OS: {SystemInfo.operatingSystem} [{Environment.OSVersion}]");
 
 		GUIUtility.systemCopyBuffer = sb.ToString();
+	}
+
+	private static void OpenLog()
+	{
+		if (File.Exists(Application.consoleLogPath))
+			Process.Start(Application.consoleLogPath);
 	}
 
 

@@ -35,21 +35,9 @@ internal class VersionLabel : MonoBehaviour
 		if (!MenuNavigator.ActiveMenu || MenuNavigator.ActiveMenu.name != "MainMenuCanvas")
 			return;
 
+		Styles.ApplySkin();
 		Styles.ScaleRelative(0f, 1f);
 
-		GUI.Label(Screen.safeArea, _label, Styles.Version.LabelStyle);
-	}
-}
-
-partial class Styles
-{
-	public static class Version
-	{
-		public static readonly GUIStyle LabelStyle = new(GUI.skin.label)
-		{
-			fontSize = 15,
-			padding = new RectOffset(10, 10, 10, 10),
-			alignment = TextAnchor.LowerLeft
-		};
+		GUI.Label(Screen.safeArea, _label, Styles.Version);
 	}
 }

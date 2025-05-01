@@ -58,6 +58,8 @@ internal abstract class Window : MonoBehaviour
 
 	protected virtual void OnGUI()
 	{
+		Styles.ApplySkin();
+
 		Styles.Scale();
 
 		if (WindowPosition == Rect.zero)
@@ -76,12 +78,12 @@ internal abstract class Window : MonoBehaviour
 		{
 			_currentTooltip = _queuedTooltip;
 			_queuedTooltip = null;
-			var size = Styles.Tooltip.WindowStyle.CalcSize(new GUIContent(_currentTooltip));
+			var size = Styles.Tooltip.CalcSize(TempContent(_currentTooltip, null));
 			GUILayout.Window(ToolTipId,
 				new Rect(Event.current.mousePosition + TooltipMouseOffset, size),
 				_tooltipWindowFunction,
 				"",
-				Styles.Tooltip.WindowStyle);
+				GUIStyle.none);
 			GUI.BringWindowToFront(ToolTipId);
 		}
 	}
@@ -98,7 +100,7 @@ internal abstract class Window : MonoBehaviour
 
 	private static void DrawTooltipWindow(int id)
 	{
-		GUILayout.Label(_currentTooltip, Styles.Tooltip.LabelStyle, Styles.ExpandWidth);
+		GUILayout.Label(_currentTooltip, Styles.Tooltip);
 	}
 
 	protected abstract void DrawWindow();
@@ -116,24 +118,4 @@ internal abstract class Window : MonoBehaviour
 		return _tempContent;
 	}
 
-}
-
-partial class Styles
-{
-	public static class Tooltip
-	{
-		public static GUIStyle WindowStyle = new(GUI.skin.box)
-		{
-			wordWrap = false,
-			stretchWidth = true,
-		};
-
-		public static GUIStyle LabelStyle = new(GUI.skin.label)
-		{
-			wordWrap = false,
-			stretchWidth = true,
-			padding = new(0, 0, 0, 0),
-			margin = new(0, 0, 0, 0),
-		};
-	}
 }

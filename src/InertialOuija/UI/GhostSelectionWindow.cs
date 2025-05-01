@@ -14,7 +14,7 @@ namespace InertialOuija.UI
 
 
 		protected override string Title => "Ghosts";
-		protected override Rect InitialPosition => new(100, 100, 400, 50);
+		protected override Rect InitialPosition => new(100, 100, 600, 50);
 		protected override Rect WindowPosition { get => _windowPosition; set => _windowPosition = value; }
 
 		private static Rect _windowPosition;
@@ -28,11 +28,11 @@ namespace InertialOuija.UI
 			new("None"),
 		};
 
-		private static readonly string[] CarFilterLabels =
+		private static readonly GUIContent[] CarFilterLabels =
 		{
-			"Same Car",
-			"Same Class",
-			"Any"
+			new("Same Car"),
+			new("Same Class"),
+			new("Any"),
 		};
 
 
@@ -51,73 +51,48 @@ namespace InertialOuija.UI
 
 		protected override void DrawWindow()
 		{
-			GUILayout.BeginVertical();
+			using (Styles.Row("Ghosts:"))
+				Config.Ghosts.Mode = (ExternalGhostMode)GUILayout.Toolbar((int)Config.Ghosts.Mode, ModeLabels, Styles.Toolbar);
 
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Ghosts:", Styles.Width100);
-			Config.Ghosts.Mode = (ExternalGhostMode)GUILayout.Toolbar((int)Config.Ghosts.Mode, ModeLabels);
-			GUILayout.EndHorizontal();
+			using (Styles.Enable(Config.Ghosts.Mode is not (ExternalGhostMode.Default or ExternalGhostMode.None)))
+			{
+				using (Styles.Row("Ghost count:"))
+				{
+					GUILayout.Label(_countString.GetString(Config.Ghosts.Count), Styles.CenteredLabel, GhostCountLabelLayout);
+					Config.Ghosts.Count = Mathf.RoundToInt(GUILayout.HorizontalSlider(Config.Ghosts.Count, 1, Config.Ghosts.MaxCount));
+				}
 
+				using (Styles.Row("Car:"))
+					Config.Ghosts.CarFilter = (CarFilter)GUILayout.Toolbar((int)Config.Ghosts.CarFilter, CarFilterLabels, Styles.Toolbar);
 
-			GUI.enabled = Config.Ghosts.Mode is not ExternalGhostMode.Default and not ExternalGhostMode.None;
+				using (Styles.Enable(Config.Ghosts.Mode != ExternalGhostMode.NextBest && Config.Ghosts.CarFilter != CarFilter.SameCar))
+				using (Styles.Row())
+					Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
 
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Ghost count:", Styles.Width100);
-			GUILayout.Label(_countString.GetString(Config.Ghosts.Count), Styles.GhostSelection.GhostCountLabelStyle, Styles.GhostSelection.GhostCountLabelLayout);
-			Config.Ghosts.Count = Mathf.RoundToInt(GUILayout.HorizontalSlider(Config.Ghosts.Count, 1, Config.Ghosts.MaxCount,
-				Styles.GhostSelection.GhostCountSlider, GUI.skin.horizontalSliderThumb));
-			GUILayout.EndHorizontal();
+				using (Styles.Enable(Config.Ghosts.Mode != ExternalGhostMode.NextBest))
+				using (Styles.Row())
+					Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
+			}
 
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Car:", Styles.Width100);
-			Config.Ghosts.CarFilter = (CarFilter)GUILayout.Toolbar((int)Config.Ghosts.CarFilter, CarFilterLabels);
-			GUILayout.EndHorizontal();
+			Styles.Space();
 
-			GUI.enabled &= Config.Ghosts.CarFilter != CarFilter.SameCar && Config.Ghosts.Mode != ExternalGhostMode.NextBest;
-			Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
+			using (Styles.Horizontal())
+			{
+				if (GUILayout.Button("Options", Styles.FixedButton))
+					UIController.ToggleGhostOptionsWindow();
 
-			GUI.enabled = Config.Ghosts.Mode is not ExternalGhostMode.Default and not ExternalGhostMode.None and not ExternalGhostMode.NextBest;
-			Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
+				GUILayout.FlexibleSpace();
 
-
-			GUI.enabled = true;
-
-			GUILayout.Space(10);
-
-			GUILayout.BeginHorizontal();
-			if (GUILayout.Button("Options"))
-				UIController.ToggleGhostOptionsWindow();
-
-			GUILayout.Space(10);
-
-			if (GUILayout.Button("Close"))
-				Close();
-			GUILayout.EndHorizontal();
-
-
-			GUILayout.EndVertical();
+				if (GUILayout.Button("Close", Styles.FixedButton))
+					Close();
+			}
 		}
 
 		void IReceiveMessages<GameModeSetupCompleteMessage>.HandleMessage(GameModeSetupCompleteMessage message)
 		{
 			Close();
 		}
-	}
 
-	partial class Styles
-	{
-		public static class GhostSelection
-		{
-			public static GUILayoutOption[] GhostCountLabelLayout = new[] { GUILayout.Width(30) };
-			public static readonly GUIStyle GhostCountLabelStyle = new(GUI.skin.label)
-			{
-				alignment = TextAnchor.MiddleCenter,
-				wordWrap = false,
-			};
-			public static readonly GUIStyle GhostCountSlider = new(GUI.skin.horizontalSlider)
-			{
-				margin = new(0, 0, 10, 0) 
-			};
-		}
+		private static GUILayoutOption[] GhostCountLabelLayout = [GUILayout.Width(40)];
 	}
 }

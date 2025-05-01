@@ -39,6 +39,7 @@
 		<Reference Include="Assembly-CSharp-firstpass" />
 		<Reference Include="UnityEngine" />
 		<Reference Include="UnityEngine.AnimationModule" />
+		<Reference Include="UnityEngine.AssetBundleModule" />
 		<Reference Include="UnityEngine.CoreModule" />
 		<Reference Include="UnityEngine.CrashReportingModule" />
 		<Reference Include="UnityEngine.InputLegacyModule" />
@@ -60,6 +61,7 @@
 		<None Include="..\..\README.md" Link="README.md" CopyToOutputDirectory="Always" />
 		<None Include="..\..\LICENSE.txt" Link="LICENSE.txt" CopyToOutputDirectory="Always" />
 		<None Include="..\..\THIRD-PARTY-LICENSES.txt" Link="THIRD-PARTY-LICENSES.txt" CopyToOutputDirectory="Always" />
+		<None Include="..\..\unity\AssetBundles\gui" Link="gui.bundle" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 	<Target Name="OrganizeOutput" AfterTargets="AfterBuild">
