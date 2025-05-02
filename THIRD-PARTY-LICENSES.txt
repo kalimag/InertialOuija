@@ -1,10 +1,10 @@
 
 -------------------------------------------------------------------------------
-https://github.com/pardeike/Harmony
+https://github.com/pardeike/Harmony Copyright (c) 2017 Andreas Pardeike
+https://github.com/praeclarum/sqlite-net Copyright (c) Krueger Systems, Inc.
+https://github.com/sqlkata/querybuilder Copyright (c) 2017 SqlKata
 
 MIT License
-
-Copyright (c) 2017 Andreas Pardeike
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
