@@ -247,8 +247,9 @@ internal class ExternalGhostManager
 		{
 			try
 			{
+				Log.Info($"Enumerate \"{GhostsPath}\"...");
 				foreach (var file in Directory.GetFiles(GhostsPath, "*" + GhostsExtension, SearchOption.AllDirectories))
-					unprocessedFiles.Add(Path.GetFullPath(file));
+					unprocessedFiles.Add(FileUtility.PrefixLongPath(file));
 			}
 			catch (DirectoryNotFoundException)
 			{

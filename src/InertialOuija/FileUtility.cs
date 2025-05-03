@@ -22,7 +22,7 @@ internal static class FileUtility
 			{
 				try
 				{
-					var stream = new FileStream(fullPath, overwriteFirst ? FileMode.Create : FileMode.CreateNew, FileAccess.Write, FileShare.None);
+					var stream = new FileStream(PrefixLongPath(fullPath), overwriteFirst ? FileMode.Create : FileMode.CreateNew, FileAccess.Write, FileShare.None);
 					return stream;
 				}
 				catch (IOException ex)
@@ -56,5 +56,16 @@ internal static class FileUtility
 			name = name.Substring(0, (int)maxLength - 3) + "...";
 
 		return name;
+	}
+
+	public static string PrefixLongPath(string path)
+	{
+		const int MaxPath = 260 - 1; // plus null terminator
+		const string Prefix = @"\\?\";
+		path = Path.GetFullPath(path);
+		if (path.Length <= MaxPath || path.StartsWith(Prefix) || Environment.OSVersion.Platform != PlatformID.Win32NT)
+			return path;
+		else
+			return Prefix + path;
 	}
 }

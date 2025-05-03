@@ -3,11 +3,8 @@
 using System;
 using System.IO;
 using System.IO.Compression;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Threading;
 using GameScripts.Assets.Source.GhostCars;
-using GameScripts.Assets.Source.SaveData;
 using InertialOuija.Utilities;
 
 namespace InertialOuija.Ghosts;
@@ -77,7 +74,7 @@ public class ExternalGhost
 	}
 	public static ExternalGhost Load(string path)
 	{
-		using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+		using var stream = new FileStream(FileUtility.PrefixLongPath(path), FileMode.Open, FileAccess.Read, FileShare.Read);
 		return Load(stream);
 	}
 
@@ -89,7 +86,7 @@ public class ExternalGhost
 	}
 	public static ExternalGhostInfo LoadInfo(string path)
 	{
-		using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+		using var stream = new FileStream(FileUtility.PrefixLongPath(path), FileMode.Open, FileAccess.Read, FileShare.Read);
 		return LoadInfo(stream);
 	}
 }
