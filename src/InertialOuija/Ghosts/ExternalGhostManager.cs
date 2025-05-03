@@ -24,6 +24,8 @@ internal class ExternalGhostManager
 {
 	private static readonly string GhostsExtension = ".ghost";
 
+	private static bool _unknownVersionShown;
+
 	public static ExternalGhostDatabase Ghosts { get; private set; }
 
 	private static CancellationTokenSource _refreshCancellation;
@@ -308,6 +310,15 @@ internal class ExternalGhostManager
 				var info = ExternalGhost.LoadInfo(file);
 				Log.Debug($"New ghost: {info.Track} {info.Direction} {info.Car} {info.Time} {info.Username} {info.Source} (\"{file}\")");
 				Ghosts.Write(() => Ghosts.Add(ExternalGhostFile.FromInfo(fileInfo, info)));
+			}
+			catch (UnknownGhostVersionException ex)
+			{
+				Log.Error(ex, true);
+				if (!_unknownVersionShown)
+				{
+					ErrorWindow.ShowError($"Found a ghost with an unrecognized version ({ex.Version}), you probably need to update your mod.\n\nFile: {file}");
+					_unknownVersionShown = true;
+				}
 			}
 			catch (Exception ex)
 			{

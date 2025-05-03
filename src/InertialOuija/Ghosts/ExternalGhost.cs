@@ -11,8 +11,8 @@ namespace InertialOuija.Ghosts;
 
 public class ExternalGhost
 {
-	private const uint FileSignature = 0x01_474449;
-
+	private const uint FileSignature = 0x474449; // IDG
+	private const uint CurrentFileVersion = 1;
 
 
 	public ExternalGhostInfo Info { get; }
@@ -35,7 +35,7 @@ public class ExternalGhost
 
 		using (var writer = new BinaryWriter(stream, Encoding.Default, true))
 		{
-			writer.Write(FileSignature);
+			writer.Write(FileSignature | (CurrentFileVersion << 24));
 		}
 
 		using var compressedStream = new GZipStream(stream, CompressionMode.Compress, true);
@@ -49,8 +49,11 @@ public class ExternalGhost
 		using (var reader = new BinaryReader(stream, Encoding.Default, true))
 		{
 			uint signature = reader.ReadUInt32();
-			if (signature != FileSignature)
+			var version = signature >> 24;
+			if ((signature & 0x00FFFFFF) != FileSignature || version == 0)
 				throw new InvalidDataException($"Ghost file does not have expected signature.");
+			if (version > CurrentFileVersion)
+				throw new UnknownGhostVersionException(version);
 		}
 
 		ExternalGhostInfo info;
