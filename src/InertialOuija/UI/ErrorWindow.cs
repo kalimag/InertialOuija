@@ -79,8 +79,14 @@ internal sealed class ErrorWindow : Window
 
 	private static void OpenLog()
 	{
-		if (File.Exists(Application.consoleLogPath))
-			Process.Start(Application.consoleLogPath);
+		var logPath = Path.GetFullPath(Application.consoleLogPath); // explorer doesn't like Unity's use of forward slashes
+		if (!File.Exists(logPath))
+			return;
+
+		if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+			Process.Start("explorer", $"/select,\"{logPath}\"")?.Dispose();
+		else
+			Process.Start(logPath)?.Dispose();
 	}
 
 
