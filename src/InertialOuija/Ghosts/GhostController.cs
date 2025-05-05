@@ -8,6 +8,7 @@ using GameScripts.Assets.Source.GhostCars.GhostPlayback;
 using GameScripts.Assets.Source.Tools;
 using InertialOuija.Components;
 using InertialOuija.Patches;
+using InertialOuija.UI.Components;
 using UnityEngine;
 using static InertialOuija.Configuration.ModConfig;
 
@@ -30,6 +31,7 @@ internal static class GhostController
 			CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
 		var ghostFiles = ExternalGhostManager.Ghosts.FindGhosts(filter, Config.Ghosts.Mode, Config.Ghosts.Count);
 
+		ChosenGhostDisplay.Instance.SetGhosts(ghostFiles);
 		SpawnGhosts(ghostFiles, ghostPlayer);
 	}
 

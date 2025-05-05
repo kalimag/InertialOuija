@@ -56,6 +56,11 @@ internal partial class Styles
 
 
 	public static GUIStyle CenteredLabel => "CenteredLabel";
+	public static GUIStyle ChosenGhost => "ChosenGhost";
+	public static GUIStyle ChosenGhostScoreLabel => "ChosenGhostScoreLabel";
+	public static GUIStyle ChosenGhostNameLabel => "ChosenGhostNameLabel";
+	public static GUIStyle ChosenGhostMiscLabel => "ChosenGhostMiscLabel";
+	public static GUIStyle ChosenGhostMessage => "ChosenGhostMessage";
 	public static GUIStyle FixedButton => "FixedButton";
 	public static GUIStyle MultilineLabel => "MultilineLabel";
 	public static GUIStyle MultilineWrapLabel => "MultilineWrapLabel";
@@ -94,9 +99,21 @@ internal partial class Styles
 		return new();
 	}
 
+	public static HorizontalScope Horizontal(GUIStyle style)
+	{
+		GUILayout.BeginHorizontal(style);
+		return new();
+	}
+
 	public static HorizontalScope Vertical()
 	{
 		GUILayout.BeginVertical();
+		return new();
+	}
+
+	public static HorizontalScope Vertical(GUIStyle style)
+	{
+		GUILayout.BeginVertical(style);
 		return new();
 	}
 

@@ -112,7 +112,7 @@ public partial class ExternalGhostDatabase : SQLiteDatabase
 		return query;
 	}
 
-	public IEnumerable<ExternalGhostFile> FindGhosts(in GhostFilter filter, ExternalGhostMode mode, int count)
+	public IReadOnlyList<ExternalGhostFile> FindGhosts(in GhostFilter filter, ExternalGhostMode mode, int count)
 	{
 		if (mode == ExternalGhostMode.Default)
 			throw new InvalidOperationException("Cannot use external ghosts in default mode.");
