@@ -149,6 +149,9 @@ public partial class ExternalGhostDatabase : SQLiteDatabase
 		if (filter.UniqueCars && mode != ExternalGhostMode.NextBest)
 			ghosts = ghosts.Distinct<ExternalGhostFile>(GhostCarComparer.Instance);
 
+		if (filter.UniqueUsers && filter.User == null && mode != ExternalGhostMode.NextBest)
+			ghosts = ghosts.Distinct<ExternalGhostFile>(GhostUserComparer.Instance);
+
 		if (pbPredicate != null)
 		{
 			// This seems unreasonably inefficient but I'm not gonna figure out how to do it in SQL

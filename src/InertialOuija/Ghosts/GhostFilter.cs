@@ -13,6 +13,7 @@ public record struct GhostFilter(
 	Car? Car = null,
 	PerformanceClassification? PerformanceClass = null,
 	bool UniqueCars = false,
+	bool UniqueUsers = false,
 	ulong? User = null
 )
 {
@@ -24,6 +25,7 @@ public record struct GhostFilter(
 			Config.Ghosts.CarFilter == CarFilter.SameCar ? car : null,
 			Config.Ghosts.CarFilter == CarFilter.SameClass ? car.GetClass() : null,
 			Config.Ghosts.UniqueCars && Config.Ghosts.CarFilter != CarFilter.SameCar && Config.Ghosts.Mode != ExternalGhostMode.NextBest,
+			Config.Ghosts.UniqueUsers && !Config.Ghosts.MyGhosts && Config.Ghosts.Mode != ExternalGhostMode.NextBest,
 			Config.Ghosts.MyGhosts && Config.Ghosts.Mode != ExternalGhostMode.NextBest ? GameData.SteamUser.Id : null
 		);
 }

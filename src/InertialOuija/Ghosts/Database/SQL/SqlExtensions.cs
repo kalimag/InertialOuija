@@ -21,16 +21,9 @@ internal static class SqlExtensions
 		return query;
 	}
 
-	// Users with ghosts saved by a pre-release version that didn't include the SteamUserId
-	private static readonly Dictionary<ulong, string> UserIdFallbacks = new()
-	{
-		[76561198065943770ul] = "Bonz",
-		[76561198041430874ul] = "Sean A",
-		[76561198014309406ul] = "kalimag",
-	};
 	public static Query WhereUser(this Query query, ulong steamUserId)
 	{
-		if (UserIdFallbacks.TryGetValue(steamUserId, out var fallbackName))
+		if (UserData.GetFallbackUsername(steamUserId) is string fallbackName)
 		{
 			return query.Where(query => query
 				.Where(nameof(ExternalGhostInfo.SteamUserId), steamUserId)

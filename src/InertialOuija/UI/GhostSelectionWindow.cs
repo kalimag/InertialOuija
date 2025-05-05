@@ -65,13 +65,19 @@ namespace InertialOuija.UI
 				using (Styles.Row("Car:"))
 					Config.Ghosts.CarFilter = (CarFilter)GUILayout.Toolbar((int)Config.Ghosts.CarFilter, CarFilterLabels, Styles.Toolbar);
 
-				using (Styles.Enable(Config.Ghosts.Mode != ExternalGhostMode.NextBest && Config.Ghosts.CarFilter != CarFilter.SameCar))
-				using (Styles.Row())
-					Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
-
 				using (Styles.Enable(Config.Ghosts.Mode != ExternalGhostMode.NextBest))
-				using (Styles.Row())
-					Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
+				{
+					using (Styles.Enable(Config.Ghosts.CarFilter != CarFilter.SameCar))
+					using (Styles.Row())
+						Config.Ghosts.UniqueCars = GUILayout.Toggle(Config.Ghosts.UniqueCars, "Unique cars");
+
+					using (Styles.Enable(!Config.Ghosts.MyGhosts))
+					using (Styles.Row())
+						Config.Ghosts.UniqueUsers = GUILayout.Toggle(Config.Ghosts.UniqueUsers, "Unique players");
+
+					using (Styles.Row())
+						Config.Ghosts.MyGhosts = GUILayout.Toggle(Config.Ghosts.MyGhosts, "My ghosts only");
+				}
 			}
 
 			Styles.Space();
