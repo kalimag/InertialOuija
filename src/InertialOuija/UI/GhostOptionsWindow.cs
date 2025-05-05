@@ -44,16 +44,20 @@ namespace InertialOuija.UI
 			if (GUILayout.Button("Open Ghost Folder"))
 				OpenGhostFolder();
 
-			if (GUILayout.Button(TempContent("Refresh External Ghosts", "Use if you added or removed files while the game is running")))
-				ExternalGhostManager.RefreshDatabaseAsync().LogFailure();
+			using (Styles.Enable(!ExternalGhostManager.RefreshInProgress))
+			{
+				if (GUILayout.Button(TempContent("Refresh External Ghosts", "Use if you added or removed files while the game is running")))
+					ExternalGhostManager.RefreshDatabaseAsync().LogFailure();
 
-			if (GUILayout.Button(TempContent("Reset Ghost Cache", "This shouldn't be necessary unless something goes wrong")))
-				ExternalGhostManager.ResetCache().LogFailure();
+				if (GUILayout.Button(TempContent("Reset Ghost Cache", "This shouldn't be necessary unless something goes wrong")))
+					ExternalGhostManager.ResetCache().LogFailure();
 
-			Styles.Space();
+				Styles.Space();
 
-			if (GUILayout.Button(TempContent("Export Old Ghosts", "This only needs to be done once")))
-				ExternalGhostManager.ExportPlayerDatabase();
+				using (Styles.Enable(GameData.CorePluginInitialized))
+					if (GUILayout.Button(TempContent("Export Old Ghosts", "This only needs to be done once")))
+						ExternalGhostManager.ExportPlayerDatabase();
+			}
 
 			Styles.Space();
 
