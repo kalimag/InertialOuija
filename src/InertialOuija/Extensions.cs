@@ -24,7 +24,7 @@ namespace InertialOuija
 
 
 		public static bool IsFileSystemException(this Exception exception)
-			=> exception is (IOException and not EndOfStreamException) or UnauthorizedAccessException;
+			=> exception is (IOException and not EndOfStreamException) or UnauthorizedAccessException or OutOfMemoryException;
 
 		public static T GetOrAddComponent<T>(this GameObject obj) where T : Component
 		{
