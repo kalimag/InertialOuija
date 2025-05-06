@@ -69,7 +69,7 @@ namespace InertialOuija.Ghosts.Database.SQL
 			if (UserVersion != null)
 				_writeConnection.ExecuteScalar<int>($"PRAGMA user_version = {UserVersion}");
 
-			_readConnection = OpenConnection(new(DatabasePath, openFlags | SQLiteOpenFlags.ReadOnly, true));
+			_readConnection = OpenConnection(new(DatabasePath, openFlags | SQLiteOpenFlags.ReadOnly, true, uncheckedUInt64Conversion: true));
 		}
 
 		private SQLiteConnection OpenConnection(SQLiteConnectionString connectionString)

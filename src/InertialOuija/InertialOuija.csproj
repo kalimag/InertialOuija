@@ -7,7 +7,7 @@
 		<DebugType>embedded</DebugType>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>InertialOuija</AssemblyName>
-		<Version>3.0</Version>
+		<Version>3.0.1</Version>
 	</PropertyGroup>
 
 	<ItemDefinitionGroup>
