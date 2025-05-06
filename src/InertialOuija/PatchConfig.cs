@@ -24,6 +24,7 @@ internal class PatchConfig
 	[Include] public bool AllowKeyboardReverseBinding { get; set; } = true;
 	[Include] public bool FixSplitscreenCarSelection { get; set; } = true;
 	[Include] public bool FixSplitscreenStyleCounter { get; set; } = true;
+	[Include] public bool IgnoreUnfinishedLapTimes { get; set; } = true;
 	[Include] public bool DisableReplayRecording { get; set; } = true;
 	[Include] public bool EnableReplay { get; set; } = false;
 

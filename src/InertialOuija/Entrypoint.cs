@@ -78,6 +78,7 @@ internal class Entrypoint
 		harmony.Apply<AllowKeyboardReverseBindingPatches>(patchConfig.AllowKeyboardReverseBinding);
 		harmony.Apply<FixSplitscreenCarSelectionPatches>(patchConfig.FixSplitscreenCarSelection);
 		harmony.Apply<FixSplitscreenStyleCounterPatches>(patchConfig.FixSplitscreenStyleCounter);
+		harmony.Apply<IgnoreUnfinishedLapTimesPatches>(patchConfig.IgnoreUnfinishedLapTimes);
 		harmony.Apply<TimeAttackHudPatches>(patchConfig.TimeAttackHud);
 		harmony.Apply<DisableReplayRecordingPatches>(patchConfig.DisableReplayRecording && !patchConfig.EnableReplay);
 		harmony.Apply<EnableReplayPatches>(patchConfig.EnableReplay);
