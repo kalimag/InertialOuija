@@ -18,7 +18,7 @@ internal class AllowKeyboardReverseBindingPatches
 	static Exception RemapButton_UpdateContext(InputMapper.Context ____context, Exception __exception)
 	{
 		if (__exception != null)
-			Log.Error("Exception in RemapButton.UpdateContext", __exception);
+			Log.Error("Exception in RemapButton.UpdateContext", __exception, true);
 
 		if (__exception is not InvalidOperationException ||
 			____context?.actionId != GameScripts.RewiredConsts.Action.Reverse ||
