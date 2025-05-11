@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using InertialOuija.Components;
 using InertialOuija.Ghosts;
 using InertialOuija.UI;
 using UnityEngine;
@@ -29,6 +30,7 @@ internal static class MainController
 
 		AddGlobalComponent<HotkeyComponent>();
 		AddGlobalComponent<VersionLabel>();
+		AddGlobalComponent<HudControl>();
 
 		ExternalGhostManager.Initialize();
 	}

@@ -3,6 +3,7 @@
 using GameScripts.Assets.Source.Messaging;
 using GameScripts.Assets.Source.Messaging.Messages;
 using GameScripts.Assets.Source.Tools;
+using InertialOuija.Components;
 using InertialOuija.Ghosts;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,9 @@ internal class ChosenGhostDisplay : BaseComponent, IReceiveMessages<RaceStartMes
 
 	void OnGUI()
 	{
+		if (!HudControl.HudVisible)
+			return;
+
 		Styles.ApplySkin();
 		Styles.Scale(Margin.x, Margin.y);
 

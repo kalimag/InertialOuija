@@ -1,6 +1,7 @@
 ﻿extern alias GameScripts;
 
 using GameScripts.Assets.Source.Tools;
+using InertialOuija.Components;
 using UnityEngine;
 
 namespace InertialOuija.UI.Components
@@ -11,6 +12,8 @@ namespace InertialOuija.UI.Components
 
 		void OnGUI()
 		{
+			if (!HudControl.HudVisible)
+				return;
 			if (!RaceComplete && !CorePlugin.IsPaused)
 				return;
 
