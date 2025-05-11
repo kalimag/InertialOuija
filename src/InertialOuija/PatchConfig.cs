@@ -21,6 +21,7 @@ internal class PatchConfig
 	[Include] public bool PrecisionModeTimer { get; set; } = true;
 	[Include] public bool TimeAttackHud { get; set; } = true;
 	[Include] public bool ReplaceLeaderboardTitle { get; set; } = true;
+	[Include] public bool RememberSelectedPalette { get; set; } = true;
 	[Include] public bool AllowKeyboardReverseBinding { get; set; } = true;
 	[Include] public bool FixSplitscreenCarSelection { get; set; } = true;
 	[Include] public bool FixSplitscreenStyleCounter { get; set; } = true;
