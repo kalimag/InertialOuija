@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
@@ -21,7 +23,18 @@ internal static class PatchExtensions
 			catch (Exception ex)
 			{
 				Log.Error($"Failed to apply {patchClass.Name}", ex);
+#if DEBUG
 				return;
+#else
+				try
+				{
+					MainController.TrySendMainThread(() => Process.Start(Path.GetFullPath(UnityEngine.Application.consoleLogPath)));
+				}
+				finally
+				{
+					Environment.Exit(0xBAD);
+				}
+#endif
 			}
 
 #if DEBUG
