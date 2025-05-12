@@ -19,6 +19,8 @@ internal class ModConfig
 	[Include] public UIConfig UI { get; private set; } = new();
 	[Include] public CustomizationConfig Customization { get; private set; } = new();
 
+	public PatchConfig Patches { get; internal set; }
+
 
 
 	private static ModConfig Load()

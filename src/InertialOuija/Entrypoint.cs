@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using HarmonyLib;
 using InertialOuija;
+using InertialOuija.Configuration;
 using InertialOuija.Patches;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -54,6 +55,8 @@ internal class Entrypoint
 		FileLog.LogWriter = new StreamWriter(harmonyLogPath, false) { AutoFlush = true };
 		Harmony.DEBUG = true;
 #endif
+
+		ModConfig.Config.Patches = patchConfig;
 
 		MainController.Initialize();
 
