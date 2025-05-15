@@ -31,17 +31,17 @@ internal class IgnoreUnfinishedLapTimesPatches
 				BestLapTime={__instance.GetBestLapTime()}
 				GhostRecorder.FastestLap={__instance.TargetRacer.GetComponent<GhostRecorder>()?.FastestLap?.GetTotalTime()}
 				""");
-				return false;
+				return PrefixPatch.SkipOriginal;
 			}
 			else
 			{
-				return true;
+				return PrefixPatch.RunOriginal;
 			}
 		}
 		catch (Exception ex)
 		{
 			Log.Error(ex);
-			return true;
+			return PrefixPatch.RunOriginal;
 		}
 	}
 }

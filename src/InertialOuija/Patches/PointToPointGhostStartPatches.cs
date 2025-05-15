@@ -44,14 +44,14 @@ internal class PointToPointGhostStartPatches
 			if (StartFixNeeded(____recording))
 			{
 				Log.Debug($"Preventing ghost playback");
-				return false;
+				return PrefixPatch.SkipOriginal;
 			}
 		}
 		catch (Exception ex)
 		{
 			Log.Error(ex);
 		}
-		return true;
+		return PrefixPatch.RunOriginal;
 	}
 
 	private static bool StartFixNeeded(IGhostRecording recording)

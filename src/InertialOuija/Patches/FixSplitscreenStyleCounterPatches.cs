@@ -20,13 +20,13 @@ internal class FixSplitscreenStyleCounterPatches
 			if (CorePlugin.GameModeManager.ActivePlayers > 1 && message.Racer != ___Setup.gameObject)
 			{
 				Log.Debug($"Suppressing other racer's CompletedRaceMessage");
-				return false;
+				return PrefixPatch.SkipOriginal;
 			}
 		}
 		catch (Exception ex)
 		{
 			Log.Error(ex);
 		}
-		return true;
+		return PrefixPatch.RunOriginal;
 	}
 }

@@ -101,7 +101,10 @@ internal class TimeAttackHudPatches
 	static bool TimeAttack_Update()
 	{
 		// TimeAttack.Update() only updates the display of the target times
-		return !_hideTargetTimes;
+		if (_hideTargetTimes)
+			return PrefixPatch.SkipOriginal;
+		else
+			return PrefixPatch.RunOriginal;
 	}
 
 }
