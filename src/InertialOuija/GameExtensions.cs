@@ -6,6 +6,7 @@ using System.Threading;
 using GameScripts.Assets.Source.CarModel;
 using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.Gameplay.GameModes;
+using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.Localisation;
 using GameScripts.Assets.Source.Tools;
 using GameScripts.Assets.Source.UI.Menus;
@@ -97,6 +98,16 @@ internal static class GameExtensions
 
 	public static IEnumerable<Car> GetCars(this PerformanceClassification perfClass)
 		=> CarDetails.Value.Where(car => car.Value.PerfClass == perfClass).Select(car => car.Key);
+
+
+	public static RollingStartRecord Clone(this RollingStartRecord record) =>
+		new()
+		{
+			GhostKey = record.GhostKey,
+			Recording = record.Recording.ToList(),
+			Speed = record.Speed
+		};
+
 
 	public static void IntegrateInLayout(this RectTransform item, int? index = null, int offset = 0)
 	{

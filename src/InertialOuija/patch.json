@@ -1,6 +1,7 @@
 ﻿{
   "SaveGhosts": true,
   "GhostPlayback": true,
+  "RollingStartManagement": true,
   "UnsavedGhostWarning": true,
   "PrecisionModeTimer": true,
   "TimeAttackHud": true,

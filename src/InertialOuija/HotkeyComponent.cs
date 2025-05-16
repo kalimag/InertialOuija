@@ -23,6 +23,9 @@ internal class HotkeyComponent : MonoBehaviour
 				UIController.ToggleOptionsWindow();
 		}
 
+		if (Input.GetKeyDown(KeyCode.F4))
+			UIController.ToggleTrackOptionsWindow();
+
 		if (Input.GetKeyDown(KeyCode.F11))
 			Components.HudControl.ToggleHud();
 

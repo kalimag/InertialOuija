@@ -14,6 +14,7 @@ internal class PatchConfig
 	[Include] public string AllowVersion { get; set; }
 	[Include] public bool SaveGhosts { get; set; } = true;
 	[Include] public bool GhostPlayback { get; set; } = true;
+	[Include] public bool RollingStartManagement { get; set; } = true;
 	[Include] public bool UnsavedGhostWarning { get; set; } = true;
 	[Include] public bool PrecisionModeTimer { get; set; } = true;
 	[Include] public bool TimeAttackHud { get; set; } = true;

@@ -73,6 +73,7 @@ internal class Entrypoint
 		harmony.Apply<SaveGhostPatches>(patchConfig.SaveGhosts);
 		harmony.Apply<SaveDownloadedGhostPatches>(patchConfig.SaveGhosts);
 		harmony.Apply<GhostPlaybackPatches>(patchConfig.GhostPlayback);
+		harmony.Apply<RollingStartManagementPatches>(patchConfig.RollingStartManagement);
 		harmony.Apply<PointToPointGhostStartPatches>();
 		harmony.Apply<SerializationWhitelistPatches>();
 		harmony.Apply<DownloadDlcGhostPatches>();

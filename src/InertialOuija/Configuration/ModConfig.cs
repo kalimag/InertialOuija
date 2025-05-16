@@ -17,6 +17,7 @@ internal class ModConfig
 
 	[Include] public GhostConfig Ghosts { get; private set; } = new();
 	[Include] public UIConfig UI { get; private set; } = new();
+	[Include] public GameConfig Game { get; private set; } = new();
 	[Include] public CustomizationConfig Customization { get; private set; } = new();
 	[Include] public MiscConfig Misc { get; private set; } = new();
 
