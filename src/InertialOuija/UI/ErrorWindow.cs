@@ -91,7 +91,7 @@ internal sealed class ErrorWindow : Window
 
 
 
-	public static void ShowError(string message, string title = "Error")
+	public static void ShowError(string message, string title = "ERROR")
 	{
 		if (!_hideErrors && Config.UI.ShowErrors)
 			MainController.TryPostMainThread(CreateErrorWindow);

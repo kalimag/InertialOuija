@@ -13,8 +13,8 @@ namespace InertialOuija.UI
 		private readonly StringCache<int> _countString = new("Ghosts: 0");
 
 
-		protected override string Title => "Ghost Options";
 		protected override Rect InitialPosition => new(710, 100, 200, 50);
+		protected override string Title => "OPTIONS";
 		protected override Rect WindowPosition { get => _windowPosition; set => _windowPosition = value; }
 
 		private static Rect _windowPosition;

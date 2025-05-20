@@ -19,13 +19,13 @@ internal static class Log
 	public static void Warning(string message)
 	{
 		UnityEngine.Debug.LogWarning($"[InertialOuija] {message}");
-		UI.ErrorWindow.ShowError(message, "Warning");
+		UI.ErrorWindow.ShowError(message, "WARNING");
 	}
 
 	public static void Warning(string message, string source)
 	{
 		UnityEngine.Debug.LogWarning($"[InertialOuija {source}] {message}");
-		UI.ErrorWindow.ShowError($"{source}: {message}", "Warning");
+		UI.ErrorWindow.ShowError($"{source}: {message}", "WARNING");
 	}
 
 	public static void Error(string message, Exception ex, bool hidden = false)
