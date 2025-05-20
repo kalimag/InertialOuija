@@ -9,6 +9,8 @@ namespace InertialOuija.UI;
 internal partial class Styles
 {
 	private const float BaseDPI = 96f;
+	private const float MinScreenWidth = 1600;
+	private const float MinScreenHeight = 900;
 
 	private static readonly Lazy<AssetBundle> GuiAssets = new(() => AssetBundle.LoadFromFile(Path.Combine(FileUtility.ModDirectory, "gui.bundle")));
 	private static readonly Lazy<GUISkin> GuiSkin = new(() => GuiAssets.Value.LoadAsset<GUISkin>("IDSkin"));
@@ -19,7 +21,9 @@ internal partial class Styles
 
 	public static void Scale(float x, float y)
 	{
-		float scale = Screen.dpi / BaseDPI * Config.UI.ModScale;
+		float dpiScale = Screen.dpi / BaseDPI;
+		float resolutionScale = Mathf.Min(1.0f, Math.Min(Screen.width / MinScreenWidth, Screen.height / MinScreenHeight) / dpiScale);
+		float scale = dpiScale * resolutionScale * Config.UI.ModScale;
 		GUI.matrix = Matrix4x4.identity;
 		GUIUtility.ScaleAroundPivot(new Vector2(scale, scale), new Vector2(x, y));
 	}
