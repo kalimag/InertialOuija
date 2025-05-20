@@ -62,6 +62,7 @@ internal partial class Styles
 	public static GUIStyle ChosenGhostMiscLabel => "ChosenGhostMiscLabel";
 	public static GUIStyle ChosenGhostMessage => "ChosenGhostMessage";
 	public static GUIStyle FixedButton => "FixedButton";
+	public static GUIStyle Heading => "Heading";
 	public static GUIStyle MultilineLabel => "MultilineLabel";
 	public static GUIStyle MultilineWrapLabel => "MultilineWrapLabel";
 	public static GUIStyle RefreshProgress => "RefreshProgress";
