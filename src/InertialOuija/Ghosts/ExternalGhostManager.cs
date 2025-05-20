@@ -37,7 +37,7 @@ internal class ExternalGhostManager
 			if (!string.IsNullOrWhiteSpace(Config.Ghosts.Directory))
 				return Path.GetFullPath(Config.Ghosts.Directory);
 			else
-				return Path.Combine(Path.GetDirectoryName(GameData.DataPath), "Ghosts");
+				return Path.Combine(FileUtility.GameDirectory, "Ghosts");
 		}
 	}
 
