@@ -8,7 +8,7 @@ using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.UI
 {
-	internal class GhostOptionsWindow : Window
+	internal class OptionsWindow : Window
 	{
 		private readonly StringCache<int> _countString = new("Ghosts: 0");
 

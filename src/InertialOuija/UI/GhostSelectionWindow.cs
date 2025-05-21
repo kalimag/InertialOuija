@@ -85,7 +85,7 @@ namespace InertialOuija.UI
 			using (Styles.Horizontal())
 			{
 				if (GUILayout.Button("Options", Styles.FixedButton))
-					UIController.ToggleGhostOptionsWindow();
+					UIController.ToggleOptionsWindow();
 
 				GUILayout.FlexibleSpace();
 
