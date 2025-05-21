@@ -19,6 +19,9 @@ internal class HotkeyComponent : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.F2))
 			UIController.ToggleGhostSelectionWindow();
 
+		if (Input.GetKeyDown(KeyCode.F3))
+			UIController.ToggleOptionsWindow();
+
 		if (Input.GetKeyDown(KeyCode.F11))
 			Components.HudControl.ToggleHud();
 
