@@ -8,6 +8,7 @@
   "TimeAttackHud": true,
   "ReplaceLeaderboardTitle": true,
   "RememberSelectedPalette": true,
+  "AutoScreenshot": true,
   "AllowKeyboardReverseBinding": true,
   "FixSplitscreenCarSelection": true,
   "FixSplitscreenStyleCounter": true,

@@ -44,6 +44,7 @@
 		<Reference Include="UnityEngine.CrashReportingModule" />
 		<Reference Include="UnityEngine.InputLegacyModule" />
 		<Reference Include="UnityEngine.IMGUIModule" />
+		<Reference Include="UnityEngine.ScreenCaptureModule" />
 		<Reference Include="UnityEngine.TextRenderingModule" />
 		<Reference Include="UnityEngine.UI" />
 		<Reference Include="Unity.TextMeshPro" />

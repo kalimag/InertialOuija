@@ -79,6 +79,7 @@ internal class Entrypoint
 		harmony.Apply<PrecisionModeTimerPatches>(patchConfig.PrecisionModeTimer);
 		harmony.Apply<ReplaceLeaderboardTitlePatches>(patchConfig.ReplaceLeaderboardTitle);
 		harmony.Apply<RememberSelectedPalettePatches>(patchConfig.RememberSelectedPalette);
+		harmony.Apply<AutoScreenshotPatches>(patchConfig.AutoScreenshot);
 		harmony.Apply<AllowKeyboardReverseBindingPatches>(patchConfig.AllowKeyboardReverseBinding);
 		harmony.Apply<FixSplitscreenCarSelectionPatches>(patchConfig.FixSplitscreenCarSelection);
 		harmony.Apply<FixSplitscreenStyleCounterPatches>(patchConfig.FixSplitscreenStyleCounter);

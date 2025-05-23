@@ -1,4 +1,6 @@
 ﻿extern alias GameScripts;
+
+using System;
 using System.Diagnostics;
 using System.IO;
 using InertialOuija.Ghosts;
@@ -39,6 +41,14 @@ namespace InertialOuija.UI
 			Config.UI.HideAchievedTargetTimes = GUILayout.Toggle(Config.UI.HideAchievedTargetTimes, TempContent("Hide medal target times in HUD", "Hides the gold/silver/bronze display if your PB is better"));
 			Config.UI.ShowChosenGhosts = GUILayout.Toggle(Config.UI.ShowChosenGhosts, "Show ghost list before race");
 
+			GUILayout.Label("Misc", Styles.Heading);
+			using (Styles.Horizontal())
+			{
+				Config.Misc.ScreenshotNewRecord = GUILayout.Toggle(Config.Misc.ScreenshotNewRecord, TempContent("Take screenshot of records", "Take screenshot of the lap time popup and\nfinish screen when setting a new record"));
+				if (GUILayout.Button("Open Folder"))
+					OpenFolder(FileUtility.ScreenshotDirectory);
+			}
+
 			GUILayout.Label("Ghost Files", Styles.Heading);
 			GUILayout.Label(_countString.GetString(ExternalGhostManager.Count));
 
@@ -49,7 +59,7 @@ namespace InertialOuija.UI
 						ExternalGhostManager.RefreshDatabaseAsync().LogFailure();
 
 				if (GUILayout.Button("Open Ghost Folder", CustomStyles.GhostButtonLayout))
-					OpenGhostFolder();
+					OpenFolder(ExternalGhostManager.GhostsPath);
 			}
 
 			Styles.Space();
@@ -75,12 +85,17 @@ namespace InertialOuija.UI
 			}
 		}
 
-		private void OpenGhostFolder()
+		private void OpenFolder(string path)
 		{
-			if (!Directory.Exists(ExternalGhostManager.GhostsPath))
-				Directory.CreateDirectory(ExternalGhostManager.GhostsPath);
-
-			Process.Start(ExternalGhostManager.GhostsPath);
+			try
+			{
+				Directory.CreateDirectory(path);
+				Process.Start(path);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
 		}
 
 		private static class CustomStyles

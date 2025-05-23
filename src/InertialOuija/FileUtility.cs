@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Doorstop;
+using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija;
 
@@ -10,6 +11,18 @@ internal static class FileUtility
 {
 	public static string ModDirectory { get; } = Path.GetDirectoryName(Path.GetFullPath(typeof(Entrypoint).Assembly.Location));
 	public static string GameDirectory { get; } = Path.GetDirectoryName(GameData.DataPath ?? ModDirectory);
+
+	public static string ScreenshotDirectory
+	{
+		get
+		{
+			if (!String.IsNullOrWhiteSpace(Config.Misc.ScreenshotPath))
+				return Config.Misc.ScreenshotPath;
+			else
+				return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.DoNotVerify), "Inertial Drift");
+		}
+	}
+
 
 	public static FileStream CreateUniqueFile(string directory, string fileName, string extension, bool overwriteFirst = false, uint maxTries = 100)
 	{
