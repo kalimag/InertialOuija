@@ -8,4 +8,5 @@ internal class MiscConfig
 {
 	[Include] public bool ScreenshotNewRecord { get; set; } = false;
 	[Include] public string ScreenshotPath { get; set; } = "";
+	[Include] public bool SkipIntro { get; set; } = false;
 }

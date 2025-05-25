@@ -42,6 +42,7 @@ namespace InertialOuija.UI
 			Config.UI.ShowChosenGhosts = GUILayout.Toggle(Config.UI.ShowChosenGhosts, "Show ghost list before race");
 
 			GUILayout.Label("Misc", Styles.Heading);
+			Config.Misc.SkipIntro = GUILayout.Toggle(Config.Misc.SkipIntro, "Skip intro");
 			using (Styles.Horizontal())
 			{
 				Config.Misc.ScreenshotNewRecord = GUILayout.Toggle(Config.Misc.ScreenshotNewRecord, TempContent("Take screenshot of records", "Take screenshot of the lap time popup and\nfinish screen when setting a new record"));
@@ -100,7 +101,7 @@ namespace InertialOuija.UI
 
 		private static class CustomStyles
 		{
-			public static GUILayoutOption[] GhostButtonLayout = [GUILayout.Width(200)];
+			public static GUILayoutOption[] GhostButtonLayout = [GUILayout.Width(220)];
 		}
 	}
 }

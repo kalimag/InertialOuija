@@ -47,6 +47,7 @@
 		<Reference Include="UnityEngine.ScreenCaptureModule" />
 		<Reference Include="UnityEngine.TextRenderingModule" />
 		<Reference Include="UnityEngine.UI" />
+		<Reference Include="UnityEngine.VideoModule" />
 		<Reference Include="Unity.TextMeshPro" />
 		<Reference Include="Rewired_Core" />
 	</ItemGroup>

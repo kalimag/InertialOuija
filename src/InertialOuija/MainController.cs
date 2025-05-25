@@ -5,6 +5,7 @@ using InertialOuija.Components;
 using InertialOuija.Ghosts;
 using InertialOuija.UI;
 using UnityEngine;
+using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija;
 
@@ -31,6 +32,9 @@ internal static class MainController
 		AddGlobalComponent<HotkeyComponent>();
 		AddGlobalComponent<VersionLabel>();
 		AddGlobalComponent<HudControl>();
+
+		if (Config.Misc.SkipIntro)
+			new GameObject().AddComponent<IntroSkip>();
 
 		ExternalGhostManager.Initialize();
 	}
