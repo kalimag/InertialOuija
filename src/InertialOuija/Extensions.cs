@@ -37,15 +37,15 @@ namespace InertialOuija
 		public static T GetOrAddComponent<T>(this Component component) where T : Component
 			=> component.gameObject.GetOrAddComponent<T>();
 
-		public static T LogFailure<T>(this T task, [CallerMemberName] string caller = null) where T : Task
+		public static T LogFailure<T>(this T task, [CallerMemberName] string memberName = null, [CallerArgumentExpression(nameof(task))] string expression = null) where T : Task
 		{
-			task.ContinueWith(static (task, caller) =>
+			task.ContinueWith(task =>
 			{
 				if (task.IsFaulted)
-					Log.Error($"Task in {caller} failed", task.Exception.InnerExceptions.Count == 1 ? task.Exception.InnerException : task.Exception);
+					Log.Error($"Task {expression} in {memberName} failed", task.Exception.InnerExceptions.Count == 1 ? task.Exception.InnerException : task.Exception);
 				else if (task.IsCanceled)
-					Log.Debug($"Task in {caller} was canceled");
-			}, caller, TaskContinuationOptions.NotOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
+					Log.Debug($"Task {expression} in {memberName} was canceled");
+			}, TaskContinuationOptions.NotOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
 			return task;
 		}
 
