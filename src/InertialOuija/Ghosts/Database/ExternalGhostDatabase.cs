@@ -16,8 +16,11 @@ namespace InertialOuija.Ghosts.Database;
 public partial class ExternalGhostDatabase : SQLiteDatabase
 {
 	private const int InvalidatedCount = -1;
+	private static readonly object UpdateSentinel = new();
 
 
+
+	private volatile object _cachedPersonalBest;
 
 	protected override string DatabasePath => Path.Combine(FileUtility.ModDirectory, "cache", "ghosts.db");
 	protected override int? UserVersion => 1;
@@ -53,6 +56,7 @@ public partial class ExternalGhostDatabase : SQLiteDatabase
 	protected override void Invalidate()
 	{
 		_count = InvalidatedCount;
+		_cachedPersonalBest = null;
 	}
 
 	private int UpdateCount()
@@ -182,12 +186,23 @@ public partial class ExternalGhostDatabase : SQLiteDatabase
 		.Limit(1)
 		.ExecuteScalar<float?>();
 
-	public GhostTime? GetPersonalBestTime(Track track, TrackDirection direction, Car? car) =>
-		GetBestTimeInSeconds(new(GhostType.Timed, track, direction, car, User: GameData.SteamUser.Id)) switch
+	public GhostTime? GetPersonalBestTime(Track track, TrackDirection direction, Car? car)
+	{
+		if (_cachedPersonalBest is CachedPersonalBestTime cachedTime && cachedTime.Track == track && cachedTime.Direction == direction && cachedTime.Car == car)
+			return cachedTime.Time;
+
+		_cachedPersonalBest = UpdateSentinel;
+		GhostTime? time = GetBestTimeInSeconds(new(GhostType.Timed, track, direction, car, User: GameData.SteamUser.Id)) switch
 		{
-			float time => new(time),
+			float seconds => new(seconds),
 			_ => null
 		};
+		if (Interlocked.CompareExchange(ref _cachedPersonalBest, new CachedPersonalBestTime(track, direction, car, time), UpdateSentinel) != UpdateSentinel)
+			Log.Debug("Invalidated before caching");
+		return time;
+	}
+	private record CachedPersonalBestTime(Track Track, TrackDirection Direction, Car? Car, GhostTime? Time);
+
 
 	public int GetCount(bool includeInvalid) => GetConnection(false).ExecuteScalar<int>(
 		$"SELECT COUNT({(includeInvalid ? "*" : nameof(ExternalGhostFile.Track))}) FROM {ExternalGhostFile.Table}");
