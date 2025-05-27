@@ -29,6 +29,7 @@ internal class PatchConfig
 	[Include] public bool IgnoreUnfinishedLapTimes { get; set; } = true;
 	[Include] public bool DisableReplayRecording { get; set; } = true;
 	[Include] public bool EnableReplay { get; set; } = false;
+	[Include] public bool DisablePlayerGhosts { get; set; } = false;
 
 
 

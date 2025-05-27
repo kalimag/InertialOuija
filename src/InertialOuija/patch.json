@@ -13,5 +13,6 @@
   "FixSplitscreenCarSelection": true,
   "FixSplitscreenStyleCounter": true,
   "DisableReplayRecording": true,
-  "EnableReplay": false
+  "EnableReplay": false,
+  "DisablePlayerGhosts": false
 }

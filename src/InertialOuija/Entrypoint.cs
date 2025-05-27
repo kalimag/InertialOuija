@@ -69,6 +69,7 @@ internal class Entrypoint
 
 		var sw = System.Diagnostics.Stopwatch.StartNew();
 
+		harmony.Apply<DisablePlayerGhostsPatches>(patchConfig.DisablePlayerGhosts);
 		harmony.Apply<SaveGhostPatches>(patchConfig.SaveGhosts);
 		harmony.Apply<SaveDownloadedGhostPatches>(patchConfig.SaveGhosts);
 		harmony.Apply<GhostPlaybackPatches>(patchConfig.GhostPlayback);
