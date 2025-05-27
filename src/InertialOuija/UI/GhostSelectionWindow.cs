@@ -51,7 +51,7 @@ namespace InertialOuija.UI
 
 		protected override void DrawWindow()
 		{
-			using (Styles.Row("Ghosts:"))
+			using (Styles.Row("Mode:"))
 				Config.Ghosts.Mode = (ExternalGhostMode)GUILayout.Toolbar((int)Config.Ghosts.Mode, ModeLabels, Styles.Toolbar);
 
 			using (Styles.Enable(Config.Ghosts.Mode is not (ExternalGhostMode.Default or ExternalGhostMode.None)))
