@@ -1,5 +1,6 @@
 extern alias GameScripts;
 using GameScripts.Assets.Source.Enums;
+using GameScripts.Assets.Source.Tools;
 using InertialOuija.Ghosts.Database.SQL;
 using SQLite;
 using SqlKata;
@@ -202,6 +203,16 @@ public partial class ExternalGhostDatabase : SQLiteDatabase
 		return time;
 	}
 	private record CachedPersonalBestTime(Track Track, TrackDirection Direction, Car? Car, GhostTime? Time);
+
+	/// <summary>
+	/// Get personal best time for current track/car
+	/// </summary>
+	public GhostTime? GetPersonalBestTime()
+	{
+		if (!GameData.CorePluginInitialized || CorePlugin.GameModeManager.CurrentTrack == Track.None || GameData.FirstPlayerCar == null)
+			throw new InvalidOperationException("No active track/vehicle");
+		return GetPersonalBestTime(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection, GameData.FirstPlayerCar);
+	}
 
 
 	public int GetCount(bool includeInvalid) => GetConnection(false).ExecuteScalar<int>(

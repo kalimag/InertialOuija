@@ -1,5 +1,6 @@
 ﻿extern alias GameScripts;
 
+using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.Tools;
 using HarmonyLib;
 using System;
@@ -23,6 +24,18 @@ public static class GameData
 
 	public static (string Name, ulong Id) SteamUser => _steamUser.Value;
 	public static (string Name, ulong Id)? TryGetSteamUser() => GameScripts.SteamManager.Initialized ? SteamUser : null;
+
+
+	public static Car? FirstPlayerCar
+	{
+		get
+		{
+			if (CorePluginInitialized && CorePlugin.GameModeManager.PlayerInformation.Count > 0)
+				return CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car;
+			else
+				return null;
+		}
+	}
 
 
 	public static string DataPath { get; private set; }
