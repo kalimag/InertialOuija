@@ -33,11 +33,8 @@ internal class TimeAttackHudPatches
 				return;
 			}
 
-			var personalBest = ExternalGhostManager.Ghosts.GetPersonalBestTime(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
-				CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
-
-			UpdateHideTargetTimes(eventDetails, ____hudInfos, personalBest);
-			AddPersonalBestTime(____hudInfos, personalBest);
+			UpdateHideTargetTimes(eventDetails, ____hudInfos);
+			AddTimeHudElements(____hudInfos);
 		}
 		catch (Exception ex)
 		{
@@ -45,7 +42,7 @@ internal class TimeAttackHudPatches
 		}
 	}
 
-	private static void AddPersonalBestTime(Dictionary<GameObject, HudPrefabInfo> hudInfos, GhostTime? personalBest)
+	private static void AddTimeHudElements(Dictionary<GameObject, HudPrefabInfo> hudInfos)
 	{
 		if (!Config.UI.ShowPersonalBestTime && !Config.UI.ShowGhostTime)
 			return;
@@ -55,15 +52,12 @@ internal class TimeAttackHudPatches
 			var hud = hudInfos.Values.Single();
 			var topRightHudRoot = hud.RivalRoot.transform.parent;
 
-			if (Config.UI.ShowPersonalBestTime && personalBest is not null)
-			{
-				var rivalTimeHud = GameAssets.CreateRivalTimeHud(topRightHudRoot, 1);
-				rivalTimeHud.SetText("personal best", GameData.SteamUser.Name, personalBest.Value);
-				rivalTimeHud.SetActive(true);
-			}
+			if (Config.UI.ShowPersonalBestTime)
+				GameAssets.CreateTimeHud<PersonalBestHud>(topRightHudRoot, 1)
+					.SetActive(true);
 
 			if (Config.UI.ShowGhostTime)
-				RivalTimeHud.FastestGhostHud = GameAssets.CreateRivalTimeHud(topRightHudRoot, 1);
+				RivalTimeHud.FastestGhostHud = GameAssets.CreateTimeHud<RivalTimeHud>(topRightHudRoot, 1);
 		}
 		catch (Exception ex)
 		{
@@ -71,7 +65,7 @@ internal class TimeAttackHudPatches
 		}
 	}
 
-	private static void UpdateHideTargetTimes(EventDetails eventDetails, Dictionary<GameObject, HudPrefabInfo> hudInfos, GhostTime? personalBest)
+	private static void UpdateHideTargetTimes(EventDetails eventDetails, Dictionary<GameObject, HudPrefabInfo> hudInfos)
 	{
 		try
 		{
@@ -79,10 +73,8 @@ internal class TimeAttackHudPatches
 			float silver = eventDetails.SilverTargetSecondsValue;
 			float gold = eventDetails.GoldTargetSecondsValue;
 
-			Log.Debug($"PB={personalBest} Gold={gold} Silver={silver} Bronze={bronze}");
-
 			_hideTargetTimes = Config.UI.HideAchievedTargetTimes &&
-				personalBest is GhostTime pb &&
+				ExternalGhostManager.Ghosts.GetPersonalBestTime() is GhostTime pb &&
 				(gold == 0 || pb.TimeInSeconds < gold) &&
 				(silver == 0 || pb.TimeInSeconds < silver) &&
 				(bronze == 0 || pb.TimeInSeconds < bronze);

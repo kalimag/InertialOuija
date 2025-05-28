@@ -6,7 +6,6 @@ namespace InertialOuija.Components;
 
 internal class RivalTimeHud : MonoBehaviour
 {
-	public static RivalTimeHud PersonalBestHud { get; set; }
 	public static RivalTimeHud FastestGhostHud { get; set; }
 
 	private TMP_Text _header;
@@ -17,7 +16,7 @@ internal class RivalTimeHud : MonoBehaviour
 	public string Name { get; private set; }
 	public string Value { get; private set; }
 
-	void Awake()
+	protected virtual void Awake()
 	{
 		_header = transform.Find("HUDTitle Rival Time/Title").GetComponent<TMP_Text>();
 		_name = transform.Find("Rival Name/Rival Name").GetComponent<TMP_Text>();
@@ -27,8 +26,6 @@ internal class RivalTimeHud : MonoBehaviour
 
 	void OnDestroy()
 	{
-		if (PersonalBestHud == this)
-			PersonalBestHud = null;
 		if (FastestGhostHud == this)
 			FastestGhostHud = null;
 	}
@@ -40,6 +37,7 @@ internal class RivalTimeHud : MonoBehaviour
 		Header = header;
 		Name = name;
 		Value = value;
+		UpdateText();
 	}
 
 	public void SetText(string header, string name, GhostTime value)

@@ -19,11 +19,11 @@ internal class GameAssets
 
 	public static HudPrefabInfo GetHudPrefabInfo(string name) => HudPrefabInfos.Value[name];
 
-	public static RivalTimeHud CreateRivalTimeHud(Transform parent, int? layoutIndex)
+	public static T CreateTimeHud<T>(Transform parent, int? layoutIndex) where T : RivalTimeHud
 	{
 		var prefab = GetHudPrefabInfo("TimeAttackHud").RivalRoot.gameObject;
 		var instance = UnityEngine.Object.Instantiate(prefab, parent);
 		instance.GetComponent<RectTransform>().IntegrateInLayout(layoutIndex);
-		return instance.AddComponent<RivalTimeHud>();
+		return instance.AddComponent<T>();
 	}
 }
