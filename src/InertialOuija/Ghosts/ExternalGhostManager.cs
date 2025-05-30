@@ -6,10 +6,12 @@ using GameScripts.Assets.Source.Gameplay.GameModes;
 using GameScripts.Assets.Source.Gameplay.Scoring;
 using GameScripts.Assets.Source.GhostCars.GhostDatabases;
 using GameScripts.Assets.Source.GhostCars.GhostLaps;
+using GameScripts::Assets.Source.SaveData;
 using GameScripts.Assets.Source.Tools;
 using InertialOuija.Components;
 using InertialOuija.Ghosts.Database;
 using InertialOuija.UI;
+using InertialOuija.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,14 +45,16 @@ internal class ExternalGhostManager
 
 
 
-	internal static void Initialize()
+	internal static async void Initialize()
 	{
 		if (Ghosts != null)
 			return;
 		try
 		{
 			Ghosts = new ExternalGhostDatabase();
-			RefreshDatabaseAsync().LogFailure();
+			await RefreshDatabaseAsync();
+			if (!Config.Ghosts.PlayerGhostsExported)
+				await ExportPlayerGhosts();
 		}
 		catch (Exception ex)
 		{
@@ -123,57 +127,89 @@ internal class ExternalGhostManager
 		}
 	}
 
-	public static void ExportPlayerDatabase()
+	public async static Task ExportPlayerGhosts()
 	{
 		if (RefreshInProgress)
-			return;
+			throw new InvalidOperationException("ExternalGhostManager is busy");
+		RefreshInProgress = true;
 
-		RefreshDatabaseInternal();
-
-		Log.Info("Export player database...");
-
-		List<GhostRecord> savedGhosts;
 		try
 		{
-			savedGhosts = CorePlugin.SaveManager.Load<List<GhostRecord>>("PlayerGhosts");
-		}
-		catch (Exception ex)
-		{
-			Log.Error("Failed to load saved player ghosts", ex);
-			return;
-		}
+			Log.Info("Export player database...");
 
-		if (savedGhosts is null)
-			return;
-
-		ulong? steamId = GameScripts.SteamManager.Initialized ? Steamworks.SteamUser.GetSteamID().m_SteamID : null;
-
-		foreach (var savedGhost in savedGhosts)
-		{
-			var info = new ExternalGhostInfo
+			List<GhostRecord> savedGhosts;
+			try
 			{
-				Track = savedGhost.GhostKey.Track,
-				Direction = savedGhost.GhostKey.Direction,
-				Car = savedGhost.GhostKey.Car,
-				TimeInSeconds = savedGhost.Recording.GetTotalTime(),
-				Source = GhostSource.PlayerDatabaseExport,
-				RecordingId = savedGhost.Recording.RecordingId,
-				Username = CorePlugin.PlatformManager.PrimaryUserName(),
-				SteamUserId = steamId,
-				Date = DateTimeOffset.UtcNow
-			};
-
-			if (Ghosts.Contains(info))
+				savedGhosts = await (Config.Patches.DisablePlayerGhosts ? GetSteamCloudGhosts() : GetSaveManagerGhosts());
+			}
+			catch (Exception ex)
 			{
-				Log.Debug($"Ghost {info} already exported");
-				continue;
+				Log.Error("Failed to load saved player ghosts", ex);
+				return;
 			}
 
-			var ghost = new ExternalGhost(info, savedGhost.Recording);
-			SaveGhost(ghost);
+			if (savedGhosts is null)
+			{
+				Log.Info("No PlayerGhosts found");
+				return;
+			}
 
-			if (savedGhost.Time != savedGhost.Recording.LapTime)
-				Log.Debug($"{savedGhost.GhostKey} {savedGhost.Time} - {savedGhost.Recording.LapTime} = {savedGhost.Time - savedGhost.Recording.LapTime}");
+			foreach (var savedGhost in savedGhosts)
+			{
+				var info = new ExternalGhostInfo
+				{
+					Track = savedGhost.GhostKey.Track,
+					Direction = savedGhost.GhostKey.Direction,
+					Car = savedGhost.GhostKey.Car,
+					TimeInSeconds = savedGhost.Recording.GetTotalTime(),
+					Source = GhostSource.PlayerDatabaseExport,
+					RecordingId = savedGhost.Recording.RecordingId,
+					Username = GameData.SteamUser.Name,
+					SteamUserId = GameData.SteamUser.Id,
+					Date = DateTimeOffset.UtcNow
+				};
+
+				if (Ghosts.Contains(info))
+				{
+					Log.Debug($"Ghost {savedGhost.GhostKey} already exported");
+					continue;
+				}
+
+				var ghost = new ExternalGhost(info, savedGhost.Recording);
+				await Task.Run(() => SaveGhost(ghost));
+
+				if (savedGhost.Time != savedGhost.Recording.LapTime)
+					Log.Debug($"{savedGhost.GhostKey} {savedGhost.Time} - {savedGhost.Recording.LapTime} = {savedGhost.Time - savedGhost.Recording.LapTime}");
+			}
+
+			Config.Ghosts.PlayerGhostsExported = true;
+			Config.Save();
+		}
+		finally
+		{
+			RefreshInProgress = false;
+		}
+
+		static async Task<List<GhostRecord>> GetSaveManagerGhosts()
+		{
+			while (!GameData.CorePluginInitialized || !CorePlugin.SaveManager.IsReady())
+				await Task.Yield();
+
+			return CorePlugin.SaveManager.Load<List<GhostRecord>>(SaveFileKeys.PlayerGhostKey);
+		}
+
+		static async Task<List<GhostRecord>> GetSteamCloudGhosts()
+		{
+			while (!GameScripts.SteamManager.Initialized)
+				await Task.Yield();
+
+			var buffer = await SteamUtility.ReadFileAsync(SaveFileKeys.PlayerGhostKey);
+			if (buffer is null)
+				return [];
+
+			var records = await Task.Run(() => (List<GhostRecord>)SaveHelpers.Deserialise(buffer));
+			Log.Debug($"Read {records.Count} ghosts from Steam storage");
+			return records;
 		}
 	}
 
@@ -214,6 +250,9 @@ internal class ExternalGhostManager
 
 	public static async Task RefreshDatabaseAsync()
 	{
+		if (RefreshInProgress)
+			throw new InvalidOperationException("ExternalGhostManager is busy");
+
 		RefreshInProgress = true;
 		var progress = MainController.CreatePersistentObject<RefreshProgressDisplay>("RefreshProgress");
 

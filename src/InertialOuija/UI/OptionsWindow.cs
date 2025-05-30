@@ -70,7 +70,7 @@ namespace InertialOuija.UI
 			{
 				using (Styles.Enable(GameData.CorePluginInitialized))
 					if (GUILayout.Button(TempContent("Export Old Ghosts", "This only needs to be done once"), CustomStyles.GhostButtonLayout))
-						ExternalGhostManager.ExportPlayerDatabase();
+						ExportPlayerGhosts();
 
 				if (GUILayout.Button(TempContent("Reset Ghost Cache", "This shouldn't be necessary unless something goes wrong"), CustomStyles.GhostButtonLayout))
 					ExternalGhostManager.ResetCache().LogFailure();
@@ -83,6 +83,19 @@ namespace InertialOuija.UI
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button("Close", Styles.FixedButton))
 					Close();
+			}
+		}
+
+		private async void ExportPlayerGhosts()
+		{
+			try
+			{
+				await ExternalGhostManager.RefreshDatabaseAsync();
+				await ExternalGhostManager.ExportPlayerGhosts();
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
 			}
 		}
 
