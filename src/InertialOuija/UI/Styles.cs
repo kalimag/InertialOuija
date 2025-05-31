@@ -78,6 +78,7 @@ internal partial class Styles
 	public static GUIStyle Version => "Version";
 	public static GUIStyle Warning => "Warning";
 	public static GUIStyle WarningContentLabel => "WarningContentLabel";
+	public static GUIStyle WarningLabel => "WarningLabel";
 
 
 
