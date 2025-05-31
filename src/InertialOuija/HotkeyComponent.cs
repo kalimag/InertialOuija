@@ -12,15 +12,16 @@ internal class HotkeyComponent : MonoBehaviour
 		if (!Input.anyKeyDown)
 			return;
 
-		//bool alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
-		//bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-		//bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-
 		if (Input.GetKeyDown(KeyCode.F2))
 			UIController.ToggleGhostSelectionWindow();
 
 		if (Input.GetKeyDown(KeyCode.F3))
-			UIController.ToggleOptionsWindow();
+		{
+			if (CtrlHeld() && ShiftHeld())
+				UIController.ToggleDangerousOptionsWindow();
+			else
+				UIController.ToggleOptionsWindow();
+		}
 
 		if (Input.GetKeyDown(KeyCode.F11))
 			Components.HudControl.ToggleHud();
@@ -28,13 +29,11 @@ internal class HotkeyComponent : MonoBehaviour
 #if DEBUG
 		if (Input.GetKeyDown(KeyCode.F7))
 			LoadUnityExplorer();
-
-		if (Input.GetKeyDown(KeyCode.F12))
-		{
-			Log.Debug($"{Application.runInBackground}={Application.runInBackground}");
-			Application.runInBackground = false;
-		}
 #endif
+
+		static bool CtrlHeld() => Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+		static bool ShiftHeld() => Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+		//static bool AltHeld() => Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
 	}
 
 #if DEBUG

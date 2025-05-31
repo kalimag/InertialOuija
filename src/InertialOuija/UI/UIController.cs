@@ -14,6 +14,9 @@ internal static class UIController
 	private static OptionsWindow _ghostOptionsWindow;
 	public static void ToggleOptionsWindow() => Toggle(ref _ghostOptionsWindow);
 
+	private static DangerousOptionsWindow _dangerousOptionsWindow;
+	public static void ToggleDangerousOptionsWindow() => Toggle(ref _dangerousOptionsWindow);
+
 
 
 	private static void Toggle<T>(ref T component) where T : Component

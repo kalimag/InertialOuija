@@ -82,4 +82,20 @@ internal static class FileUtility
 		else
 			return Prefix + path;
 	}
+
+	public static string FormatSize(ulong size)
+	{
+		const ulong Kibi = 1024;
+		const ulong Mebi = Kibi * 1024;
+		const ulong Gibi = Mebi * 1024;
+
+		return size switch
+		{
+			>= Gibi => $"{size / (double)Gibi:0.#} GiB",
+			>= Mebi => $"{size / (double)Mebi:0.#} MiB",
+			>= Kibi => $"{size / (double)Kibi:0.#} KiB",
+			_ => $"{size} B",
+		};
+	}
+	public static string FormatSize(long size) => FormatSize(checked((ulong)size));
 }
