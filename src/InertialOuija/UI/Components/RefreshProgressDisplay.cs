@@ -8,8 +8,8 @@ namespace InertialOuija.UI;
 
 internal sealed class RefreshProgressDisplay : MonoBehaviour, IProgress<float>
 {
-	private static readonly Vector2 Size = new(270, 50);
-	private static readonly Vector2 Margin = new(10, 10);
+	private static readonly Vector2 Size = new(320, 50);
+	private static readonly Vector2 Margin = new(15, 15);
 
 
 	private readonly StringCache<double> _text = new(static value => $"{value:0}%");
