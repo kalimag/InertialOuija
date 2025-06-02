@@ -85,6 +85,7 @@ internal class Entrypoint
 		harmony.Apply<FixSplitscreenCarSelectionPatches>(patchConfig.FixSplitscreenCarSelection);
 		harmony.Apply<FixSplitscreenStyleCounterPatches>(patchConfig.FixSplitscreenStyleCounter);
 		harmony.Apply<IgnoreUnfinishedLapTimesPatches>(patchConfig.IgnoreUnfinishedLapTimes);
+		harmony.Apply<DelaySavingAfterRacePatches>(patchConfig.DelaySavingAfterRace);
 		harmony.Apply<TimeAttackHudPatches>(patchConfig.TimeAttackHud);
 		harmony.Apply<DisableReplayRecordingPatches>(patchConfig.DisableReplayRecording && !patchConfig.EnableReplay);
 		harmony.Apply<EnableReplayPatches>(patchConfig.EnableReplay);

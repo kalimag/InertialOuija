@@ -12,6 +12,7 @@
   "AllowKeyboardReverseBinding": true,
   "FixSplitscreenCarSelection": true,
   "FixSplitscreenStyleCounter": true,
+  "DelaySavingAfterRace": true,
   "DisableReplayRecording": true,
   "EnableReplay": false,
   "DisablePlayerGhosts": false
