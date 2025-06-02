@@ -97,6 +97,5 @@ internal static class FileUtility
 			_ => $"{size} B",
 		};
 	}
-	public static string FormatSize(long size) =>
-		size >= 0 ? FormatSize((ulong)size) : "-" + FormatSize(unchecked((ulong)-size));
+	public static string FormatSize(long size) => size >= 0 ? FormatSize((ulong)size) : "-" + FormatSize(unchecked((ulong)-size));
 }
