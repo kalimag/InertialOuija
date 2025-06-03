@@ -73,21 +73,21 @@ internal class Entrypoint
 		harmony.Apply<SaveGhostPatches>(patchConfig.SaveGhosts);
 		harmony.Apply<SaveDownloadedGhostPatches>(patchConfig.SaveGhosts);
 		harmony.Apply<GhostPlaybackPatches>(patchConfig.GhostPlayback);
-		harmony.Apply<PointToPointGhostStartPatches>(patchConfig.PointToPointGhostStart);
-		harmony.Apply<SerializationWhitelistPatches>(patchConfig.SerializationWhitelist);
-		harmony.Apply<DownloadDlcGhostPatches>(patchConfig.DownloadDlcGhosts);
+		harmony.Apply<PointToPointGhostStartPatches>();
+		harmony.Apply<SerializationWhitelistPatches>();
+		harmony.Apply<DownloadDlcGhostPatches>();
 		harmony.Apply<UnsavedGhostWarningPatches>(patchConfig.UnsavedGhostWarning);
 		harmony.Apply<PrecisionModeTimerPatches>(patchConfig.PrecisionModeTimer);
 		harmony.Apply<ReplaceLeaderboardTitlePatches>(patchConfig.ReplaceLeaderboardTitle);
 		harmony.Apply<RememberSelectedPalettePatches>(patchConfig.RememberSelectedPalette);
 		harmony.Apply<AutoScreenshotPatches>(patchConfig.AutoScreenshot);
-		harmony.Apply<AllowKeyboardReverseBindingPatches>(patchConfig.AllowKeyboardReverseBinding);
-		harmony.Apply<FixSplitscreenCarSelectionPatches>(patchConfig.FixSplitscreenCarSelection);
-		harmony.Apply<FixSplitscreenStyleCounterPatches>(patchConfig.FixSplitscreenStyleCounter);
-		harmony.Apply<IgnoreUnfinishedLapTimesPatches>(patchConfig.IgnoreUnfinishedLapTimes);
+		harmony.Apply<AllowKeyboardReverseBindingPatches>();
+		harmony.Apply<FixSplitscreenCarSelectionPatches>();
+		harmony.Apply<FixSplitscreenStyleCounterPatches>();
+		harmony.Apply<IgnoreUnfinishedLapTimesPatches>();
 		harmony.Apply<DelaySavingAfterRacePatches>(patchConfig.DelaySavingAfterRace);
 		harmony.Apply<TimeAttackHudPatches>(patchConfig.TimeAttackHud);
-		harmony.Apply<DisableReplayRecordingPatches>(patchConfig.DisableReplayRecording && !patchConfig.EnableReplay);
+		harmony.Apply<DisableReplayRecordingPatches>(!patchConfig.EnableReplay);
 		harmony.Apply<EnableReplayPatches>(patchConfig.EnableReplay);
 
 #if DEBUG

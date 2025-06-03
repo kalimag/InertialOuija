@@ -1,19 +1,13 @@
 ﻿{
   "SaveGhosts": true,
   "GhostPlayback": true,
-  "PointToPointGhostStart": true,
-  "DownloadDlcGhosts": true,
   "UnsavedGhostWarning": true,
   "PrecisionModeTimer": true,
   "TimeAttackHud": true,
   "ReplaceLeaderboardTitle": true,
   "RememberSelectedPalette": true,
   "AutoScreenshot": true,
-  "AllowKeyboardReverseBinding": true,
-  "FixSplitscreenCarSelection": true,
-  "FixSplitscreenStyleCounter": true,
   "DelaySavingAfterRace": true,
-  "DisableReplayRecording": true,
-  "EnableReplay": false,
-  "DisablePlayerGhosts": false
+  "DisablePlayerGhosts": false,
+  "EnableReplay": false
 }
