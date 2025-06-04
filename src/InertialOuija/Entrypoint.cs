@@ -82,6 +82,7 @@ internal class Entrypoint
 		harmony.Apply<RememberSelectedPalettePatches>(patchConfig.RememberSelectedPalette);
 		harmony.Apply<AutoScreenshotPatches>(patchConfig.AutoScreenshot);
 		harmony.Apply<AllowKeyboardReverseBindingPatches>();
+		harmony.Apply<FixCanRollingStartPatches>();
 		harmony.Apply<FixSplitscreenCarSelectionPatches>();
 		harmony.Apply<FixSplitscreenStyleCounterPatches>();
 		harmony.Apply<IgnoreUnfinishedLapTimesPatches>();
