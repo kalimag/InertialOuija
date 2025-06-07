@@ -13,7 +13,10 @@ namespace InertialOuija.UI;
 
 internal sealed class ErrorWindow : Window
 {
+	private const int OpenWindowLimit = 10;
+
 	private static bool _hideErrors;
+	private static int _openWindows;
 
 	private string _title;
 	private string _message;
@@ -24,6 +27,18 @@ internal sealed class ErrorWindow : Window
 	protected override Rect InitialPosition => new(100, 100, 700, 300);
 	protected override string Title => _title;
 
+
+	protected override void Awake()
+	{
+		base.Awake();
+		_openWindows++;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		_openWindows--;
+	}
 
 
 	protected override void OnGUI()
@@ -93,15 +108,32 @@ internal sealed class ErrorWindow : Window
 
 	public static void ShowError(string message, string title = "ERROR")
 	{
-		if (!_hideErrors && Config.UI.ShowErrors)
-			MainController.TryPostMainThread(CreateErrorWindow);
+		try
+		{
+			if (_openWindows >= OpenWindowLimit)
+				_hideErrors = true;
+
+			if (!_hideErrors && Config.UI.ShowErrors)
+				MainController.TryPostMainThread(CreateErrorWindow);
+		}
+		catch (Exception ex)
+		{
+			Log.Error("Error when showing error window", ex, true);
+		}
 
 		void CreateErrorWindow()
 		{
-			var obj = new GameObject { hideFlags = HideFlags.HideAndDontSave };
-			var window = obj.AddComponent<ErrorWindow>();
-			window._message = message;
-			window._title = title;
+			try
+			{
+				var obj = new GameObject { hideFlags = HideFlags.HideAndDontSave };
+				var window = obj.AddComponent<ErrorWindow>();
+				window._message = message;
+				window._title = title;
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error when showing error window", ex, true);
+			}
 		}
 	}
 }
