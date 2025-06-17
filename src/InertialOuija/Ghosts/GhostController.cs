@@ -27,7 +27,7 @@ internal static class GhostController
 		if (CorePlugin.EventManager.GameMode.GetGhostType() is not GhostType ghostType)
 			return;
 
-		var filter = GhostFilter.FromConfig(ghostType, CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection,
+		var filter = GhostFilter.FromConfig(ghostType, CorePlugin.GameModeManager.GetRealCurrentTrack(), CorePlugin.GameModeManager.TrackDirection,
 			CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car);
 		var ghostFiles = ExternalGhostManager.Ghosts.FindGhosts(filter, Config.Ghosts.Mode, Config.Ghosts.Count);
 

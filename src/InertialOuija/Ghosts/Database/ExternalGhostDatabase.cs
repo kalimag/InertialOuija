@@ -211,7 +211,7 @@ public partial class ExternalGhostDatabase : SQLiteDatabase
 	{
 		if (!GameData.CorePluginInitialized || CorePlugin.GameModeManager.CurrentTrack == Track.None || GameData.FirstPlayerCar == null)
 			throw new InvalidOperationException("No active track/vehicle");
-		return GetPersonalBestTime(CorePlugin.GameModeManager.CurrentTrack, CorePlugin.GameModeManager.TrackDirection, GameData.FirstPlayerCar);
+		return GetPersonalBestTime(CorePlugin.GameModeManager.GetRealCurrentTrack(), CorePlugin.GameModeManager.TrackDirection, GameData.FirstPlayerCar);
 	}
 
 
