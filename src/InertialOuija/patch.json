@@ -4,6 +4,7 @@
   "UnsavedGhostWarning": true,
   "PrecisionModeTimer": true,
   "TimeAttackHud": true,
+  "ShowCarClass": true,
   "ReplaceLeaderboardTitle": true,
   "RememberSelectedPalette": true,
   "AutoScreenshot": true,

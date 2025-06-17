@@ -78,6 +78,7 @@ internal class Entrypoint
 		harmony.Apply<DownloadDlcGhostPatches>();
 		harmony.Apply<UnsavedGhostWarningPatches>(patchConfig.UnsavedGhostWarning);
 		harmony.Apply<PrecisionModeTimerPatches>(patchConfig.PrecisionModeTimer);
+		harmony.Apply<ShowCarClassPatches>(patchConfig.ShowCarClass);
 		harmony.Apply<ReplaceLeaderboardTitlePatches>(patchConfig.ReplaceLeaderboardTitle);
 		harmony.Apply<RememberSelectedPalettePatches>(patchConfig.RememberSelectedPalette);
 		harmony.Apply<AutoScreenshotPatches>(patchConfig.AutoScreenshot);

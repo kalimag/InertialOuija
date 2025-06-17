@@ -17,6 +17,7 @@ internal class PatchConfig
 	[Include] public bool UnsavedGhostWarning { get; set; } = true;
 	[Include] public bool PrecisionModeTimer { get; set; } = true;
 	[Include] public bool TimeAttackHud { get; set; } = true;
+	[Include] public bool ShowCarClass { get; set; } = true;
 	[Include] public bool ReplaceLeaderboardTitle { get; set; } = true;
 	[Include] public bool RememberSelectedPalette { get; set; } = true;
 	[Include] public bool AutoScreenshot { get; set; } = true;
