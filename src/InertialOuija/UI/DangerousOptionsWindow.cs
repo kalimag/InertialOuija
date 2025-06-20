@@ -60,8 +60,13 @@ internal class DangerousOptionsWindow : Window
 			GUILayout.Label("DisablePlayerGhosts patch must be enabled", Styles.WarningLabel);
 
 		using (Styles.Enable(persisted && quota <= QuotaThreshold && Config.Patches.DisablePlayerGhosts))
+		{
 			if (GUILayout.Button("Remove Player Ghosts from cloud"))
+			{
+				BackupUtility.CreateSteamBackup(SaveFileKeys.PlayerGhostKey);
 				SteamRemoteStorage.FileForget(SaveFileKeys.PlayerGhostKey);
+			}
+		}
 
 		Styles.Space();
 

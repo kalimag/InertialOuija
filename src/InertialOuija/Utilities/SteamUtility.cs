@@ -66,6 +66,26 @@ internal static class SteamUtility
 			throw new SteamApiException("File read could not be completed");
 		return buffer;
 	}
+
+	public static byte[] ReadFile(string file)
+	{
+		if (!SteamRemoteStorage.FileExists(file))
+			return null;
+
+		int size = SteamRemoteStorage.GetFileSize(file);
+		if (size == 0)
+			return []; // API docs say reading 0 bytes will cause an error
+
+		var buffer = new byte[size];
+		var read = SteamRemoteStorage.FileRead(file, buffer, size);
+
+		if (read == 0)
+			throw new SteamApiException($"File read failed\nFile: {file}");
+		if (read < size)
+			throw new SteamApiException($"Read less data than expected ({read} < {size})\\nFile: {file}\"");
+
+		return buffer;
+	}
 }
 
 public class SteamApiException(string message) : Exception(message)
