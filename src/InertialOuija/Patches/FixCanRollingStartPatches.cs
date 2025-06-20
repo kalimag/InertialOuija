@@ -18,7 +18,6 @@ internal class FixCanRollingStartPatches
 	/// This leads to strange camera behavior during race start when rolling start is available,
 	/// but PlayerGhost is not.
 	/// </remarks>
-	/// 
 	[HarmonyTranspiler, HarmonyPatch(typeof(GameModeManager), nameof(GameModeManager.CanRollingStart))]
 	static IEnumerable<CodeInstruction> GameModeManager_CanRollingStart(IEnumerable<CodeInstruction> instructions)
 	{
