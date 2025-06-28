@@ -7,7 +7,7 @@ An unofficial mod for the game [Inertial Drift] (Steam/Windows version only) to 
 ## Features
 
 - Use any ghost you want in Time Attack
-- Store an umlimited number of ghosts per track/car
+- Store an unlimited number of ghosts per track/car
 - Store ghosts as individual, shareable files
 - Ghosts for DLC car leaderboards
 - No delayed ghosts for point-to-point races
@@ -29,13 +29,10 @@ This mod uses the [Doorstop] and [Harmony] libraries to inject code into the gam
 
 ## Usage
 
-Press `F2` to open the ghost menu and configure which ghosts you want to use. Select *None* to use the game's
+Press `F2` to open the ghost menu and configure which ghosts you want to use. Select *Default* to use the game's
 regular ghost behaviour.
 
 > **Note** The mod chooses which ghosts to display at the start of the race. To use new ghosts or change the ghost
 > options, you have to exit and restart the race.
-
-After installing the mod, open the *Options* menu and select *Export Ghost Database* to make ghosts you previously
-recorded available for use with the mod. You should only have to do this once.
 
 If you have added or removed files in the ghost folder while the game is running, select *Refresh External Ghosts*.
