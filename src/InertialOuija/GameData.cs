@@ -2,6 +2,7 @@
 
 using GameScripts.Assets.Source.Enums;
 using GameScripts.Assets.Source.Tools;
+using GameScripts.Assets.Source.UI.Menus;
 using HarmonyLib;
 using System;
 using System.Threading;
@@ -30,8 +31,12 @@ public static class GameData
 	{
 		get
 		{
-			if (CorePluginInitialized && CorePlugin.GameModeManager.PlayerInformation.Count > 0)
+			if (!CorePluginInitialized)
+				return null;
+			else if (CorePlugin.GameModeManager.PlayerInformation.Count > 0)
 				return CorePlugin.GameModeManager.PlayerInformation[0].CarPrefab.Car;
+			else if (MenuSelection.CurrentCharacter != Character.None)
+				return CorePlugin.CharacterDatabase.GetCharacterData(MenuSelection.CurrentCharacter)?.CarPrefab.Car;
 			else
 				return null;
 		}
