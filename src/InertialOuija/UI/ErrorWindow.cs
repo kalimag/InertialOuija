@@ -26,6 +26,7 @@ internal sealed class ErrorWindow : Window
 	protected override Rect WindowPosition { get; set; }
 	protected override Rect InitialPosition => new(100, 100, 700, 300);
 	protected override string Title => _title;
+	protected override bool CloseBeforeRace => false;
 
 
 	protected override void Awake()

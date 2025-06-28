@@ -1,9 +1,13 @@
-﻿using System;
+﻿extern alias GameScripts;
+
+using GameScripts.Assets.Source.Messaging;
+using GameScripts.Assets.Source.Messaging.Messages;
+using System;
 using UnityEngine;
 
 namespace InertialOuija.UI;
 
-internal abstract class Window : MonoBehaviour
+internal abstract class Window : MonoBehaviour, IReceiveMessages<GameModeSetupCompleteMessage>
 {
 	private static readonly GUIContent _tempContent = new();
 
@@ -26,7 +30,7 @@ internal abstract class Window : MonoBehaviour
 	protected abstract Rect InitialPosition { get; }
 	protected abstract string Title { get; }
 	protected GUILayoutOption[] WindowLayout { get; set; } = new[] { GUILayout.ExpandHeight(true) };
-	protected virtual bool StayOpen => false;
+	protected virtual bool CloseBeforeRace => true;
 
 
 
@@ -38,8 +42,9 @@ internal abstract class Window : MonoBehaviour
 		if (WindowPosition.x > Screen.width - 50 || WindowPosition.y > Screen.height - 50 || WindowPosition.x < -50 || WindowPosition.y < -5)
 			WindowPosition = Rect.zero;
 
-		if (StayOpen)
-			DontDestroyOnLoad(this);
+		DontDestroyOnLoad(this);
+
+		MessagingCenter.RegisterReceiver(this);
 	}
 
 	protected void OnEnable()
@@ -54,7 +59,9 @@ internal abstract class Window : MonoBehaviour
 	}
 
 	protected virtual void OnDestroy()
-	{ }
+	{
+		MessagingCenter.DeregisterReceiver(this);
+	}
 
 	protected virtual void OnGUI()
 	{
@@ -109,6 +116,12 @@ internal abstract class Window : MonoBehaviour
 	{
 		if (this && this.gameObject)
 			Destroy(gameObject);
+	}
+
+	void IReceiveMessages<GameModeSetupCompleteMessage>.HandleMessage(GameModeSetupCompleteMessage message)
+	{
+		if (CloseBeforeRace)
+			Close();
 	}
 
 	protected static GUIContent TempContent(string text, string tooltip)

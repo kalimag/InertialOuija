@@ -1,6 +1,4 @@
 ﻿extern alias GameScripts;
-using GameScripts.Assets.Source.Messaging;
-using GameScripts.Assets.Source.Messaging.Messages;
 using InertialOuija.Ghosts;
 using InertialOuija.Utilities;
 using UnityEngine;
@@ -8,7 +6,7 @@ using static InertialOuija.Configuration.ModConfig;
 
 namespace InertialOuija.UI
 {
-	internal class GhostSelectionWindow : Window, IReceiveMessages<GameModeSetupCompleteMessage>
+	internal class GhostSelectionWindow : Window
 	{
 		private readonly StringCache<int> _countString = new();
 
@@ -36,16 +34,9 @@ namespace InertialOuija.UI
 		};
 
 
-		protected override void Awake()
-		{
-			base.Awake();
-			MessagingCenter.RegisterReceiver(this);
-		}
-
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			MessagingCenter.DeregisterReceiver(this);
 			Config.Save();
 		}
 
@@ -95,11 +86,6 @@ namespace InertialOuija.UI
 				if (GUILayout.Button("Close", Styles.FixedButton))
 					Close();
 			}
-		}
-
-		void IReceiveMessages<GameModeSetupCompleteMessage>.HandleMessage(GameModeSetupCompleteMessage message)
-		{
-			Close();
 		}
 
 		private static GUILayoutOption[] GhostCountLabelLayout = [GUILayout.Width(40)];
